@@ -1,0 +1,12 @@
+.sublabel {
+  font-size: var(--text-xs);
+  color: white;
+}
+
+.sublabel.--error {
+  color: var(--color-red-500);
+}
+
+.sublabel.--success {
+  color: var(--color-green-500);
+}

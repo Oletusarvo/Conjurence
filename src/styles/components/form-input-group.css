@@ -1,0 +1,4 @@
+.form-input-group {
+  display: flex;
+  flex-flow: column;
+}

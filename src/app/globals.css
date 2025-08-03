@@ -1,26 +1,46 @@
-@import "tailwindcss";
+@import '../styles/main.css';
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #191919;
+  --foreground: #ffffff;
+  --background-light: #222222;
+  --accent: var(--color-yellow-500);
+  --accent-hover: var(--color-yellow-300);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-light: var(--background-light);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent);
+  --animate-slide-down: SlideDown 0.1s ease-out;
+  --animate-fade-in: FadeIn 0.1s ease-out;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes SlideDown {
+  0% {
+    transform: translateY(25px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes FadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

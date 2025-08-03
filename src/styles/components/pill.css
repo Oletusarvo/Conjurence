@@ -1,0 +1,25 @@
+.pill {
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill.--outlined.--accent {
+  background-color: hsl(from var(--color-accent) h s l / 0.25);
+  color: white;
+}
+
+.pill.--outlined.--success {
+  background-color: var(--color-green-960);
+}
+
+.pill.--small {
+  padding: 0.25rem 0.5rem;
+  font-size: var(--text-xs);
+}
+
+.pill.--outlined.--white {
+  background-color: hsl(from white h s l / 0.25);
+}

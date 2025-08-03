@@ -1,0 +1,61 @@
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+  min-height: 2.5rem;
+  padding: --spacing(2) --spacing(4);
+}
+
+button.--ghost {
+  background-color: transparent;
+}
+
+button.--ghost.--accent:hover {
+  background-color: hsl(from var(--color-accent) h s l / 0.25);
+}
+
+button.--small {
+  padding: --spacing(1) --spacing(2);
+  font-size: var(--text-xs);
+}
+
+button.--full-width {
+  width: 100%;
+}
+
+button.--no-default {
+  padding: 0;
+  width: auto;
+  min-height: auto;
+}
+
+button.--contained.--accent {
+  color: black;
+}
+
+button.--contained.--accent:hover {
+  background-color: var(--accent-hover);
+}
+
+button.--contained.--accent:disabled {
+  background-color: hsl(from var(--color-accent) h 0.25 l);
+  color: white;
+}
+
+button.--outlined.--accent:hover {
+  background-color: hsl(from var(--color-accent) h s l / 0.25);
+  color: var(--color-accent);
+}
+
+button.--round {
+  border-radius: 100px;
+  padding: 0;
+  aspect-ratio: 1/1;
+}
+
+button.--box {
+  padding: 1rem;
+}
