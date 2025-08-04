@@ -80,7 +80,7 @@ export function CreateEventForm({ categories, template }: CreateEventForm) {
         <input
           type='checkbox'
           name='is_template'
-          defaultChecked={template.is_template}
+          defaultChecked={template?.is_template}
         />
       </div>
       <div className='flex gap-2 w-full'>

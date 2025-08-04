@@ -1,5 +1,6 @@
-import { name as packageName } from '@package';
-import { Star, Waypoints } from 'lucide-react';
+import { Logo } from '@/components/header/Header';
+import { name as packageName, version } from '@package';
+import { Facebook, Github, Instagram, Star, Waypoints } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function HomePage() {
@@ -7,7 +8,7 @@ export default async function HomePage() {
     <div className='flex flex-col w-full'>
       <section
         id='hero-section'
-        className='flex flex-col gap-2 py-24 w-full text-center items-center'>
+        className='flex flex-col gap-2 py-24 w-full text-center items-center px-2'>
         <Waypoints
           size='var(--text-7xl)'
           color='var(--color-accent)'
@@ -28,7 +29,7 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
-      <section className='flex flex-col gap-8 py-24 items-center'>
+      <section className='flex flex-col gap-8 py-24 items-center px-2'>
         <h2>Features</h2>
         <ul className='flex flex-col gap-4'>
           <li className='flex flex-col bg-background-light rounded-xl p-4 border border-gray-500'>
@@ -55,6 +56,36 @@ export default async function HomePage() {
           </li>
         </ul>
       </section>
+      <footer className='py-24 bg-background-light px-2 flex flex-col gap-8 items-center'>
+        <div className='flex flex-col gap-2'>
+          <Link href='/terms'>Terms Of Service</Link>
+        </div>
+        <div className='flex gap-4 justify-center'>
+          <i>
+            <img
+              width='32px'
+              height='32px'
+              src='/icons/instagram.svg'
+              color='white'
+            />
+          </i>
+          <i>
+            <iframe
+              width='32px'
+              height='32px'
+              src='/icons/instagram.svg'
+              loading='lazy'
+            />
+          </i>
+          <Github />
+        </div>
+
+        <div className='flex flex-col gap-2 items-center'>
+          <Logo />
+
+          <small>{version}</small>
+        </div>
+      </footer>
     </div>
   );
 }

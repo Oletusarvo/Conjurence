@@ -7,9 +7,11 @@ import { AuthError } from '@/errors/auth';
 import { Sublabel } from '../../../components/Sublabel';
 import { withLoader } from '@/hoc/withLoader';
 import { useLoginForm } from '../hooks/useLoginForm';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm() {
   const { status, isPending, submitCredentials } = useLoginForm();
+  const router = useRouter();
 
   const SubmitButton = withLoader(({ children, ...props }: React.ComponentProps<'button'>) => (
     <button
@@ -47,6 +49,7 @@ export function LoginForm() {
       </div>
       <div className='flex gap-2 w-full'>
         <button
+          onClick={() => router.push('/')}
           className='--outlined --accent --full-width'
           type='button'>
           Cancel

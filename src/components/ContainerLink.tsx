@@ -1,5 +1,7 @@
+import { withIcon } from '@/hoc/withIcon';
 import { AtSign } from 'lucide-react';
 import Link from 'next/link';
+import React from 'react';
 
 export const ContainerLink = ({
   children,
@@ -9,10 +11,7 @@ export const ContainerLink = ({
   return (
     <Link
       {...props}
-      className='flex w-full rounded-xl p-4 bg-background-light gap-4 hover:bg-[hsl(from var(--color-accent) h s 1.1)] border border-accent'
-      style={{
-        backgroundColor: 'hsl(from var(--color-accent) h s l / 0.2)',
-      }}>
+      className='container-link w-full'>
       <div className='flex items-center'>
         <Icon
           size='var(--text-4xl)'

@@ -1,4 +1,4 @@
-import { ContainerLink } from '@/features/events/components/ContainerLink';
+import { ContainerLink } from '@/components/ContainerLink';
 import { AtSign, Database, File as FileIcon } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';

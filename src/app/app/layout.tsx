@@ -4,6 +4,7 @@ import db from '@/dbconfig';
 import { EventAttendanceProvider } from '@/features/attendance/providers/AttendanceProvider';
 import { UserProvider } from '@/features/users/providers/UserProvider';
 import { TUser } from '@/features/users/schemas/userSchema';
+import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
@@ -22,14 +23,16 @@ export default async function AppLayout({ children }) {
   console.log(initialAttendanceRecords);
   return (
     <QueryProvider>
-      <UserProvider user={session.user}>
-        <EventAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
-          <HeaderProvider>
-            <MainMenuButton />
-          </HeaderProvider>
-          {children}
-        </EventAttendanceProvider>
-      </UserProvider>
+      <ModalStackProvider>
+        <UserProvider user={session.user}>
+          <EventAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
+            <HeaderProvider>
+              <MainMenuButton />
+            </HeaderProvider>
+            {children}
+          </EventAttendanceProvider>
+        </UserProvider>
+      </ModalStackProvider>
     </QueryProvider>
   );
 }

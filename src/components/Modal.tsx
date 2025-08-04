@@ -22,7 +22,7 @@ export function Modal({ children, title, onClose, show, fullHeight, ...props }: 
   };
 
   const bodyClassName = useClassName(
-    'rounded-md p-4 shadow-md overflow-hidden w-full flex flex-col animate-fade-in',
+    'rounded-md p-4 shadow-md overflow-hidden w-full flex flex-col animate-slide-down',
     fullHeight ? 'h-full' : ''
   );
 

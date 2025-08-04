@@ -2,7 +2,7 @@ import { Armchair, AtSign, MapPin, Star } from 'lucide-react';
 import { Pill } from '../../../components/Pill';
 import { useClassName } from '@/hooks/useClassName';
 import { EventStatusBadge } from './EventStatusBadge';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useEventSocket } from '@/features/events/hooks/useEventSocket';
 import { useToggle } from '@/hooks/useToggle';
 import axios from 'axios';
@@ -11,6 +11,10 @@ import { TEvent } from '@/features/events/schemas/eventSchema';
 import { useAttendanceContext } from '@/features/attendance/providers/AttendanceProvider';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { ToggleProvider } from '@/providers/ToggleProvider';
+import { Modal } from '@/components/Modal';
+import { useModalStackContext } from '@/providers/ModalStackProvider';
+import { Spinner } from '@/components/Spinner';
 
 export type EventCardProps = {
   event: TEvent;
@@ -50,6 +54,7 @@ function InterestButton({ event, ...props }) {
   //const [optimisticCount, setOptimisticCount] = useOptimistic(event.interested_count);
   //const [transitionPending, startTransition] = useTransition();
   const isHost = thisEventParticipation?.status === 'host';
+  const { pushModal, closeCurrentModal } = useModalStackContext();
 
   const mutation = useMutation({
     mutationKey: [`event-${event.id}-interest`],
@@ -59,7 +64,6 @@ function InterestButton({ event, ...props }) {
         const res = await axios.post('/api/events/toggle_interest', {
           data: {
             eventId: event.id,
-            userId: user?.id,
           },
         });
         if (res.status === 200) {
@@ -78,14 +82,45 @@ function InterestButton({ event, ...props }) {
     },
   });
 
+  const pushConfirmModal = () => {
+    pushModal({
+      title: 'Confirm Interest',
+      content: (
+        <p>
+          No pressure — marking interest just means you’re genuinely considering showing up. It
+          helps hosts get a feel for the crowd and keeps things flowing naturally. Sound good?
+        </p>
+      ),
+      cancelButtonConfig: {
+        props: { className: '--outlined --accent --full-width' },
+        content: 'Cancel',
+      },
+      confirmButtonConfig: {
+        props: {
+          className: '--contained --accent --full-width',
+          onClick: async e => {
+            if (mutation.isPending) return;
+            toggleSelected(true);
+            mutation.mutate();
+          },
+          disabled: mutation.isPending,
+        },
+        content: mutation.isPending ? <Spinner /> : 'Yes, Still Interested!',
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (mutation.isPending == false) {
+      closeCurrentModal();
+    }
+  }, [mutation.isPending]);
+
   return (
     <button
       {...props}
+      onClick={pushConfirmModal}
       disabled={!!thisEventParticipation}
-      onClick={() => {
-        toggleSelected(true);
-        mutation.mutate();
-      }}
       className='flex gap-2 items-center --no-default'>
       <Star
         size={'var(--text-2xl)'}

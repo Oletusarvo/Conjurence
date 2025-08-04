@@ -1,14 +1,14 @@
 'use client';
 
 import { List } from '@/components/List';
-import { TParticipant } from '@/features/attendance/schemas/attendanceSchema';
+import { TAttendance } from '@/features/attendance/schemas/attendanceSchema';
 import { FeedEntry } from './FeedEntry';
 import { useState } from 'react';
 import { useEventSocket } from '@/features/events/hooks/useEventSocket';
 
 type FeedProps = {
   eventId: string;
-  initialParticipants: TParticipant[];
+  initialParticipants: TAttendance[];
 };
 export function Feed({ initialParticipants, eventId }: FeedProps) {
   const [participants, setParticipants] = useState(initialParticipants);

@@ -3,7 +3,7 @@
 import { List } from '@/components/List';
 import { TEventData } from '../schemas/eventSchema';
 import Link from 'next/link';
-import { ContainerLink } from './ContainerLink';
+import { ContainerLink } from '../../../components/ContainerLink';
 import { Dice5 } from 'lucide-react';
 
 type TemplateListProps = {

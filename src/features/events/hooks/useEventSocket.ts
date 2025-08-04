@@ -1,4 +1,4 @@
-import { TParticipant } from '@/features/attendance/schemas/attendanceSchema';
+import { TAttendance } from '@/features/attendance/schemas/attendanceSchema';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 import { useSocketRoom } from '@/hooks/useSocketRoom';
 
@@ -12,7 +12,7 @@ export function useEventSocket({
   onInterest,
 }: {
   eventId: string;
-  onInterest: (payload: { currentInterestCount: number; newInterestRecord: TParticipant }) => void;
+  onInterest: (payload: { currentInterestCount: number; newInterestRecord: TAttendance }) => void;
 }) {
   useSocketRoom([`event:${eventId}`]);
   useSocketHandlers({

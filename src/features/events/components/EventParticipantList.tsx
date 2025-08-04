@@ -4,12 +4,12 @@ import { TabsProvider } from '@/providers/TabsProvider';
 import { Tab } from '../../../components/Tab';
 import { useEffect, useState } from 'react';
 import { useUserContext } from '@/features/users/providers/UserProvider';
-import { acceptJoinRequestAction } from '@/features/events/actions/acceptJoinRequestAction';
+import { acceptJoinRequestAction } from '@/features/attendance/actions/experimental/acceptJoinRequestAction';
 import { Spinner } from '../../../components/Spinner';
 import { AtSign, Check, Star, X } from 'lucide-react';
 import { StatusBadge } from '../../../components/StatusBadge';
 import { useEventContext } from '@/features/events/providers/EventProvider';
-import { rejectJoinRequestAction } from '@/features/events/actions/rejectJoinRequestAction';
+import { rejectJoinRequestAction } from '@/features/attendance/actions/experimental/rejectJoinRequestAction';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 import { useSocketRoom } from '@/hooks/useSocketRoom';
 

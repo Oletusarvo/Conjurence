@@ -1,0 +1,12 @@
+.notice {
+  padding: --spacing(4);
+  border-radius: var(--radius-lg);
+}
+
+.notice.--contained.--success {
+  border: 1px solid var(--color-green-400);
+}
+
+.notice.--contained.--error {
+  border: 1px solid var(--color-red-400);
+}

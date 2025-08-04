@@ -5,8 +5,32 @@ import { eventDataSchema } from '@/features/events/schemas/eventSchema';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
 
+/**Creates a new event.
+ * @param payload The data for the event.
+ * @param templateId An optional id of the template to use. If not provided, creates a new template, otherwise updates the existing one.
+ */
 export async function createEventAction(payload: FormData, templateId?: string) {
   const session = await loadSession();
+  const data = Object.fromEntries(payload);
+  const parsedData = eventDataSchema.parse(data);
+
+  //Prevent adding more templates than allowed
+  if (parsedData.is_template) {
+    const maxTemplateCount = process.env.MAX_TEMPLATE_COUNT;
+    if (maxTemplateCount) {
+      const currentTemplateCountRecord = await db(tablenames.event_data)
+        .where({ author_id: session.user.id, is_template: true })
+        .count('* AS count')
+        .first();
+      if (
+        currentTemplateCountRecord &&
+        +currentTemplateCountRecord.count >= parseInt(maxTemplateCount)
+      ) {
+        throw new Error('Maximum template count exceeded!');
+      }
+    }
+  }
+
   const oldParticipantRecord = await db(tablenames.event_attendance)
     .where(
       db.raw(
@@ -27,8 +51,6 @@ export async function createEventAction(payload: FormData, templateId?: string) 
     }
   }
 
-  const data = Object.fromEntries(payload);
-  const parsedData = eventDataSchema.parse(data);
   const trx = await db.transaction();
 
   let newEventRecord = null;

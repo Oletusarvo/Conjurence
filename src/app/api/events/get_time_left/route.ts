@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const { event_id } = body.data;
-    const event = await db(tablenames.event).where({ id: event_id }).first();
+    const event = await db(tablenames.event_instance).where({ id: event_id }).first();
     const timeLeft = getTimeLeft(event);
     return new NextResponse(timeLeft.toString(), { status: 200 });
   } catch (err) {

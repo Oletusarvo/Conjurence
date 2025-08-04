@@ -1,11 +1,11 @@
 import { useStatus } from '@/hooks/useStatus';
-import { requestJoinEventAction } from '../actions/requestJoinEventAction';
+import { requestJoinEventAction } from '../../attendance/actions/experimental/requestJoinEventAction';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { cancelJoinRequestAction } from '../actions/cancelJoinRequestAction';
+import { cancelJoinRequestAction } from '../../attendance/actions/experimental/cancelJoinRequestAction';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { endEventAction } from '../actions/endEventAction';
-import { leaveEventAction } from '../actions/leaveEventAction';
+import { leaveEventAction } from '../../attendance/actions/experimental/leaveEventAction';
 
 export function useEventActions(eventId: string) {
   const [status, isPending, setStatus, setIsPending] = useStatus();

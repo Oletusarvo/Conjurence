@@ -5,6 +5,9 @@
 @import './components/form-input-group.css';
 @import './components/card.css';
 @import './components/pill.css';
+@import './components/container-link.css';
+@import './components/notice';
+
 @keyframes SlideDown {
   0% {
     opacity: 0;
@@ -78,6 +81,11 @@ a.--on-path {
 .--contained.--accent {
   background-color: var(--color-accent);
   color: white;
+}
+
+.--contained.--success {
+  background-color: hsl(from var(--color-green-400) h s l / 0.2);
+  color: var(--color-green-400);
 }
 
 .--outlined {

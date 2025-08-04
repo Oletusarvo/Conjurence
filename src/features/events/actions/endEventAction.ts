@@ -5,6 +5,10 @@ import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
 import z from 'zod';
 
+/**Ends an event, deleting it.
+ * @event_id The instance id of the event to delete. If the data for the instance is a template, only the instance is deleted.
+ */
+
 export async function endEventAction(event_id: string) {
   z.uuid().parse(event_id);
 
