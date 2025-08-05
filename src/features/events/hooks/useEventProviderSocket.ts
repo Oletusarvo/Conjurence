@@ -3,7 +3,7 @@
 import { socket } from '@/socket';
 import axios from 'axios';
 import { useUserContext } from '../../users/providers/UserProvider';
-import { useEventContext } from '../providers/EventProvider';
+import { useEventContext } from '../providers/EventStatusFeedbackProvider';
 import { useEffect } from 'react';
 
 /**Defines the logic for handling emited socket events related to an event.

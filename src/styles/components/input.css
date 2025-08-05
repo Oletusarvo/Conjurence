@@ -1,6 +1,7 @@
 input {
   outline: none;
   width: 100%;
+  color: var(--color-gray-300);
 }
 
 input[type='checkbox'] {

@@ -11,13 +11,13 @@ export default async function CreateEventPage() {
         href='/app/event/create/new'
         icon={FileIcon}>
         <h3>New</h3>
-        <p className='text-yellow-50'>Create a new event from scratch.</p>
+        <p>Create a new event from scratch.</p>
       </ContainerLink>
       <ContainerLink
         href='/app/event/create/from_template'
         icon={Database}>
         <h3>From Template</h3>
-        <p className='text-yellow-50'>
+        <p>
           Made an awesome event in the past and don't feel like re-typing everything? Tap here and
           use it as a template!
         </p>

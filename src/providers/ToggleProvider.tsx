@@ -9,7 +9,7 @@ const [ToggleContext, useToggleContext] = createContextWithUseHook<{
   state: boolean;
   toggleState: (newState?: boolean) => void;
   hideOnClickOutside: boolean;
-}>();
+}>('useToggleContext can only be called within the scope of a ToggleContext!');
 
 type ToggleProviderProps = React.PropsWithChildren & {
   value?: boolean;

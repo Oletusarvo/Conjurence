@@ -6,6 +6,7 @@ import { cancelJoinRequestAction } from '../../attendance/actions/experimental/c
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { endEventAction } from '../actions/endEventAction';
 import { leaveEventAction } from '../../attendance/actions/experimental/leaveEventAction';
+import { toggleInterestAction } from '@/features/attendance/actions/toggleInterestAction';
 
 export function useEventActions(eventId: string) {
   const [status, isPending, setStatus, setIsPending] = useStatus();
@@ -39,6 +40,20 @@ export function useEventActions(eventId: string) {
       router.refresh();
     } catch (err) {
       toast.error(err.message);
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  const showInterest = async () => {
+    if (isPending) return;
+    setIsPending(true);
+
+    try {
+      await toggleInterestAction(eventId);
+    } catch (err) {
+      toast.error('Something went wrong!');
+      console.log(err.message);
     } finally {
       setIsPending(false);
     }
@@ -105,5 +120,5 @@ export function useEventActions(eventId: string) {
     }
   };
 
-  return { requestJoin, cancelJoinRequest, endEvent, leaveEvent, isPending };
+  return { requestJoin, cancelJoinRequest, endEvent, leaveEvent, showInterest, isPending };
 }

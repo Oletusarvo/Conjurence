@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { TEvent } from '@/features/events/schemas/eventSchema';
 import { List } from '../../../components/List';
 import { withAlternate } from '@/hoc/withAlternate';
+import { EventProvider } from '../providers/EventProvider';
 
 type EventFeedProps = {
   events: TEvent[];
@@ -31,7 +32,11 @@ export function EventFeed({ events }: EventFeedProps) {
         return order === 'asc' ? adate - bdate : bdate - adate;
       }}
       component={({ item }) => {
-        return <EventCard event={item} />;
+        return (
+          <EventProvider initialEvent={item}>
+            <EventCard />
+          </EventProvider>
+        );
       }}
     />
   );

@@ -40,6 +40,9 @@ export const options: NextAuthOptions = {
 
         const pr = await getAttendance(db)
           .where({ user_id: user.id })
+          .andWhereRaw("attendance_status_id = (SELECT id FROM ?? WHERE label = 'host')", [
+            tablenames.event_attendance_status,
+          ])
           .orderBy('requested_at', 'desc')
           .first();
 

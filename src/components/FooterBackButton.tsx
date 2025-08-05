@@ -10,7 +10,7 @@ export function FooterBackButton() {
   return (
     <button
       className='--no-default'
-      onClick={() => router.back()}>
+      onClick={() => router.push('/app/feed')}>
       <ArrowLeft />
     </button>
   );

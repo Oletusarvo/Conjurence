@@ -23,7 +23,7 @@ export default async function middleware(req: NextRequestWithAuth) {
     if (token.attended_event_id) {
       if (
         url.pathname === '/' ||
-        url.pathname === '/app/event/create' ||
+        url.pathname.startsWith('/app/event/create') ||
         url.pathname === '/app/feed'
       ) {
         const newUrl = url.clone();

@@ -22,7 +22,7 @@ export function Modal({ children, title, onClose, show, fullHeight, ...props }: 
   };
 
   const bodyClassName = useClassName(
-    'rounded-md p-4 shadow-md overflow-hidden w-full flex flex-col animate-slide-down',
+    'rounded-md p-4 shadow-md overflow-hidden w-full flex flex-col animate-slide-down bg-background-light',
     fullHeight ? 'h-full' : ''
   );
 
@@ -40,11 +40,13 @@ export function Modal({ children, title, onClose, show, fullHeight, ...props }: 
         <div className='w-full flex items-center justify-between mb-4 py-2 z-10'>
           <h3>{title}</h3>
 
-          <button
-            className='--no-default'
-            onClick={() => onClose && onClose()}>
-            <X />
-          </button>
+          {onClose ? (
+            <button
+              className='--no-default'
+              onClick={() => onClose && onClose()}>
+              <X />
+            </button>
+          ) : null}
         </div>
 
         {children}

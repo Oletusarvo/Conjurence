@@ -10,15 +10,22 @@ import { useSocketRoom } from '@/hooks/useSocketRoom';
 export function useEventSocket({
   eventId,
   onInterest,
+  onEnd,
 }: {
   eventId: string;
-  onInterest: (payload: { currentInterestCount: number; newInterestRecord: TAttendance }) => void;
+  onInterest?: (payload: { currentInterestCount: number; newInterestRecord: TAttendance }) => void;
+  onEnd?: (payload: { eventId: string }) => void;
 }) {
   useSocketRoom([`event:${eventId}`]);
   useSocketHandlers({
     'event:interest': payload => {
       if (payload.eventId !== eventId) return;
-      onInterest(payload);
+      onInterest && onInterest(payload);
+    },
+
+    'event:end': payload => {
+      if (payload.eventId !== eventId) return;
+      onEnd && onEnd(payload);
     },
   });
 }

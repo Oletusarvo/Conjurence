@@ -1,3 +1,5 @@
+'use client';
+
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
 import { useEventActions } from '../hooks/useEventActions';
 import { useEventContext } from './EventProvider';

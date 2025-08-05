@@ -2,6 +2,7 @@
 
 import { Input } from '@/components/Input';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
+import { debounce } from '@/util/network/debounce';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -15,10 +16,6 @@ export function SearchProvider({ children }: React.PropsWithChildren) {
     <SearchContext.Provider value={{ order }}>
       <div className='flex gap-2 w-full'>
         <SearchBar />
-        <SortButton
-          currentOrder={order}
-          onChange={order => setOrder(order)}
-        />
       </div>
       {children}
     </SearchContext.Provider>
@@ -48,12 +45,12 @@ function SearchBar() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const updateQuery = (paramName: string, paramValue: string) => {
+  const updateQuery = debounce((paramName: string, paramValue: string) => {
     const params = new URLSearchParams(searchParams);
     params.set(paramName, paramValue);
     const newUrl = pathname + '?' + params.toString();
     router.replace(newUrl);
-  };
+  }, 500);
 
   return (
     <div className='flex gap-2 w-full'>

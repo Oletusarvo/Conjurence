@@ -8,7 +8,7 @@ export function Input({ icon, ...props }: InputProps) {
 
   return (
     <div className='relative w-full flex items-center'>
-      <span className='absolute left-2 text-gray-400'>{icon}</span>
+      <span className='absolute left-2 text-gray-500'>{icon}</span>
       <input
         {...props}
         className={inputClassName}

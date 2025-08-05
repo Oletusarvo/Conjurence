@@ -4,9 +4,13 @@ import { getEvent } from '@/features/events/dal/getEvent';
 import db from '@/dbconfig';
 import { loadSession } from '@/util/loadSession';
 import { getAttendance } from '@/features/attendance/dal/getAttendance';
-import { EventProvider } from '@/features/events/providers/EventProvider';
+import { EventStatusFeedback } from '@/features/events/providers/EventStatusFeedbackProvider';
 import { Suspense } from 'react';
 import { Spinner } from '@/components/Spinner';
+import { EventProvider } from '@/features/events/providers/EventProvider';
+import { ModalStackProvider } from '@/providers/ModalStackProvider';
+import { EventActionProvider } from '@/features/events/providers/EventActionProvider';
+import { MapPin } from 'lucide-react';
 
 export const revalidate = 0;
 
@@ -24,33 +28,47 @@ export default async function EventPage({ params, attendance }) {
     .first();
 
   if (!attendanceRecord || attendanceRecord.status !== 'host') {
-    return <span>Only the host can view event details!</span>;
+    //return <span>Only the host can view event details!</span>;
   }
 
   const event = await getData(event_id);
 
-  return (
-    <EventProvider event={event}>
-      <BaseEventModalBody>
-        <div className='flex flex-col gap-4 bg-background-light w-full px-2 py-4 border-b border-gray-600'>
-          <div className='flex items-start px-2 w-full'>
-            <div className='flex flex-col items-start gap-2 w-full'>
-              <div className='flex gap-2 items-center justify-between w-full'>
-                <div className='flex items-center gap-4'>
-                  <h3>{event.title}</h3>
-                </div>{' '}
-                <EventStatusBadge createdAt={event.created_at} />
-              </div>
+  if (!event) {
+    return <span>Event not found!</span>;
+  }
 
-              <div className='pill --small --outlined --accent'>{event.category}</div>
-              <p>{event.description}</p>
-            </div>
-          </div>
-        </div>
-        <div className='flex flex-col w-full flex-1 px-4 gap-2'>
-          <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
-        </div>
-      </BaseEventModalBody>
+  return (
+    <EventProvider initialEvent={event}>
+      <EventActionProvider>
+        <ModalStackProvider>
+          <EventStatusFeedback>
+            <BaseEventModalBody>
+              <div className='flex flex-col gap-4 bg-background-light w-full px-2 py-4 border-b border-gray-600'>
+                <div className='flex items-start px-2 w-full'>
+                  <div className='flex flex-col items-start gap-4 w-full'>
+                    <div className='flex gap-2 items-center justify-between w-full'>
+                      <div className='flex items-center gap-4'>
+                        <h3>{event.title}</h3>
+                      </div>{' '}
+                      <EventStatusBadge createdAt={event.created_at} />
+                    </div>
+
+                    <div className='pill --small --outlined --accent'>{event.category}</div>
+                    <p className='tracking-tight leading-[18px]'>{event.description}</p>
+                    <div className='flex gap-1 items-center'>
+                      <MapPin size={'var(--text-sm)'} />
+                      <span>{event.location || 'No location.'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='flex flex-col w-full flex-1 px-4 gap-2 max-h-full overflow-y-scroll'>
+                <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
+              </div>
+            </BaseEventModalBody>
+          </EventStatusFeedback>
+        </ModalStackProvider>
+      </EventActionProvider>
     </EventProvider>
   );
 }

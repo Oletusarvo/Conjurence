@@ -20,7 +20,7 @@ export function UserInterestTagInput() {
           </div>
 
           <TagInputProvider.ApplyButton>
-            <button className='--outlined --round --accent'>
+            <button className='--round --accent --no-default'>
               <Plus />
             </button>
           </TagInputProvider.ApplyButton>

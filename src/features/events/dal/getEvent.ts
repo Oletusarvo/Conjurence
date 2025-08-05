@@ -9,7 +9,7 @@ const getEventQuery = (ctx: Knex | Knex.Transaction, includeParticipants?: boole
     //Get the host participant.
     .join(
       db.raw(
-        "(SELECT user_id AS host_user_id, event_instance_id FROM ?? WHERE attendance_status_id IN (SELECT id FROM ?? WHERE label IN ('host'))) AS hp",
+        "(SELECT user_id AS host_user_id, event_instance_id FROM ?? WHERE attendance_status_id IN (SELECT id as status_id FROM ?? WHERE label IN ('host'))) AS hp",
         [tablenames.event_attendance, tablenames.event_attendance_status]
       ),
       'hp.event_instance_id',
@@ -24,7 +24,7 @@ const getEventQuery = (ctx: Knex | Knex.Transaction, includeParticipants?: boole
     //Get the participant count.
     .leftJoin(
       db.raw(
-        "(SELECT event_instance_id AS ap_instance_id, attendance_status_id AS ap_status_id, COUNT(*) AS interested_count FROM ?? WHERE attendance_status_id IN (SELECT id FROM ?? WHERE label IN ('interested') LIMIT 1) GROUP BY event_instance_id, attendance_status_id) AS ap",
+        "(SELECT event_instance_id AS ap_instance_id, attendance_status_id AS ap_status_id, COUNT(*) AS interested_count FROM ?? WHERE attendance_status_id IN (SELECT id as ap_status_id FROM ?? WHERE label IN ('interested') LIMIT 1) GROUP BY event_instance_id, attendance_status_id) AS ap",
         [tablenames.event_attendance, tablenames.event_attendance_status]
       ),
       'ap.ap_instance_id',

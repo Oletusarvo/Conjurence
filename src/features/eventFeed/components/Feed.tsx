@@ -27,7 +27,7 @@ export function Feed({ initialParticipants, eventId }: FeedProps) {
         <FeedEntry
           username={item.username}
           timestamp={new Date(item.requested_at).toLocaleTimeString('fi')}>
-          {item.status === 'interested' ? <>is interested.</> : 'started the event.'}
+          {item.status === 'interested' ? <>Is interested.</> : 'Started the event.'}
         </FeedEntry>
       )}
     />

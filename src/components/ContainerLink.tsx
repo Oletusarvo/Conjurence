@@ -15,7 +15,7 @@ export const ContainerLink = ({
       <div className='flex items-center'>
         <Icon
           size='var(--text-4xl)'
-          color='var(--color-yellow-200)'
+          color='var(--color-accent)'
         />
       </div>
       <div className='flex flex-col flex-1'>{children}</div>

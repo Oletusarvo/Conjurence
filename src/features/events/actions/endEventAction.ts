@@ -57,6 +57,7 @@ export async function endEventAction(event_id: string) {
     ended_at: new Date(),
   });
 
-  global.io.to('event:' + event_id).emit('event_ended');
+  
   global.io.to('user:' + session.user.id).emit('event_ended')*/
+  global.io.to('event:' + event_id).emit('event:end', { eventId: event_id });
 }

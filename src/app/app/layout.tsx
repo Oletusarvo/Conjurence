@@ -20,19 +20,16 @@ export default async function AppLayout({ children }) {
     )
     .where({ user_id: session.user.id })
     .select('p.*', 'ps.label as status');
-  console.log(initialAttendanceRecords);
   return (
     <QueryProvider>
-      <ModalStackProvider>
-        <UserProvider user={session.user}>
-          <EventAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
-            <HeaderProvider>
-              <MainMenuButton />
-            </HeaderProvider>
-            {children}
-          </EventAttendanceProvider>
-        </UserProvider>
-      </ModalStackProvider>
+      <UserProvider user={session.user}>
+        <EventAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
+          <HeaderProvider>
+            <MainMenuButton />
+          </HeaderProvider>
+          {children}
+        </EventAttendanceProvider>
+      </UserProvider>
     </QueryProvider>
   );
 }

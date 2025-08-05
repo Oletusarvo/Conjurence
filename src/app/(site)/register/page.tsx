@@ -2,7 +2,7 @@ import { RegisterForm } from '@/features/signup/components/RegisterForm';
 
 export default function RegisterPage() {
   return (
-    <div className='flex gap-2 flex-col flex-1 justify-center'>
+    <div className='flex gap-2 flex-col flex-1 justify-center px-2'>
       <h2>Register</h2>
 
       <RegisterForm />
