@@ -6,3 +6,5 @@ export const EventError = {
   titleTooLong: getError('title_too_long'),
   descriptionTooLong: getError('description_too_long'),
 };
+
+export type TEventError = (typeof EventError)[keyof typeof EventError];

@@ -4,8 +4,11 @@ import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
 import { getAttendance } from '../dal/getAttendance';
+import { TAttendance } from '../schemas/attendanceSchema';
 
-export async function toggleInterestAction(event_id: string) {
+export async function toggleInterestAction(
+  event_id: string
+): Promise<ActionResponse<TAttendance, string>> {
   const session = await loadSession();
 
   const currentParticipationRecord = await db(db.raw('?? AS p', [tablenames.event_attendance]))
@@ -18,26 +21,31 @@ export async function toggleInterestAction(event_id: string) {
     .first();
 
   if (currentParticipationRecord) {
-    throw new Error('The user has already show interest in the event!');
+    return {
+      success: false,
+      error: 'The user has already show interest in the event!',
+    };
   }
 
   const interestCountRecord = await db(tablenames.event_attendance)
     .where({ event_instance_id: event_id })
-    .andWhereRaw("attendance_status_id <> (SELECT id FROM ?? WHERE label = 'host' LIMIT 1)", [
-      tablenames.event_attendance_status,
-    ])
-    .count('* AS count')
-    .first();
+    .andWhereNot({
+      attendance_status_id: db(tablenames.event_attendance_status)
+        .where({ label: 'host' })
+        .select('id')
+        .limit(1),
+    })
 
-  const statusRecord = await db(tablenames.event_attendance_status)
-    .where({ label: 'interested' })
-    .select('id')
+    .count('* AS count')
     .first();
 
   await db(tablenames.event_attendance).insert({
     user_id: session.user.id,
     event_instance_id: event_id,
-    attendance_status_id: statusRecord.id,
+    attendance_status_id: db(tablenames.event_attendance_status)
+      .where({ label: 'interested' })
+      .select('id')
+      .limit(1),
   });
 
   const newInterestRecord = await getAttendance(db)
@@ -52,5 +60,8 @@ export async function toggleInterestAction(event_id: string) {
     newInterestRecord,
   });
 
-  return newInterestRecord;
+  return {
+    success: true,
+    data: newInterestRecord,
+  };
 }

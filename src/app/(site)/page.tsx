@@ -60,25 +60,6 @@ export default async function HomePage() {
         <div className='flex flex-col gap-2'>
           <Link href='/terms'>Terms Of Service</Link>
         </div>
-        <div className='flex gap-4 justify-center'>
-          <i>
-            <img
-              width='32px'
-              height='32px'
-              src='/icons/instagram.svg'
-              color='white'
-            />
-          </i>
-          <i>
-            <iframe
-              width='32px'
-              height='32px'
-              src='/icons/instagram.svg'
-              loading='lazy'
-            />
-          </i>
-          <Github />
-        </div>
 
         <div className='flex flex-col gap-2 items-center'>
           <Logo />

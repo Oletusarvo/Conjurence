@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
-export function useStatus<T extends string>() {
-  const [status, setStatus] = useState<T | null>(null);
-  const [isPending, setIsPending] = useState(false);
-  return [status, isPending, setStatus, setIsPending] as const;
+type BaseStatus = 'idle' | 'loading' | 'error' | 'success';
+export function useStatus<T extends string = never>() {
+  type Status = T | BaseStatus;
+  const [status, setStatus] = useState<Status>('idle');
+  const isPending = status === 'loading';
+  return [status, isPending, setStatus] as const;
 }

@@ -7,7 +7,7 @@ export function UsernameContainer({ children }: React.PropsWithChildren) {
       style={{
         backgroundColor: 'hsl(from var(--color-accent) h s l / 0.2)',
       }}>
-      <AtSign size='var(--text-xs)' />
+      <AtSign size='12px' />
       {children}
     </div>
   );

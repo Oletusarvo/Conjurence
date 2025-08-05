@@ -20,6 +20,5 @@ export const registerCredentialsSchema = z
   }, AuthError.passwordMismatch)
   .refine(creds => {
     const { email } = creds;
-    const domain = email.split('@').at(1);
-    return domain === 'gmail.com';
+    return email.endsWith('@gmail.com');
   }, AuthError.emailInvalidDomain);

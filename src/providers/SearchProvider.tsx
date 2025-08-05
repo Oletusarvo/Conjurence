@@ -7,7 +7,9 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
-const [SearchContext, useSearchProvider] = createContextWithUseHook<{ order: 'desc' | 'asc' }>();
+const [SearchContext, useSearchProvider] = createContextWithUseHook<{ order: 'desc' | 'asc' }>(
+  'useSearchProvider can only be called within the scope of a SearchContext!'
+);
 
 export function SearchProvider({ children }: React.PropsWithChildren) {
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
@@ -16,6 +18,10 @@ export function SearchProvider({ children }: React.PropsWithChildren) {
     <SearchContext.Provider value={{ order }}>
       <div className='flex gap-2 w-full'>
         <SearchBar />
+        <SortButton
+          currentOrder={order}
+          onChange={val => setOrder(val)}
+        />
       </div>
       {children}
     </SearchContext.Provider>

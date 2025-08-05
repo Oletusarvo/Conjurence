@@ -28,8 +28,8 @@ export const options: NextAuthOptions = {
         }
         const { password, email } = credentials;
 
-        const user = await db(`${tablenames.user} as u`)
-          .join(db.raw(`${tablenames.user_status} as ut on ut.id = u.user_status_id`))
+        const user = await db({ u: tablenames.user })
+          .join(db.select('*').from(tablenames.user_status).as('ut'), 'u.user_status_id', 'ut.id')
           .where({ email })
           .select('u.id', 'u.email', 'u.username', 'u.password', 'ut.label as status')
           .first();
@@ -39,10 +39,14 @@ export const options: NextAuthOptions = {
         }
 
         const pr = await getAttendance(db)
-          .where({ user_id: user.id })
-          .andWhereRaw("attendance_status_id = (SELECT id FROM ?? WHERE label = 'host')", [
-            tablenames.event_attendance_status,
-          ])
+          .where({
+            user_id: user.id,
+            attendance_status_id: db
+              .select('id')
+              .from(tablenames.event_attendance_status)
+              .where({ label: 'host' })
+              .limit(1),
+          })
           .orderBy('requested_at', 'desc')
           .first();
 

@@ -9,7 +9,7 @@ import { leaveEventAction } from '../../attendance/actions/experimental/leaveEve
 import { toggleInterestAction } from '@/features/attendance/actions/toggleInterestAction';
 
 export function useEventActions(eventId: string) {
-  const [status, isPending, setStatus, setIsPending] = useStatus();
+  const [status, isPending, setStatus] = useStatus();
   const { user, updateSession } = useUserContext();
   const router = useRouter();
 
@@ -29,7 +29,7 @@ export function useEventActions(eventId: string) {
 
   const requestJoin = async () => {
     if (isPending) return;
-    setIsPending(true);
+    setStatus('loading');
 
     try {
       await updateAttendanceOnAction({
@@ -41,13 +41,13 @@ export function useEventActions(eventId: string) {
     } catch (err) {
       toast.error(err.message);
     } finally {
-      setIsPending(false);
+      setStatus(prev => (prev === 'loading' ? 'idle' : prev));
     }
   };
 
   const showInterest = async () => {
     if (isPending) return;
-    setIsPending(true);
+    setStatus('loading');
 
     try {
       await toggleInterestAction(eventId);
@@ -55,13 +55,13 @@ export function useEventActions(eventId: string) {
       toast.error('Something went wrong!');
       console.log(err.message);
     } finally {
-      setIsPending(false);
+      setStatus(prev => (prev === 'loading' ? 'idle' : prev));
     }
   };
 
   const cancelJoinRequest = async () => {
     if (isPending) return;
-    setIsPending(true);
+    setStatus('loading');
 
     try {
       await updateAttendanceOnAction({
@@ -74,13 +74,13 @@ export function useEventActions(eventId: string) {
     } catch (err) {
       toast.error(err.message);
     } finally {
-      setIsPending(false);
+      setStatus(prev => (prev === 'loading' ? 'idle' : prev));
     }
   };
 
   const leaveEvent = async () => {
     if (isPending) return;
-    setIsPending(true);
+    setStatus('loading');
 
     try {
       await updateAttendanceOnAction({
@@ -93,21 +93,22 @@ export function useEventActions(eventId: string) {
     } catch (err) {
       toast.error(err.message);
     } finally {
-      setIsPending(false);
+      setStatus(prev => (prev === 'loading' ? 'idle' : prev));
     }
   };
 
   const endEvent = async () => {
     if (isPending) return;
-
-    const c = confirm('Are you sure you want to end the event?');
-    if (!c) return;
-
-    setIsPending(true);
+    setStatus('loading');
 
     try {
       await updateAttendanceOnAction({
-        action: async () => await endEventAction(eventId),
+        action: async () => {
+          const res = await endEventAction(eventId);
+          if (res.success === false) {
+            toast.error(res.error);
+          }
+        },
         attended_event_id: null,
       });
 
@@ -116,7 +117,7 @@ export function useEventActions(eventId: string) {
     } catch (err) {
       toast.error(err.message);
     } finally {
-      setIsPending(false);
+      setStatus(prev => (prev === 'loading' ? 'idle' : prev));
     }
   };
 

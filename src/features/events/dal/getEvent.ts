@@ -3,39 +3,56 @@ import { tablenames } from '@/tablenames';
 import { Knex } from 'knex';
 
 const getEventQuery = (ctx: Knex | Knex.Transaction, includeParticipants?: boolean) => {
-  const q = ctx(db.raw('?? as e', [tablenames.event_data]))
-    //Get the event instance.
-    .join(db.raw('?? AS ei ON ei.event_data_id = e.id', [tablenames.event_instance]))
-    //Get the host participant.
-    .join(
-      db.raw(
-        "(SELECT user_id AS host_user_id, event_instance_id FROM ?? WHERE attendance_status_id IN (SELECT id as status_id FROM ?? WHERE label IN ('host'))) AS hp",
-        [tablenames.event_attendance, tablenames.event_attendance_status]
-      ),
-      'hp.event_instance_id',
-      'ei.id'
+  //Get the event instance.
+  const eventInstanceSubquery = db
+    .select('*', 'id as ei_id')
+    .from(tablenames.event_instance)
+    .as('ei');
+
+  //Get the host participant.
+  const hostParticipantSubquery = db
+    .select('user_id as host_user_id', 'event_instance_id')
+    .from(tablenames.event_attendance)
+    .whereIn(
+      'attendance_status_id',
+      db(tablenames.event_attendance_status).whereIn('label', ['host']).select('id as status_id')
     )
-    //Get the host username.
-    .join(
-      db.raw('(SELECT id as host_user_id, username as host FROM ??) as u', [tablenames.user]),
-      'u.host_user_id',
-      'hp.host_user_id'
+    .as('hp');
+
+  //Get the host username.
+  const hostUsernameSubquery = db(tablenames.user)
+    .select('id as host_user_id', 'username as host')
+    .as('u');
+
+  //Get the participant count.
+  const participantCountSubquery = db
+    .select('event_instance_id AS ap_instance_id', 'attendance_status_id AS ap_status_id')
+    .count('* AS interested_count')
+    .from(tablenames.event_attendance)
+    .whereIn(
+      'attendance_status_id',
+      db
+        .select('id AS ap_status_id')
+        .from(tablenames.event_attendance_status)
+        .whereIn('label', ['interested'])
+        .limit(1)
     )
-    //Get the participant count.
-    .leftJoin(
-      db.raw(
-        "(SELECT event_instance_id AS ap_instance_id, attendance_status_id AS ap_status_id, COUNT(*) AS interested_count FROM ?? WHERE attendance_status_id IN (SELECT id as ap_status_id FROM ?? WHERE label IN ('interested') LIMIT 1) GROUP BY event_instance_id, attendance_status_id) AS ap",
-        [tablenames.event_attendance, tablenames.event_attendance_status]
-      ),
-      'ap.ap_instance_id',
-      'ei.id'
-    )
-    //Get the event category.
-    .join(
-      db.raw('(SELECT id AS category_id, label FROM ??) AS ec', [tablenames.event_category]),
-      'ec.category_id',
-      'e.event_category_id'
-    );
+    .groupBy('event_instance_id', 'attendance_status_id')
+    .as('ap');
+
+  //Get the event category label.
+  const eventCategorySubquery = db
+    .select('id as category_id', 'label')
+    .from(tablenames.event_category)
+    .as('ec');
+
+  const q = ctx(db.select('*', 'id AS e_id').from(tablenames.event_data).as('e'))
+    .join(eventInstanceSubquery, 'ei.event_data_id', 'e.e_id')
+    .join(hostParticipantSubquery, 'hp.event_instance_id', 'ei.id')
+    .join(hostUsernameSubquery, 'u.host_user_id', 'hp.host_user_id')
+    .leftJoin(participantCountSubquery, 'ap.ap_instance_id', 'ei.id')
+    .join(eventCategorySubquery, 'ec.category_id', 'e.event_category_id');
+
   return q;
 };
 
@@ -92,7 +109,9 @@ export function getEvent(
     'ec.label',
     'e.spots_available',
     'u.host',
-    'ap.interested_count'
+    'ap.interested_count',
+    'ei.created_at',
+    'ei.ended_at'
   );
   q.orderBy('ei.created_at', 'asc');
   return q;

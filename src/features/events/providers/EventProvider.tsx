@@ -7,6 +7,7 @@ import { useEventSocket } from '../hooks/useEventSocket';
 import axios from 'axios';
 import { useAbortSignal } from '@/hooks/useAbortController';
 import { useReloadData } from '@/hooks/useReloadData';
+import { useRouter } from 'next/navigation';
 
 type EventProviderProps = React.PropsWithChildren & {
   initialEvent: TEvent;
@@ -20,9 +21,15 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
 
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
   const [event, setEvent] = useState(initialEvent);
-  const hasEnded = event.ended_at !== null;
+  const hasEnded = event?.ended_at !== null;
   const interestCount = event.interested_count;
-  const reloadEvent = useReloadData<TEvent>(`/api/events/${event.id}`, data => setEvent(data), 500);
+  const reloadEvent = useReloadData<TEvent>(
+    `/api/events/${event.id}`,
+    data => {
+      setEvent(data);
+    },
+    300
+  );
 
   useEventSocket({
     eventId: event.id,

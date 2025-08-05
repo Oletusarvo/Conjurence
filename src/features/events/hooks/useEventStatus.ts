@@ -1,5 +1,4 @@
 import { StatusBadgeProps } from '@/components/StatusBadge';
-import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 
 export function useEventStatus(createdAt: any, poll?: boolean) {

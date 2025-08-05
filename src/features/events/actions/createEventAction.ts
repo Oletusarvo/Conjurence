@@ -9,7 +9,10 @@ import { loadSession } from '@/util/loadSession';
  * @param payload The data for the event.
  * @param templateId An optional id of the template to use. If not provided, creates a new template, otherwise updates the existing one.
  */
-export async function createEventAction(payload: FormData, templateId?: string) {
+export async function createEventAction(
+  payload: FormData,
+  templateId?: string
+): Promise<ActionResponse<string, string>> {
   const session = await loadSession();
   const data = Object.fromEntries(payload);
   const parsedData = eventDataSchema.parse(data);
@@ -26,18 +29,23 @@ export async function createEventAction(payload: FormData, templateId?: string) 
         currentTemplateCountRecord &&
         +currentTemplateCountRecord.count >= parseInt(maxTemplateCount)
       ) {
-        throw new Error('Maximum template count exceeded!');
+        return {
+          success: false,
+          error: 'Maximum template count exceeded!',
+        };
       }
     }
   }
 
   const oldParticipantRecord = await db(tablenames.event_attendance)
-    .where(
-      db.raw(
-        "user_id = ? AND attendance_status_id IN (SELECT id FROM ?? WHERE label IN ('host', 'verified'))",
-        [session.user.id, tablenames.event_attendance_status]
-      )
+    .whereIn(
+      'attendance_status_id',
+      db
+        .select('id')
+        .from(tablenames.event_attendance_status)
+        .whereIn('label', ['host', 'verified'])
     )
+    .andWhere({ user_id: session.user.id })
     .select('user_id', 'event_instance_id')
     .first();
 
@@ -46,8 +54,12 @@ export async function createEventAction(payload: FormData, templateId?: string) 
       .where({ id: oldParticipantRecord.event_instance_id })
       .select('ended_at')
       .first();
+
     if (oldEventRecord.ended_at === null) {
-      throw new Error('Cannot create an event while hosting or joined to another!');
+      return {
+        success: false,
+        error: 'Cannot create an event while hosting or joined to another!',
+      };
     }
   }
 
@@ -69,6 +81,7 @@ export async function createEventAction(payload: FormData, templateId?: string) 
       .where({ id: templateId })
       .update({
         ...parsedData,
+        is_template: parsedData.is_template,
       });
   }
 
@@ -80,18 +93,18 @@ export async function createEventAction(payload: FormData, templateId?: string) 
     ['id']
   );
 
-  //Insert the logged in user as the host.
-  const requestStatusRecord = await trx(tablenames.event_attendance_status)
-    .where({ label: 'host' })
-    .select('id')
-    .first();
-
   await trx(tablenames.event_attendance).insert({
     user_id: session.user.id,
     event_instance_id: eventInstanceRecord.id,
-    attendance_status_id: requestStatusRecord.id,
+    attendance_status_id: db(tablenames.event_attendance_status)
+      .where({ label: 'host' })
+      .select('id')
+      .limit(1),
   });
 
   await trx.commit();
-  return eventInstanceRecord.id;
+  return {
+    success: true,
+    data: eventInstanceRecord.id,
+  };
 }

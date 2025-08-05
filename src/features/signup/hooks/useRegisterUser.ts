@@ -5,31 +5,35 @@ import { registerUserAction } from '@/features/signup/actions/registerUserAction
 import { FormEvent } from 'react';
 import { parseFormDataUsingSchema } from '@/util/parseUsingSchema';
 import { useRouter } from 'next/navigation';
+import { AuthError, TAuthError } from '@/errors/auth';
 
 export function useRegisterUser() {
-  const [status, isPending, setStatus, setIsPending] = useStatus();
+  const [status, isPending, setStatus] = useStatus<TAuthError>();
   const router = useRouter();
   const submitCredentials = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsPending(true);
+    setStatus('loading');
     const payload = new FormData(e.currentTarget);
     const parseResult = parseFormDataUsingSchema(payload, registerCredentialsSchema);
 
     if (parseResult.success) {
-      const res = await registerUserAction(payload);
-      setStatus(res);
-      if (res === 'success') {
-        toast.success('Registration succeeded!');
-        router.replace('/login');
-      } else if (status === 'error') {
-        toast.error('An unexpected error occured!');
+      try {
+        const res = await registerUserAction(payload);
+        if (res.success === true) {
+          toast.success('Registration succeeded!');
+          router.replace('/login');
+        } else {
+          setStatus(res.error);
+          toast.error('An unexpected error occured!');
+        }
+      } catch (err) {
+        setStatus('error');
       }
     } else {
       const msg = parseResult.error.issues.at(0)?.message || null;
-      setStatus(msg);
+      setStatus(msg as TAuthError);
     }
-
-    setIsPending(false);
+    setStatus('idle');
   };
 
   return {

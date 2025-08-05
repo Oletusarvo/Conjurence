@@ -54,7 +54,7 @@ const Button = withLoader(({ children, ...props }) => (
 
 const useEventActionButton = () => {
   const { event } = useEventContext();
-  const { getAttendanceByEventId, addAttendanceRecord } = useAttendanceContext();
+  const { getAttendanceByEventId } = useAttendanceContext();
   const { pushModal, closeCurrentModal } = useModalStackContext();
 
   const thisEventAttendance = getAttendanceByEventId(event.id);
@@ -101,8 +101,12 @@ const useEventActionButton = () => {
   }
 
   function ConfirmInterestDialog() {
+    const { event } = useEventContext();
+    const { user } = useUserContext();
     const { closeCurrentModal } = useModalStackContext();
     const { showInterest, isPending } = useEventActionContext();
+    const { addAttendanceRecord } = useAttendanceContext();
+
     const ConfirmButton = withLoader(({ children, ...props }) => (
       <button
         {...props}
@@ -126,10 +130,15 @@ const useEventActionButton = () => {
           <ConfirmButton
             onClick={async () => {
               await showInterest();
+              addAttendanceRecord({
+                event_instance_id: event.id,
+                status: 'interested',
+                username: user.username,
+              });
               closeCurrentModal();
             }}
             disabled={isPending}
-            loading={status === 'pending'}>
+            loading={isPending}>
             Yes, I'm Interested!
           </ConfirmButton>
         }>

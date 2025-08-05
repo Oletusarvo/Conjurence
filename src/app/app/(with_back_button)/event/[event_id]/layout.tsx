@@ -27,15 +27,7 @@ export default async function EventPage({ params, attendance }) {
     .where({ user_id: session.user.id, event_instance_id: event_id })
     .first();
 
-  if (!attendanceRecord || attendanceRecord.status !== 'host') {
-    //return <span>Only the host can view event details!</span>;
-  }
-
   const event = await getData(event_id);
-
-  if (!event) {
-    return <span>Event not found!</span>;
-  }
 
   return (
     <EventProvider initialEvent={event}>
@@ -56,7 +48,7 @@ export default async function EventPage({ params, attendance }) {
                     <div className='pill --small --outlined --accent'>{event.category}</div>
                     <p className='tracking-tight leading-[18px]'>{event.description}</p>
                     <div className='flex gap-1 items-center'>
-                      <MapPin size={'var(--text-sm)'} />
+                      <MapPin size={'14px'} />
                       <span>{event.location || 'No location.'}</span>
                     </div>
                   </div>

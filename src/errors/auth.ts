@@ -16,3 +16,5 @@ export const AuthError = {
   unauthorized: getError('unauthorized'),
   invalidCredentials: getError('invalid_credentials'),
 };
+
+export type TAuthError = (typeof AuthError)[keyof typeof AuthError];
