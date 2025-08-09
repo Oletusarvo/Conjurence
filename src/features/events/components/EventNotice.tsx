@@ -15,6 +15,7 @@ import {
 import Link from 'next/link';
 import { useEventActionContext } from '../providers/EventActionProvider';
 import { useUserContext } from '@/features/users/providers/UserProvider';
+import { Spinner } from '@/components/Spinner';
 
 const ButtonWithIcon = withLoader(
   withIcon(({ children, variant = '--contained', ...props }) => {
@@ -174,10 +175,17 @@ export function AttendanceStatusNotice({ status }: { status: string }) {
     status === 'joining' ? (
       <>
         <h2>Joining event...</h2>{' '}
+        <p>Please stay close to the event. Moving too far will cancel the join.</p>
       </>
     ) : status === 'leaving' ? (
       <>
         <h2>Leaving event...</h2>{' '}
+        <p>Please stay far from the event. Moving too close will cancel the leave.</p>
+      </>
+    ) : status === 'ending' ? (
+      <>
+        <h2>Ending event...</h2>
+        <p>You are moving outside the event area. Staying away will end the event.</p>
       </>
     ) : null;
 
@@ -188,6 +196,7 @@ export function AttendanceStatusNotice({ status }: { status: string }) {
         Component={CircleEllipsis}
       />
       {content}
+      <Spinner />
     </div>
   );
 }

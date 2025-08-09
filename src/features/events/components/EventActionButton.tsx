@@ -28,7 +28,10 @@ export function EventActionButton(props: React.ComponentProps<'button'>) {
   const { getAttendanceByEventId } = useUserAttendanceContext();
   const attendanceRecord = getAttendanceByEventId(event.id);
   const hideButton =
-    attendanceRecord?.status === 'interested' || attendanceRecord?.status === 'joined' || false;
+    attendanceRecord?.status === 'interested' ||
+    attendanceRecord?.status === 'joined' ||
+    attendanceRecord?.status === 'left' ||
+    false;
 
   return !hideButton ? (
     <Button

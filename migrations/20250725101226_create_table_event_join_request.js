@@ -29,11 +29,7 @@ exports.up = function (knex) {
         .onUpdate('CASCADE');
 
       tbl.timestamp('requested_at').defaultTo(knex.fn.now());
-
-      tbl
-        .timestamp('left_at')
-        .comment('Set when status id points to rejected, left, canceled or kicked');
-
+      tbl.timestamp('updated_at');
       tbl.primary(['event_instance_id', 'user_id']);
     })
     .then(async () => {

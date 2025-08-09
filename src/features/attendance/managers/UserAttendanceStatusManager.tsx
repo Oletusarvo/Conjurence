@@ -14,23 +14,23 @@ import { useEventContext } from '../../events/providers/EventProvider';
 
 export function UserAttendanceStatusManager() {
   const { updateSession } = useUserContext();
-  const { getAttendanceByEventId, attendanceStatus } = useUserAttendanceContext();
+  const attendance = useUserAttendanceContext();
   const { event, hasEnded } = useEventContext();
-  const attendance = getAttendanceByEventId(event.id);
+  const currentAttendance = attendance.getAttendanceByEventId(event.id);
 
   const getModalContent = () => {
     if (hasEnded) {
-      if (attendance.status !== 'host') {
+      if (currentAttendance.status !== 'host') {
         return <EventEndedNotice variant='attendee' />;
       } else {
         return <EventEndedNotice variant='host' />;
       }
-    } else if (attendanceStatus !== null) {
-      return <AttendanceStatusNotice status={attendanceStatus} />;
+    } else if (currentAttendance !== null) {
+      return <AttendanceStatusNotice status={attendance.currentAction} />;
     }
 
-    if (attendance) {
-      if (attendance.status === 'left') {
+    if (currentAttendance) {
+      if (currentAttendance.status === 'left') {
         return <EventLeftNotice />;
       }
     }
@@ -45,7 +45,7 @@ export function UserAttendanceStatusManager() {
   return (
     <Modal
       title='Status'
-      show={hasEnded || attendanceStatus !== null}
+      show={hasEnded || attendance.currentAction !== null}
       fullHeight>
       <BaseEventModalBody>
         <div className='flex w-full h-full items-center justify-center'>{getModalContent()}</div>

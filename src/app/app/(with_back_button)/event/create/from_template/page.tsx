@@ -13,7 +13,7 @@ export default async function EventTemplatesPage({ searchParams }) {
       const str = `%${q}%`;
       this.whereILike('title', str).orWhereILike('description', str);
     })
-    .andWhere({ author_id: session.user.id })
+    .andWhere({ author_id: session.user.id, is_template: true })
 
     .select('title', 'description', 'spots_available', 'id');
   return (

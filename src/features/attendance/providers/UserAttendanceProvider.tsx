@@ -17,8 +17,8 @@ const [UserAttendanceContext, useUserAttendanceContext] = createContextWithUseHo
   join: (eventId: string) => Promise<void>;
   leave: (eventId: string) => Promise<void>;
   showInterest: (eventId: string) => Promise<void>;
-  attendanceStatus: TAttendanceStatusType;
-  setAttendanceStatus: React.Dispatch<SetStateAction<TAttendanceStatusType | null>>;
+  currentAction: TAttendanceStatusType;
+  setCurrentAction: React.Dispatch<SetStateAction<TAttendanceStatusType | null>>;
 }>('useAttendanceContext can only be called within the scope of an EventAttendanceContext!');
 
 type EventParticipantProviderProps = React.PropsWithChildren & {
@@ -32,7 +32,7 @@ export function UserAttendanceProvider({
 }: EventParticipantProviderProps) {
   const { user } = useUserContext();
   const [attendanceRecords, setAttendanceRecords] = useState(initialAttendanceRecords);
-  const [status, setStatus] = useState<TAttendanceStatusType | null>(null);
+  const [currentAction, setCurrentAction] = useState<TAttendanceStatusType | null>(null);
 
   const updateAttendance = (eventId: string, status: TAttendance['status']) => {
     const newAttendance = [...attendanceRecords];
@@ -79,8 +79,8 @@ export function UserAttendanceProvider({
         join,
         leave,
         showInterest,
-        attendanceStatus: status,
-        setAttendanceStatus: setStatus,
+        currentAction,
+        setCurrentAction: setCurrentAction,
       }}>
       {children}
     </UserAttendanceContext.Provider>

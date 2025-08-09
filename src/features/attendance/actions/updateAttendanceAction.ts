@@ -17,13 +17,12 @@ export async function updateAttendanceAction(
         .from(tablenames.event_attendance_status)
         .where({ label: status })
         .limit(1),
+      updated_at: new Date(),
     });
 
-  global.io
-    .to(`event:${eventId}`)
-    .emit('event:attendance_update', {
-      eventId,
-      newAttendanceRecord: { username: session.user.username, status },
-    });
+  global.io.to(`event:${eventId}`).emit('event:attendance_update', {
+    eventId,
+    newAttendanceRecord: { username: session.user.username, status },
+  });
   return { success: true };
 }
