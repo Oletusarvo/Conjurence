@@ -8,7 +8,7 @@ import { useTimeout } from '@/hooks/useTimeout';
 import { endEventAction } from '@/features/events/actions/endEventAction';
 
 const joinThreshold = 15;
-const leaveThreshold = 3;
+const leaveThreshold = 25;
 
 /**
  * Handles automatic joining and leaving from an event when within or outside a set distance from it.
