@@ -1,10 +1,11 @@
+import { EventError } from '@/errors/events';
 import z from 'zod';
 
 export const eventDataSchema = z.object({
   id: z.uuid().optional(),
-  title: z.string().min(3).max(24).trim(),
-  description: z.string().max(256).trim(),
-  location: z.string().max(32).trim(),
+  title: z.string().min(3, EventError.titleTooShort).max(24, EventError.titleTooLong).trim(),
+  description: z.string().max(256, EventError.descriptionTooLong).trim(),
+  //location: z.string().max(32, EventError.locationTooLong).trim(),
   spots_available: z
     .string()
     .optional()
@@ -19,6 +20,7 @@ export const eventDataSchema = z.object({
 export const eventInstanceSchema = z.object({
   created_at: z.date().optional(),
   ended_at: z.date().optional(),
+  location: z.object().optional(),
 });
 
 export const eventSchema = z
@@ -27,6 +29,7 @@ export const eventSchema = z
     category: z.string(),
     host: z.string(),
     interested_count: z.number(),
+    attendance_count: z.number(),
   })
   .extend(eventDataSchema.shape)
   .extend(eventInstanceSchema.shape)

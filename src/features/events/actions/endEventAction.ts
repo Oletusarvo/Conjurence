@@ -1,6 +1,7 @@
 'use server';
 
 import db from '@/dbconfig';
+import { EventError } from '@/errors/events';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
 import z from 'zod';
@@ -27,7 +28,10 @@ export async function endEventAction(event_id: string): Promise<ActionResponse<v
   }
 
   if (eventRecord.ended_at) {
-    //throw new Error('Event has already ended!');
+    return {
+      success: false,
+      error: 'The event has already ended!',
+    };
   }
 
   const hostParticipantRecord = await db(tablenames.event_attendance)
@@ -56,19 +60,17 @@ export async function endEventAction(event_id: string): Promise<ActionResponse<v
 
   if (eventDataRecord.is_template) {
     //Delete the instance only.
-    await db(tablenames.event_instance).where({ id: eventRecord.id }).del();
+    //await db(tablenames.event_instance).where({ id: eventRecord.id }).del();
   } else {
     //Delete the data, cascading to the instance.
-    await db(tablenames.event_data).where({ id: eventRecord.event_data_id }).del();
+    //await db(tablenames.event_data).where({ id: eventRecord.event_data_id }).del();
   }
 
-  /*
   await db(tablenames.event_instance).where({ id: eventRecord.id }).update({
     ended_at: new Date(),
   });
 
-  
-  global.io.to('user:' + session.user.id).emit('event_ended')*/
+  //global.io.to('user:' + session.user.id).emit('event_ended');
   global.io.to('event:' + event_id).emit('event:end', { eventId: event_id });
   return { success: true };
 }

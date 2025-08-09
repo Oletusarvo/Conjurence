@@ -15,7 +15,7 @@ export default async function EventTemplatesPage({ searchParams }) {
     })
     .andWhere({ author_id: session.user.id })
 
-    .select('title', 'description', 'location', 'spots_available', 'id');
+    .select('title', 'description', 'spots_available', 'id');
   return (
     <div className='flex flex-col gap-2 w-full p-2 h-full'>
       <SearchProvider>

@@ -1,6 +1,7 @@
 'use server';
 
 import db from '@/dbconfig';
+import { EventError, TEventError } from '@/errors/events';
 import { eventDataSchema } from '@/features/events/schemas/eventSchema';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
@@ -12,9 +13,10 @@ import { loadSession } from '@/util/loadSession';
 export async function createEventAction(
   payload: FormData,
   templateId?: string
-): Promise<ActionResponse<string, string>> {
+): Promise<ActionResponse<string, TEventError>> {
   const session = await loadSession();
   const data = Object.fromEntries(payload);
+
   const parsedData = eventDataSchema.parse(data);
 
   //Prevent adding more templates than allowed
@@ -31,7 +33,7 @@ export async function createEventAction(
       ) {
         return {
           success: false,
-          error: 'Maximum template count exceeded!',
+          error: EventError.maximumTemplateCount,
         };
       }
     }
@@ -58,53 +60,63 @@ export async function createEventAction(
     if (oldEventRecord.ended_at === null) {
       return {
         success: false,
-        error: 'Cannot create an event while hosting or joined to another!',
+        error: EventError.singleAttendance,
       };
     }
   }
 
   const trx = await db.transaction();
 
-  let newEventRecord = null;
-  if (!templateId) {
-    //Not using a template; save new data.
-    [newEventRecord] = await trx(tablenames.event_data)
-      .insert({
-        ...parsedData,
-        author_id: session.user.id,
-        is_template: parsedData.is_template,
-      })
-      .returning('id');
-  } else {
-    //Update the current template.
-    await trx(tablenames.event_data)
-      .where({ id: templateId })
-      .update({
-        ...parsedData,
-        is_template: parsedData.is_template,
-      });
+  try {
+    let newEventRecord = null;
+    if (!templateId) {
+      console.log('Creating template...');
+      //Not using a template; save new data.
+      [newEventRecord] = await trx(tablenames.event_data)
+        .insert({
+          ...parsedData,
+          author_id: session.user.id,
+          is_template: parsedData.is_template,
+        })
+        .returning('id');
+      console.log('Created new template.');
+    } else {
+      console.log('Updating template...', templateId);
+      //Update the current template.
+      await trx(tablenames.event_data)
+        .where({ id: templateId })
+        .update({
+          ...parsedData,
+          is_template: parsedData.is_template,
+        });
+      console.log('Updated template.');
+    }
+
+    const [eventInstanceRecord] = await trx(tablenames.event_instance).insert(
+      {
+        event_data_id: templateId || newEventRecord.id,
+        location: JSON.parse(data.location.toString()),
+      },
+      ['id']
+    );
+
+    await trx(tablenames.event_attendance).insert({
+      user_id: session.user.id,
+      event_instance_id: eventInstanceRecord.id,
+      attendance_status_id: db(tablenames.event_attendance_status)
+        .where({ label: 'host' })
+        .select('id')
+        .limit(1),
+    });
+
+    await trx.commit();
+    return {
+      success: true,
+      data: eventInstanceRecord.id,
+    };
+  } catch (err) {
+    console.log(err.message);
+    await trx.rollback();
+    throw err;
   }
-
-  //Create an event instance for the data.
-  const [eventInstanceRecord] = await trx(tablenames.event_instance).insert(
-    {
-      event_data_id: templateId || newEventRecord.id,
-    },
-    ['id']
-  );
-
-  await trx(tablenames.event_attendance).insert({
-    user_id: session.user.id,
-    event_instance_id: eventInstanceRecord.id,
-    attendance_status_id: db(tablenames.event_attendance_status)
-      .where({ label: 'host' })
-      .select('id')
-      .limit(1),
-  });
-
-  await trx.commit();
-  return {
-    success: true,
-    data: eventInstanceRecord.id,
-  };
 }

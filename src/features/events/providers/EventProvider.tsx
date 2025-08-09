@@ -8,6 +8,8 @@ import axios from 'axios';
 import { useAbortSignal } from '@/hooks/useAbortController';
 import { useReloadData } from '@/hooks/useReloadData';
 import { useRouter } from 'next/navigation';
+import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
+import { useDistance } from '../../distance/hooks/useDistance';
 
 type EventProviderProps = React.PropsWithChildren & {
   initialEvent: TEvent;
@@ -21,8 +23,9 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
 
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
   const [event, setEvent] = useState(initialEvent);
-  const hasEnded = event?.ended_at !== null;
+  const hasEnded = event.ended_at !== null;
   const interestCount = event.interested_count;
+
   const reloadEvent = useReloadData<TEvent>(
     `/api/events/${event.id}`,
     data => {
@@ -34,7 +37,7 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
   useEventSocket({
     eventId: event.id,
     onEnd: () => reloadEvent(),
-    onInterest: () => reloadEvent(),
+    onAttendanceUpdate: () => reloadEvent(),
   });
 
   return (

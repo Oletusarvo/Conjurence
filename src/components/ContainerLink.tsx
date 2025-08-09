@@ -18,7 +18,7 @@ export const ContainerLink = ({
           color='var(--color-accent)'
         />
       </div>
-      <div className='flex flex-col flex-1'>{children}</div>
+      <div className='flex flex-col flex-1 gap-2'>{children}</div>
     </Link>
   );
 };

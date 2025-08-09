@@ -48,7 +48,7 @@ export async function toggleInterestAction(
       .limit(1),
   });
 
-  const newInterestRecord = await getAttendance(db)
+  const newAttendanceRecord = await getAttendance(db)
     .where({ user_id: session.user.id, event_instance_id: event_id })
     .orderBy('requested_at', 'desc')
     .first();
@@ -57,11 +57,11 @@ export async function toggleInterestAction(
   global.io.to(room).emit('event:interest', {
     eventId: event_id,
     currentInterestCount: +interestCountRecord.count + 1,
-    newInterestRecord,
+    newAttendanceRecord,
   });
 
   return {
     success: true,
-    data: newInterestRecord,
+    data: newAttendanceRecord,
   };
 }

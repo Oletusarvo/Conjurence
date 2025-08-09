@@ -71,6 +71,7 @@ export class RateLimiter {
         }
       }
 
+      //Add the ip to be tracked.
       this.m_ipMap.set(ip, {
         requestCount: 1,
         lastReset: Date.now(),

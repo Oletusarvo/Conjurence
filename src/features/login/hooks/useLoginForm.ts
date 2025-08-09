@@ -1,4 +1,5 @@
 import { TAuthError } from '@/errors/auth';
+import { useOnSubmit } from '@/hooks/useOnSubmit';
 import { useStatus } from '@/hooks/useStatus';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -6,38 +7,30 @@ import { FormEvent } from 'react';
 import toast from 'react-hot-toast';
 
 export function useLoginForm() {
-  const [status, isPending, setStatus] = useStatus<TAuthError>();
   const router = useRouter();
   const callbackUrl = useSearchParams().get('callback_url');
-
-  const submitCredentials = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setStatus('loading');
-    const credentials = Object.fromEntries(new FormData(e.currentTarget));
-    try {
+  const {
+    onSubmit: submitCredentials,
+    isPending,
+    status,
+  } = useOnSubmit({
+    action: async payload => {
+      const credentials = Object.fromEntries(payload);
       const res = await signIn('Credentials', {
         ...credentials,
         redirect: false,
       });
 
-      if (res) {
-        if (res.ok) {
-          setStatus('success');
-          const url = callbackUrl || '/app/feed';
-
-          router.push(url);
-        } else {
-          toast.error(res.error);
-          setStatus(res.error as TAuthError);
-        }
+      if (res.ok) {
+        return { success: true };
+      } else {
+        return { success: false, error: res.error };
       }
-    } catch (err: any) {
-      toast.error(err.message);
-      setStatus(err.message);
-    } finally {
-      setStatus(prev => (prev === 'loading' ? 'idle' : prev));
-    }
-  };
+    },
+    onSuccess: async () => {
+      router.push(callbackUrl || '/app/feed');
+    },
+  });
 
   return { status, submitCredentials, isPending };
 }

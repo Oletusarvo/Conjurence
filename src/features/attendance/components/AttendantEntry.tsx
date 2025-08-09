@@ -1,11 +1,11 @@
 import { UsernameContainer } from './UsernameContainer';
 
-type FeedEntryProps = React.PropsWithChildren & {
+type AttendantEntryProps = React.PropsWithChildren & {
   username: string;
   timestamp: string;
 };
 
-export function FeedEntry({ children, username, timestamp }: FeedEntryProps) {
+export function AttendantEntry({ children, username, timestamp }: AttendantEntryProps) {
   return (
     <div className='w-full flex justify-between items-center text-sm'>
       <div className='flex items-center gap-2 flex-1'>

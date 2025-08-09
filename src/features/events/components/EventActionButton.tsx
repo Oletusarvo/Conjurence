@@ -3,12 +3,10 @@
 import { withLoader } from '@/hoc/withLoader';
 import { useEventContext } from '@/features/events/providers/EventProvider';
 import { useUserContext } from '@/features/users/providers/UserProvider';
-import { useMemo } from 'react';
-import { useEventActions } from '../hooks/useEventActions';
-import { useAttendanceContext } from '@/features/attendance/providers/AttendanceProvider';
+import { useMemo, useState } from 'react';
+import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
 import { useModalStackContext } from '@/providers/ModalStackProvider';
 import { Dialog } from '@/components/Dialog';
-import { useMutation } from '@tanstack/react-query';
 import { useEventActionContext } from '../providers/EventActionProvider';
 
 /**
@@ -27,11 +25,12 @@ export function EventActionButton(props: React.ComponentProps<'button'>) {
   const { user, sessionStatus } = useUserContext();
   const { event } = useEventContext();
   const { buttonConfig, isPending } = useEventActionButton();
-  const { getAttendanceByEventId } = useAttendanceContext();
+  const { getAttendanceByEventId } = useUserAttendanceContext();
   const attendanceRecord = getAttendanceByEventId(event.id);
-  const isInterested = attendanceRecord?.status === 'interested' || false;
+  const hideButton =
+    attendanceRecord?.status === 'interested' || attendanceRecord?.status === 'joined' || false;
 
-  return !isInterested ? (
+  return !hideButton ? (
     <Button
       {...props}
       type='button'
@@ -54,11 +53,11 @@ const Button = withLoader(({ children, ...props }) => (
 
 const useEventActionButton = () => {
   const { event } = useEventContext();
-  const { getAttendanceByEventId } = useAttendanceContext();
-  const { pushModal, closeCurrentModal } = useModalStackContext();
+  const { getAttendanceByEventId } = useUserAttendanceContext();
+  const { pushModal } = useModalStackContext();
 
-  const thisEventAttendance = getAttendanceByEventId(event.id);
-  const userIsHost = thisEventAttendance?.status === 'host' || false;
+  const attendance = getAttendanceByEventId(event.id);
+  const userIsHost = attendance?.status === 'host' || false;
   const { leaveEvent, cancelJoinRequest, isPending } = useEventActionContext();
 
   function ConfirmEndEventModal() {
@@ -101,11 +100,9 @@ const useEventActionButton = () => {
   }
 
   function ConfirmInterestDialog() {
-    const { event } = useEventContext();
-    const { user } = useUserContext();
+    const [isPending, setIsPending] = useState(false);
     const { closeCurrentModal } = useModalStackContext();
-    const { showInterest, isPending } = useEventActionContext();
-    const { addAttendanceRecord } = useAttendanceContext();
+    const { addAttendanceRecord, showInterest } = useUserAttendanceContext();
 
     const ConfirmButton = withLoader(({ children, ...props }) => (
       <button
@@ -129,12 +126,9 @@ const useEventActionButton = () => {
         confirmButton={
           <ConfirmButton
             onClick={async () => {
-              await showInterest();
-              addAttendanceRecord({
-                event_instance_id: event.id,
-                status: 'interested',
-                username: user.username,
-              });
+              setIsPending(true);
+              await showInterest(event.id);
+              setIsPending(false);
               closeCurrentModal();
             }}
             disabled={isPending}
@@ -151,17 +145,17 @@ const useEventActionButton = () => {
   }
 
   const buttonConfig = useMemo((): { label: string; action: () => Promise<void> } => {
-    if (thisEventAttendance) {
-      if (thisEventAttendance.status === 'host') {
+    if (attendance) {
+      if (attendance.status === 'host') {
         return {
           label: 'End Event',
           action: async () => {
             pushModal(<ConfirmEndEventModal />);
           },
         };
-      } else if (thisEventAttendance.status === 'pending') {
+      } else if (attendance.status === 'pending') {
         return { label: 'Cancel Join Request', action: cancelJoinRequest };
-      } else if (thisEventAttendance.status === 'joined') {
+      } else if (attendance.status === 'joined') {
         return { label: 'Leave Event', action: leaveEvent };
       }
     }
@@ -171,7 +165,7 @@ const useEventActionButton = () => {
         pushModal(<ConfirmInterestDialog />);
       },
     };
-  }, [thisEventAttendance, userIsHost]);
+  }, [attendance?.status, userIsHost]);
 
   return { buttonConfig, isPending };
 };

@@ -18,7 +18,6 @@ exports.up = function (knex) {
 
       tbl.string('title', 24).notNullable();
       tbl.string('description');
-      tbl.string('location', 32);
       tbl.boolean('is_template').defaultTo(false);
     })
     .createTable('event_instance', tbl => {
@@ -30,8 +29,16 @@ exports.up = function (knex) {
         .inTable('events.event_data')
         .onDelete('CASCADE')
         .onUpdate('CASCADE');
+
       tbl.timestamp('created_at').defaultTo(knex.fn.now());
       tbl.timestamp('ended_at');
+      tbl.jsonb('location');
+      tbl.integer('auto_join_threshold');
+      tbl
+        .integer('auto_leave_threshold')
+        .comment(
+          'The distance from the event a user has to be before they are automatically marked as having left.'
+        );
     });
 };
 

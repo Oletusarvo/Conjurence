@@ -4,13 +4,20 @@ import { getEvent } from '@/features/events/dal/getEvent';
 import db from '@/dbconfig';
 import { loadSession } from '@/util/loadSession';
 import { getAttendance } from '@/features/attendance/dal/getAttendance';
-import { EventStatusFeedback } from '@/features/events/providers/EventStatusFeedbackProvider';
+import { UserAttendanceStatusManager } from '@/features/attendance/managers/UserAttendanceStatusManager';
 import { Suspense } from 'react';
 import { Spinner } from '@/components/Spinner';
 import { EventProvider } from '@/features/events/providers/EventProvider';
 import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { EventActionProvider } from '@/features/events/providers/EventActionProvider';
 import { MapPin } from 'lucide-react';
+import { DistanceBadge } from '@/features/distance/components/DistanceBadge';
+import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
+import { UserAttendanceManager } from '@/features/attendance/managers/UserAttendanceManager';
+import { EventActionButton } from '@/features/events/components/EventActionButton';
+import { EventAttendanceProvider } from '@/features/attendance/providers/EventAttendanceProvider';
+import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
+import { AttendanceFeed } from '@/features/attendance/components/AttendanceFeed';
 
 export const revalidate = 0;
 
@@ -21,35 +28,33 @@ const getData = async (event_id: string) => {
 
 export default async function EventPage({ params, attendance }) {
   const { event_id } = await params;
-  const session = await loadSession();
-
-  const attendanceRecord = await getAttendance(db)
-    .where({ user_id: session.user.id, event_instance_id: event_id })
-    .first();
-
   const event = await getData(event_id);
-
+  console.log(event);
   return (
     <EventProvider initialEvent={event}>
-      <EventActionProvider>
-        <ModalStackProvider>
-          <EventStatusFeedback>
+      <DistanceProvider>
+        <UserAttendanceManager />
+        <UserAttendanceStatusManager />
+        <EventActionProvider>
+          <ModalStackProvider>
             <BaseEventModalBody>
               <div className='flex flex-col gap-4 bg-background-light w-full px-2 py-4 border-b border-gray-600'>
                 <div className='flex items-start px-2 w-full'>
                   <div className='flex flex-col items-start gap-4 w-full'>
                     <div className='flex gap-2 items-center justify-between w-full'>
                       <div className='flex items-center gap-4'>
-                        <h3>{event.title}</h3>
+                        <h3>{event?.title}</h3>
                       </div>{' '}
-                      <EventStatusBadge createdAt={event.created_at} />
+                      <EventStatusBadge createdAt={event?.created_at} />
                     </div>
 
-                    <div className='pill --small --outlined --accent'>{event.category}</div>
-                    <p className='tracking-tight leading-[18px]'>{event.description}</p>
-                    <div className='flex gap-1 items-center'>
-                      <MapPin size={'14px'} />
-                      <span>{event.location || 'No location.'}</span>
+                    <div className='pill --small --outlined --accent'>
+                      {event?.category.at(0).toUpperCase() + event?.category.slice(1)}
+                    </div>
+                    <p className='tracking-tight leading-[18px]'>{event?.description}</p>
+                    <div className='flex gap-4 items-center'>
+                      <DistanceBadge />
+                      <JoinedCountBadge />
                     </div>
                   </div>
                 </div>
@@ -58,9 +63,12 @@ export default async function EventPage({ params, attendance }) {
                 <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
               </div>
             </BaseEventModalBody>
-          </EventStatusFeedback>
-        </ModalStackProvider>
-      </EventActionProvider>
+            <div className='w-full px-2 mb-2'>
+              <EventActionButton />
+            </div>
+          </ModalStackProvider>
+        </EventActionProvider>
+      </DistanceProvider>
     </EventProvider>
   );
 }

@@ -1,10 +1,14 @@
 declare type TODO = any;
+declare type SuccessActionResponse<TData> = {
+  success: true;
+  data?: TData;
+};
+
+declare type FailureActionResponse<TError extends string> = {
+  success: false;
+  error?: TError;
+};
+
 declare type ActionResponse<TData, TError extends string | void> =
-  | {
-      success: true;
-      data?: TData;
-    }
-  | {
-      success: false;
-      error?: TError;
-    };
+  | SuccessActionResponse<TData>
+  | FailureActionResponse<TError>;

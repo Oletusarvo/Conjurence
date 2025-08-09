@@ -43,7 +43,7 @@ exports.up = function (knex) {
     })
     .then(async () => {
       await knex('users.user_status').insert([
-        { label: 'unconfirmed' },
+        { label: 'pending' },
         { label: 'deleted' },
         { label: 'active' },
       ]);

@@ -8,6 +8,9 @@ import { Sublabel } from '../../../components/Sublabel';
 import { withLoader } from '@/hoc/withLoader';
 import { AuthError } from '@/errors/auth';
 import { ReactNode, useRef } from 'react';
+import { PasswordInput } from '@/components/PasswordInput';
+import { Notice } from '@/components/Notice';
+import { Form } from '@/components/Form';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -23,12 +26,9 @@ export function RegisterForm() {
     </button>
   ));
 
-  const hideIfPending = (element: ReactNode) => (!isPending ? element : null);
-
   return (
-    <form
+    <Form
       ref={formRef}
-      className='flex flex-col gap-2 sm:w-[450px] xs:w-full'
       onSubmit={submitCredentials}>
       <div className='form-input-group'>
         <Input
@@ -38,13 +38,6 @@ export function RegisterForm() {
           placeholder='Email...'
           required
         />
-        {hideIfPending(
-          status === AuthError.duplicateEmail ? (
-            <Sublabel variant='error'>A user with this email already exists!</Sublabel>
-          ) : status === AuthError.emailInvalidDomain ? (
-            <Sublabel variant='error'>Only gmail is allowed!</Sublabel>
-          ) : null
-        )}
       </div>
 
       <div className='form-input-group'>
@@ -56,43 +49,23 @@ export function RegisterForm() {
           max={24}
           required
         />
-        {hideIfPending(
-          status === AuthError.duplicateUsername ? (
-            <Sublabel variant='error'>A user with this username already exists!</Sublabel>
-          ) : null
-        )}
       </div>
 
-      <Input
-        icon={<Ellipsis />}
+      <PasswordInput
         min={8}
         max={16}
         name='password1'
-        type='password'
         placeholder='Type a password...'
         required
       />
       <div className='form-input-group'>
-        <Input
-          icon={<Ellipsis />}
+        <PasswordInput
           min={8}
           max={16}
           name='password2'
-          type='password'
           placeholder='Re-type password...'
           required
         />
-        {hideIfPending(
-          status === AuthError.passwordInvalidFormat ? (
-            <Sublabel variant='error'>
-              Password must contain numbers, letters and special characters!
-            </Sublabel>
-          ) : status === AuthError.passwordTooShort ? (
-            <Sublabel variant='error'>Password must be at least 8 characters long!</Sublabel>
-          ) : status === AuthError.passwordTooLong ? (
-            <Sublabel variant='error'>Password cannot be longer than 16 characters!</Sublabel>
-          ) : null
-        )}
       </div>
 
       <div className='flex w-full items-center justify-between'>
@@ -107,16 +80,38 @@ export function RegisterForm() {
       <div className='flex gap-2 w-full'>
         <button
           onClick={() => router.back()}
-          className='--outlined --accent --full-width'
+          className='--outlined --secondary --full-width'
           type='button'>
           Cancel
         </button>
         <SubmitButton
           loading={isPending}
-          disabled={isPending || status === 'success'}>
+          disabled={isPending}>
           Register
         </SubmitButton>
       </div>
-    </form>
+
+      {status === AuthError.duplicateEmail ? (
+        <Notice variant='error'>The email is already taken!</Notice>
+      ) : status === AuthError.emailInvalidDomain ? (
+        <Notice variant='error'>Only gmail is allowed!</Notice>
+      ) : status === AuthError.passwordInvalidFormat ? (
+        <Notice variant='error'>
+          Password must contain numbers, letters and special characters!
+        </Notice>
+      ) : status === AuthError.passwordTooShort ? (
+        <Notice variant='error'>Password must be at least 8 characters long!</Notice>
+      ) : status === AuthError.passwordTooLong ? (
+        <Notice variant='error'>Password cannot be longer than 16 characters!</Notice>
+      ) : status === AuthError.duplicateUsername ? (
+        <Notice variant='error'>The username is already taken!</Notice>
+      ) : status === 'error' ? (
+        <Notice variant='error'>An unexpected error occured!</Notice>
+      ) : status === 'success' ? (
+        <Notice variant='success'>Signup successful! Redirecting you to the login page...</Notice>
+      ) : status === AuthError.passwordMismatch ? (
+        <Notice variant='error'>The passwords do not match!</Notice>
+      ) : null}
+    </Form>
   );
 }

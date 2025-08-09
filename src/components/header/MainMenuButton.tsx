@@ -6,7 +6,7 @@ import { MenuButton } from '../MenuButton';
 import { useHeaderContext } from './HeaderProvider';
 import { HighlightLink } from '../HighlightLink';
 import { withIcon } from '@/hoc/withIcon';
-import { LogIn, LogOut, Menu, User, X } from 'lucide-react';
+import { LogIn, LogOut, Menu, Settings, User, X } from 'lucide-react';
 import { Spinner } from '../Spinner';
 import { ToggleProvider } from '@/providers/ToggleProvider';
 import { withAlternate } from '@/hoc/withAlternate';
@@ -28,6 +28,11 @@ export function MainMenuButton() {
         <>
           <span className='text-sm'>@{(session.user as any).username}</span>
           <div className='h-[1px] w-full bg-gray-600 mb-4' />
+          <IconLink
+            icon={<Settings />}
+            href='/app/settings'>
+            Settings
+          </IconLink>
           <IconLink
             icon={<LogOut />}
             href='/logout'>

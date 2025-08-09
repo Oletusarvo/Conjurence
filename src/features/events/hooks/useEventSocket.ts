@@ -11,10 +11,18 @@ export function useEventSocket({
   eventId,
   onInterest,
   onEnd,
+  onAttendanceUpdate,
 }: {
   eventId: string;
-  onInterest?: (payload: { currentInterestCount: number; newInterestRecord: TAttendance }) => void;
+  onInterest?: (payload: {
+    currentInterestCount: number;
+    newAttendanceRecord: TAttendance;
+  }) => void;
   onEnd?: (payload: { eventId: string }) => void;
+  onAttendanceUpdate?: (newAttendanceRecord: {
+    username: string;
+    status: TAttendance['status'];
+  }) => void;
 }) {
   useSocketRoom([`event:${eventId}`]);
   useSocketHandlers({
@@ -26,6 +34,17 @@ export function useEventSocket({
     'event:end': payload => {
       if (payload.eventId !== eventId) return;
       onEnd && onEnd(payload);
+    },
+
+    'event:attendance_update': (payload: {
+      eventId: string;
+      newAttendanceRecord: {
+        username: string;
+        status: TAttendance['status'];
+      };
+    }) => {
+      if (payload.eventId !== eventId) return;
+      onAttendanceUpdate && onAttendanceUpdate(payload.newAttendanceRecord);
     },
   });
 }

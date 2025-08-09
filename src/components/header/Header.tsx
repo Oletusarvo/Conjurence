@@ -1,4 +1,4 @@
-import { Waypoints } from 'lucide-react';
+import { Ghost, Waypoints } from 'lucide-react';
 import { name } from '@package';
 import Link from 'next/link';
 
@@ -17,9 +17,9 @@ export function Logo() {
   return (
     <Link
       href='/'
-      className='flex gap-2 items-center text-gray-200 text-xs'>
+      className='flex gap-1 items-center text-gray-200 text-xs'>
       <span className='text-accent'>
-        <Waypoints />
+        <Ghost />
       </span>
       <div className='flex items-baseline gap-1'>
         <h2

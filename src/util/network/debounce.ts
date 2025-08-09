@@ -1,10 +1,10 @@
 /**Delays the running of a function. */
-export function debounce(fn, delay: number) {
+export function debounce<RetT, ArgsT = void>(fn: (args: ArgsT) => RetT, delay: number) {
   let timeout;
-  return (...args) => {
+  return (args: ArgsT) => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      fn.apply(this, args);
+    timeout = setTimeout(async () => {
+      await fn(args);
     }, delay);
   };
 }

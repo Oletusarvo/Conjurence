@@ -8,6 +8,8 @@ import { Sublabel } from '../../../components/Sublabel';
 import { withLoader } from '@/hoc/withLoader';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Notice } from '@/components/Notice';
 
 export function LoginForm() {
   const { status, isPending, submitCredentials } = useLoginForm();
@@ -33,6 +35,14 @@ export function LoginForm() {
         required
       />
       <div className='form-input-group'>
+        <div className='w-full flex justify-end'>
+          <Link
+            href='/login/reset'
+            className='text-accent'>
+            Forgot Password?
+          </Link>
+        </div>
+
         <Input
           icon={<Ellipsis />}
           name='password'
@@ -40,17 +50,11 @@ export function LoginForm() {
           placeholder='Password...'
           required
         />
-        {hideIf(
-          status === AuthError.invalidCredentials ? (
-            <Sublabel variant='error'>Invalid credentials!</Sublabel>
-          ) : null,
-          isPending
-        )}
       </div>
       <div className='flex gap-2 w-full'>
         <button
           onClick={() => router.push('/')}
-          className='--outlined --accent --full-width'
+          className='--outlined --secondary --full-width'
           type='button'>
           Cancel
         </button>
@@ -61,6 +65,15 @@ export function LoginForm() {
           Login
         </SubmitButton>
       </div>
+      {status === AuthError.invalidCredentials ? (
+        <Notice variant='error'>Invalid credentials!</Notice>
+      ) : status === 'error' ? (
+        <Notice variant='error'>An unexpected error occured!</Notice>
+      ) : status === 'success' ? (
+        <Notice variant='success'>
+          Login successful! You will be redirected to the event feed...
+        </Notice>
+      ) : null}
     </form>
   );
 }

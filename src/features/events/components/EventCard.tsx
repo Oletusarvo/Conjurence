@@ -3,10 +3,14 @@ import { Pill } from '../../../components/Pill';
 import { useClassName } from '@/hooks/useClassName';
 import { EventStatusBadge } from './EventStatusBadge';
 import { useToggle } from '@/hooks/useToggle';
-import { useAttendanceContext } from '@/features/attendance/providers/AttendanceProvider';
+import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
 import { useRouter } from 'next/navigation';
 import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { useEventContext } from '../providers/EventProvider';
+import { useDistance } from '../../distance/hooks/useDistance';
+import { Spinner } from '@/components/Spinner';
+import { DistanceBadge } from '../../distance/components/DistanceBadge';
+import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
 
 export type EventCardProps = {
   onClick?: () => void;
@@ -35,7 +39,7 @@ export function EventCard({ ...props }: EventCardProps) {
 
 function InterestButton({ ...props }) {
   const { event, interestCount } = useEventContext();
-  const { getAttendanceByEventId } = useAttendanceContext();
+  const { getAttendanceByEventId } = useUserAttendanceContext();
   const thisEventParticipation = getAttendanceByEventId(event.id);
   const [selected] = useToggle(!!thisEventParticipation);
 
@@ -48,7 +52,7 @@ function InterestButton({ ...props }) {
       disabled={!!thisEventParticipation}
       className='flex gap-2 items-center --no-default'>
       <Star
-        size={'24px'}
+        size={'14px'}
         fill={isHost ? 'var(--color-green-500)' : selected ? 'var(--color-accent)' : null}
       />
       <span>{interestCount}</span>
@@ -60,6 +64,7 @@ function CardHeader() {
   const {
     event: { title, host, category, spots_available, created_at },
   } = useEventContext();
+
   return (
     <div className='flex w-full items-start justify-between'>
       <div className='flex flex-col justify-start items-start gap-1'>
@@ -94,16 +99,15 @@ function CardHeader() {
 
 function CardFooter() {
   const { event, hasEnded } = useEventContext();
+
   return (
     <div className='flex justify-between gap-2 w-full text-sm font-semibold'>
       <div className='flex items-center gap-4'>
         {!hasEnded ? <InterestButton event={event} /> : null}
+        <JoinedCountBadge />
       </div>
 
-      <div className='flex gap-1 items-center'>
-        <MapPin size={'14px'} />
-        <span>{event.location || 'No location.'}</span>
-      </div>
+      <DistanceBadge />
     </div>
   );
 }

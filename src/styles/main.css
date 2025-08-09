@@ -96,6 +96,14 @@ a.--on-path {
   color: var(--color-green-400);
 }
 
+.--contained.--warning {
+  background-color: hsl(from var(--color-yellow-400) h s l / 0.2);
+}
+
+.--contained.--error {
+  background-color: hsl(from var(--color-red-400) h s l / 0.2);
+}
+
 .--outlined {
   background-color: transparent;
   border: 1px solid white;
@@ -115,4 +123,9 @@ a.--on-path {
 .--outlined.--success {
   color: var(--color-green-400);
   border-color: var(--color-green-400);
+}
+
+.--outlined.--secondary {
+  color: var(--color-gray-400);
+  border-color: var(--color-gray-400);
 }

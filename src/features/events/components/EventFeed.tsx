@@ -2,13 +2,15 @@
 
 import { EventCard } from '@/features/events/components/EventCard';
 import { PlusCircle } from 'lucide-react';
-import { useMemo } from 'react';
 import { useSearchProvider } from '../../../providers/SearchProvider';
 import Link from 'next/link';
 import { TEvent } from '@/features/events/schemas/eventSchema';
 import { List } from '../../../components/List';
 import { withAlternate } from '@/hoc/withAlternate';
 import { EventProvider } from '../providers/EventProvider';
+import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
+import { UserAttendanceManager } from '@/features/attendance/managers/UserAttendanceManager';
+import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
 
 type EventFeedProps = {
   events: TEvent[];
@@ -32,9 +34,17 @@ export function EventFeed({ events }: EventFeedProps) {
         return order === 'asc' ? adate - bdate : bdate - adate;
       }}
       component={({ item }) => {
+        const { getAttendanceByEventId } = useUserAttendanceContext();
+        const attendance = getAttendanceByEventId(item.id);
+
         return (
           <EventProvider initialEvent={item}>
-            <EventCard />
+            <DistanceProvider>
+              {attendance?.status === 'interested' || attendance?.status === 'joined' ? (
+                <UserAttendanceManager />
+              ) : null}
+              <EventCard />
+            </DistanceProvider>
           </EventProvider>
         );
       }}

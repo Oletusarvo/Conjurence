@@ -14,6 +14,7 @@ const tables = {
    * */
   event_instance: 'event_instance',
   event_category: 'event_category',
+  event_category_description: 'event_category_description',
   /**
    * Contains the interests to, and participations on an event instance.
    */
@@ -31,6 +32,7 @@ export const tablenames = {
   event_data: getFullTableName(schemas.events, tables.event_data),
   event_instance: getFullTableName(schemas.events, tables.event_instance),
   event_category: getFullTableName(schemas.events, tables.event_category),
+  event_category_description: getFullTableName(schemas.events, tables.event_category_description),
   event_attendance: getFullTableName(schemas.events, tables.event_participant),
   event_attendance_status: getFullTableName(schemas.events, tables.event_participant_status),
   notification: getFullTableName(schemas.users, tables.notification),

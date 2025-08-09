@@ -2,7 +2,8 @@ import { App } from '@/components/App';
 import { HeaderProvider } from '@/components/header/HeaderProvider';
 import { MainMenuButton } from '@/components/header/MainMenuButton';
 import db from '@/dbconfig';
-import { EventAttendanceProvider } from '@/features/attendance/providers/AttendanceProvider';
+import { UserAttendanceProvider } from '@/features/attendance/providers/UserAttendanceProvider';
+import { GeolocationProvider } from '@/features/geolocation/providers/GeolocationProvider';
 import { UserProvider } from '@/features/users/providers/UserProvider';
 import { TUser } from '@/features/users/schemas/userSchema';
 import { QueryProvider } from '@/providers/QueryProvider';
@@ -19,16 +20,19 @@ export default async function AppLayout({ children }) {
     )
     .where({ user_id: session.user.id })
     .select('p.*', 'ps.label as status');
+
   return (
     <App>
       <QueryProvider>
         <UserProvider user={session.user}>
-          <EventAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
-            <HeaderProvider>
-              <MainMenuButton />
-            </HeaderProvider>
-            {children}
-          </EventAttendanceProvider>
+          <UserAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
+            <GeolocationProvider>
+              <HeaderProvider>
+                <MainMenuButton />
+              </HeaderProvider>
+              {children}
+            </GeolocationProvider>
+          </UserAttendanceProvider>
         </UserProvider>
       </QueryProvider>
     </App>

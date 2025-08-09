@@ -1,6 +1,7 @@
 import { getToken } from 'next-auth/jwt';
 import { NextRequestWithAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import { RateLimiter } from './util/network/rateLimiter';
 
 export default async function middleware(req: NextRequestWithAuth) {
   const token = (await getToken({ req })) as {

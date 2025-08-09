@@ -37,7 +37,7 @@ button.--contained.--accent {
 }
 
 button.--contained.--accent:hover {
-  background-color: var(--accent-hover);
+  background-color: hsl(from var(--color-accent) h s 45);
 }
 
 button.--contained.--accent:disabled {
@@ -48,6 +48,10 @@ button.--contained.--accent:disabled {
 button.--outlined.--accent:hover {
   background-color: hsl(from var(--color-accent) h s l / 0.25);
   color: var(--color-accent);
+}
+
+button.--outlined.--secondary:hover {
+  background-color: hsl(from var(--color-gray-400) h s l / 0.25);
 }
 
 button.--round {

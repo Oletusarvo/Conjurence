@@ -46,7 +46,20 @@ const Icon = ({ Component, color }) => (
   />
 );
 
-export function EventEndedNotice() {
+export function EventEndedNotice({ variant }: { variant: 'host' | 'attendee' }) {
+  const content =
+    variant === 'attendee' ? (
+      <p>
+        This gathering has faded into the mist. <br />
+        But don’t fret—fresh conjurings are always appearing. Keep your senses sharp for the next
+        spectral meetup!
+      </p>
+    ) : (
+      <p>
+        Looks like you drifted a bit too far from your own gathering, so the event has been gently
+        laid to rest. Next time, keep your spectral presence close and conjure up another meetup!
+      </p>
+    );
   return (
     <div className='flex flex-col items-center gap-2 text-center'>
       <Icon
@@ -54,10 +67,7 @@ export function EventEndedNotice() {
         color='var(--color-red-500)'
       />
       <h2>Event has ended!</h2>
-      <p>
-        Unfortunately the event you are trying to view, has ended. <br />
-        But no worries, there are always new events happening, keep your eye out!
-      </p>
+      {content}
       <ButtonContainer>
         <BackToFeedButton />
       </ButtonContainer>
@@ -136,6 +146,48 @@ export function EventAttendanceRejected() {
       <ButtonContainer>
         <BackToFeedButton />
       </ButtonContainer>
+    </div>
+  );
+}
+
+export function EventLeftNotice() {
+  return (
+    <div className='flex flex-col items-center gap-2 text-center'>
+      <Icon
+        Component={ClockFading}
+        color='var(--color-red-500)'
+      />
+      <h2>You have left the event!</h2>
+      <p>
+        You have wandered too far from the event, and have been marked as left. Thanks for
+        attending!
+      </p>
+      <ButtonContainer>
+        <BackToFeedButton />
+      </ButtonContainer>
+    </div>
+  );
+}
+
+export function AttendanceStatusNotice({ status }: { status: string }) {
+  const content =
+    status === 'joining' ? (
+      <>
+        <h2>Joining event...</h2>{' '}
+      </>
+    ) : status === 'leaving' ? (
+      <>
+        <h2>Leaving event...</h2>{' '}
+      </>
+    ) : null;
+
+  return (
+    <div className='flex flex-col w-full items-center gap-2 text-center'>
+      <Icon
+        color='var(--color-yellow-500)'
+        Component={CircleEllipsis}
+      />
+      {content}
     </div>
   );
 }
