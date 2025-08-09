@@ -99,7 +99,6 @@ export function getEvent(
       const str = `%${search}%`;
       this.whereILike('e.title', str)
         .orWhereILike('e.description', str)
-        .orWhereILike('location', str)
         .orWhereILike('u.host', str)
         .orWhereILike('ec.label', str);
     });
