@@ -42,7 +42,7 @@ const BackToFeedButton = () => (
 const Icon = ({ Component, color }) => (
   <Component
     color={color}
-    size='var(--text-7xl)'
+    size='72px'
   />
 );
 
