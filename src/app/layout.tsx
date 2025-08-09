@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { Toaster } from 'react-hot-toast';
+import { name as packageName } from '@package';
 
 export const metadata: Metadata = {
-  title: 'Socialize',
+  title: packageName,
   description:
     'An app for creating small local events, like a game of cards, or hangout in the park, for other users to find and join.',
 };
@@ -31,7 +32,7 @@ export default function RootLayout({
           rel='stylesheet'></link>
       </head>
 
-      <body className='flex flex-col antialiazed w-full max-h-screen h-screen overflow-y-hidden'>
+      <body className='flex flex-col antialiazed w-full max-h-screen h-screen'>
         <AuthProvider>{children}</AuthProvider>
         <Toaster position='bottom-center' />
       </body>
