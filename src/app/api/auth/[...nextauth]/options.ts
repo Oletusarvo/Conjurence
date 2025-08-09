@@ -23,40 +23,46 @@ export const options: NextAuthOptions = {
 
       credentials: {},
       async authorize(credentials) {
-        if (!credentials) {
-          throw new Error(AuthError.noCredentials);
+        try {
+          if (!credentials) {
+            throw new Error(AuthError.noCredentials);
+          }
+          const { password, email } = credentials;
+          console.log(email);
+          const user = await db({ u: tablenames.user })
+            .join(db.select('*').from(tablenames.user_status).as('ut'), 'u.user_status_id', 'ut.id')
+            .where({ email })
+            .select('u.id', 'u.email', 'u.username', 'u.password', 'ut.label as status')
+            .first();
+
+          if (!user || !(await verifyPassword(password, user.password))) {
+            console.log(user);
+            throw new Error(AuthError.invalidCredentials);
+          }
+
+          const pr = await getAttendance(db)
+            .where({
+              user_id: user.id,
+              attendance_status_id: db
+                .select('id')
+                .from(tablenames.event_attendance_status)
+                .where({ label: 'host' })
+                .limit(1),
+            })
+            .orderBy('requested_at', 'desc')
+            .first();
+
+          return {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            status: user.status,
+            attended_event_id: pr?.event_instance_id || null,
+          };
+        } catch (err) {
+          console.log(err.message);
+          throw err;
         }
-        const { password, email } = credentials;
-
-        const user = await db({ u: tablenames.user })
-          .join(db.select('*').from(tablenames.user_status).as('ut'), 'u.user_status_id', 'ut.id')
-          .where({ email })
-          .select('u.id', 'u.email', 'u.username', 'u.password', 'ut.label as status')
-          .first();
-
-        if (!user || !(await verifyPassword(password, user.password))) {
-          throw new Error(AuthError.invalidCredentials);
-        }
-
-        const pr = await getAttendance(db)
-          .where({
-            user_id: user.id,
-            attendance_status_id: db
-              .select('id')
-              .from(tablenames.event_attendance_status)
-              .where({ label: 'host' })
-              .limit(1),
-          })
-          .orderBy('requested_at', 'desc')
-          .first();
-
-        return {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          status: user.status,
-          attended_event_id: pr?.event_instance_id || null,
-        };
       },
     },
   ],

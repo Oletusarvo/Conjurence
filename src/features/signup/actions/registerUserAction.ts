@@ -42,7 +42,7 @@ export async function registerUserAction(
     };
   } catch (err) {
     await trx.rollback();
-    console.log(err.message);
+    console.log('user:register: ', err.message);
     const msg = err.message.toLowerCase();
 
     if (msg.includes('duplicate')) {

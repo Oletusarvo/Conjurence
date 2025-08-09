@@ -28,11 +28,7 @@ export function MainMenuButton() {
         <>
           <span className='text-sm'>@{(session.user as any).username}</span>
           <div className='h-[1px] w-full bg-gray-600 mb-4' />
-          <IconLink
-            icon={<Settings />}
-            href='/app/settings'>
-            Settings
-          </IconLink>
+
           <IconLink
             icon={<LogOut />}
             href='/logout'>
