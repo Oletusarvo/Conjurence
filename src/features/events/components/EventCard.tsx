@@ -11,6 +11,8 @@ import { useDistance } from '../../distance/hooks/useDistance';
 import { Spinner } from '@/components/Spinner';
 import { DistanceBadge } from '../../distance/components/DistanceBadge';
 import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
+import { SpotsAvailableBadge } from './SpotsAvailableBadge';
+import { CategoryBadge } from './CategoryBadge';
 
 export type EventCardProps = {
   onClick?: () => void;
@@ -75,20 +77,8 @@ function CardHeader() {
           {host || 'host'}
         </div>
         <div className='flex gap-2'>
-          <Pill
-            variant='outlined'
-            size='small'
-            color='accent'>
-            {category || 'Other'}
-          </Pill>
-          <Pill
-            variant='outlined'
-            size='small'>
-            <div className='flex gap-2 items-center'>
-              <Armchair size={'14px'} />
-              <span>{spots_available}</span>
-            </div>
-          </Pill>
+          <CategoryBadge />
+          <SpotsAvailableBadge />
         </div>
       </div>
 

@@ -18,6 +18,8 @@ import { EventActionButton } from '@/features/events/components/EventActionButto
 import { EventAttendanceProvider } from '@/features/attendance/providers/EventAttendanceProvider';
 import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
 import { AttendanceFeed } from '@/features/attendance/components/AttendanceFeed';
+import { CategoryBadge } from '@/features/events/components/CategoryBadge';
+import { SpotsAvailableBadge } from '@/features/events/components/SpotsAvailableBadge';
 
 export const revalidate = 0;
 
@@ -48,9 +50,11 @@ export default async function EventPage({ params, attendance }) {
                       <EventStatusBadge createdAt={event?.created_at} />
                     </div>
 
-                    <div className='pill --small --outlined --accent'>
-                      {event?.category.at(0).toUpperCase() + event?.category.slice(1)}
+                    <div className='flex gap-2'>
+                      <CategoryBadge />
+                      <SpotsAvailableBadge />
                     </div>
+
                     <p className='tracking-tight leading-[18px]'>{event?.description}</p>
                     <div className='flex gap-4 items-center'>
                       <DistanceBadge />
