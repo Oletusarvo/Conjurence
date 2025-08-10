@@ -2,9 +2,9 @@
   "short_name": "Conjurence",
   "name": "Conjurence - Conjure a presence.",
   "display": "standalone",
-  "start_url": "/",
-  "background_color": "#ffffff",
-  "theme_color": "#6f3b6a",
+  "start_url": ".",
+  "background_color": "black",
+  "theme_color": "orange",
   "orientation": "portrait",
 
   "icons": [

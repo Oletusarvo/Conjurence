@@ -31,7 +31,8 @@ const getData = async (event_id: string) => {
 export default async function EventPage({ params, attendance }) {
   const { event_id } = await params;
   const event = await getData(event_id);
-  console.log(event);
+  if (!event) return <span>Event does not exist!</span>;
+
   return (
     <EventProvider initialEvent={event}>
       <DistanceProvider>
