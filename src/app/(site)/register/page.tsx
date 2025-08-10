@@ -1,12 +1,13 @@
+import { FormContainer } from '@/components/Form';
 import { RegisterForm } from '@/features/signup/components/RegisterForm';
 
 export default function RegisterPage() {
   return (
     <div className='flex gap-2 flex-col flex-1 justify-center px-default items-center'>
-      <div className='flex flex-col gap-2'>
+      <FormContainer>
         <h2>Register</h2>
         <RegisterForm />
-      </div>
+      </FormContainer>
     </div>
   );
 }

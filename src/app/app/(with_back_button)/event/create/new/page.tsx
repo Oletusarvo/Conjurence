@@ -1,6 +1,7 @@
 import { CreateEventForm } from '@/features/events/components/CreateEventForm';
 import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
+import { FormContainer } from '@/components/Form';
 
 export default async function CreateEventPage() {
   const categories = await db({ ec: tablenames.event_category })
@@ -16,10 +17,10 @@ export default async function CreateEventPage() {
 
   return (
     <div className='flex flex-col px-default w-full flex-1 justify-center'>
-      <div className='flex flex-col gap-2'>
+      <FormContainer>
         <h2>Create event</h2>
         <CreateEventForm categories={categories} />
-      </div>
+      </FormContainer>
     </div>
   );
 }

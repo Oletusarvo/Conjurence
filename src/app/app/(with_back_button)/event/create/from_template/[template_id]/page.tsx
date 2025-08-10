@@ -1,3 +1,4 @@
+import { FormContainer } from '@/components/Form';
 import db from '@/dbconfig';
 import { CreateEventForm } from '@/features/events/components/CreateEventForm';
 import { tablenames } from '@/tablenames';
@@ -6,13 +7,14 @@ import { loadSession } from '@/util/loadSession';
 export default async function CreateEventFromTemplatePage({ params }) {
   const { template_id } = await params;
   const session = await loadSession();
-  const templateRecord = await db(tablenames.event_data).where({ id: template_id }).first();
+  const [author_id] = await db(tablenames.event_data).where({ id: template_id }).pluck('author_id');
 
   //Check that the template is by the logged in user.
-  if (templateRecord.author_id !== session.user.id) {
+  if (author_id !== session.user.id) {
     return <span>Only the author of a template can use it!</span>;
   }
 
+  const templateRecord = await db(tablenames.event_data).where({ id: template_id }).first();
   const categories = await db({ ec: tablenames.event_category })
     .leftJoin(
       db
@@ -26,13 +28,13 @@ export default async function CreateEventFromTemplatePage({ params }) {
 
   return (
     <div className='flex flex-col px-default w-full flex-1 justify-center items-center'>
-      <div className='flex flex-col gap-2'>
+      <FormContainer>
         <h2>Create event</h2>
         <CreateEventForm
           categories={categories}
           template={templateRecord}
         />
-      </div>
+      </FormContainer>
     </div>
   );
 }

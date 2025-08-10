@@ -7,3 +7,7 @@ export function Form({ children, ...props }: React.ComponentProps<'form'>) {
     </form>
   );
 }
+
+export function FormContainer({ children }: React.PropsWithChildren) {
+  return <div className='flex flex-col gap-2 xs:w-full sm:w-auto'>{children}</div>;
+}
