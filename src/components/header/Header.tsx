@@ -6,7 +6,7 @@ export function Header({ children, ...props }: React.ComponentProps<'header'>) {
   return (
     <header
       {...props}
-      className='py-4 px-2 flex items-center w-full border-b border-gray-600 justify-between z-20 bg-background-light'>
+      className='py-4 px-default flex items-center w-full border-b border-gray-600 justify-between z-20 bg-background-light'>
       <Logo />
       <div className='flex items-center gap-4'>{children}</div>
     </header>

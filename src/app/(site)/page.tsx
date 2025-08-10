@@ -8,7 +8,7 @@ export default async function HomePage() {
     <div className='flex flex-col w-full'>
       <section
         id='hero-section'
-        className='flex flex-col gap-4 py-24 w-full text-center items-center px-2'>
+        className='flex flex-col gap-4 py-24 w-full text-center items-center px-default'>
         <div
           id='logo-glow-container'
           className='relative inline-block'>
@@ -40,7 +40,7 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
-      <section className='flex flex-col gap-8 py-24 items-center px-2 bg-background-light'>
+      <section className='flex flex-col gap-8 py-24 items-center px-default bg-background-light'>
         <h2>What Is {packageName}?</h2>
         <p className='text-gray-300'>
           Here’s how it works: conjure up an event by setting a title, description, and how many
@@ -58,7 +58,7 @@ export default async function HomePage() {
           magic in the mix.
         </p>
       </section>
-      <section className='flex flex-col gap-8 py-24 items-center px-2'>
+      <section className='flex flex-col gap-8 py-24 items-center px-default'>
         <h2>Features</h2>
         <ul className='flex flex-col gap-4'>
           <FeatureListItem>
@@ -85,7 +85,7 @@ export default async function HomePage() {
           </FeatureListItem>
         </ul>
       </section>
-      <footer className='py-24 bg-background-light px-2 flex flex-col gap-8 items-center'>
+      <footer className='py-24 bg-background-light px-default flex flex-col gap-8 items-center'>
         <div className='flex flex-col gap-2'>
           <Link href='/terms'>Terms Of Service</Link>
         </div>

@@ -25,12 +25,14 @@ export default async function CreateEventFromTemplatePage({ params }) {
     .select('description', 'label', 'ec.id as id');
 
   return (
-    <div className='flex flex-col px-2 w-full flex-1 justify-center'>
-      <h2>Create event</h2>
-      <CreateEventForm
-        categories={categories}
-        template={templateRecord}
-      />
+    <div className='flex flex-col px-default w-full flex-1 justify-center items-center'>
+      <div className='flex flex-col gap-2'>
+        <h2>Create event</h2>
+        <CreateEventForm
+          categories={categories}
+          template={templateRecord}
+        />
+      </div>
     </div>
   );
 }

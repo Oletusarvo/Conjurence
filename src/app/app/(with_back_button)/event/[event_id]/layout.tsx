@@ -40,7 +40,7 @@ export default async function EventPage({ params, attendance }) {
         <EventActionProvider>
           <ModalStackProvider>
             <BaseEventModalBody>
-              <div className='flex flex-col gap-4 bg-background-light w-full px-2 py-4 border-b border-gray-600'>
+              <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-gray-600'>
                 <div className='flex items-start px-2 w-full'>
                   <div className='flex flex-col items-start gap-4 w-full'>
                     <div className='flex gap-2 items-center justify-between w-full'>
@@ -63,11 +63,11 @@ export default async function EventPage({ params, attendance }) {
                   </div>
                 </div>
               </div>
-              <div className='flex flex-col w-full flex-1 px-4 gap-2 max-h-full overflow-y-scroll'>
+              <div className='flex flex-col w-full flex-1 px-default gap-2 max-h-full overflow-y-scroll'>
                 <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
               </div>
             </BaseEventModalBody>
-            <div className='w-full px-2 mb-2'>
+            <div className='w-full px-default mb-2'>
               <EventActionButton />
             </div>
           </ModalStackProvider>

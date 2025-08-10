@@ -17,7 +17,7 @@ export default async function EventTemplatesPage({ searchParams }) {
 
     .select('title', 'description', 'spots_available', 'id');
   return (
-    <div className='flex flex-col gap-2 w-full p-2 h-full'>
+    <div className='flex flex-col gap-2 w-full py-2 px-default h-full'>
       <SearchProvider>
         <TemplateList templates={templates} />
       </SearchProvider>

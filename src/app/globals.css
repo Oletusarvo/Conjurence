@@ -18,6 +18,7 @@
   --animate-slide-down: SlideDown 0.1s ease-out;
   --animate-fade-in: FadeIn 0.1s ease-out;
   --animate-rotate-slow: RotateSlow 10s linear infinite;
+  --breakpoint-xs: 360px;
 }
 
 body {
@@ -53,5 +54,58 @@ body {
 
   100% {
     transform: rotate(365deg);
+  }
+}
+
+.px-default {
+  padding-left: 0.5rem; /* xs:px-2 */
+  padding-right: 0.5rem;
+}
+
+@media (min-width: 360px) {
+  /* xs */
+  .px-default {
+    padding-left: 0.5rem; /* xs:px-2 */
+    padding-right: 0.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  /* sm */
+  .px-default {
+    padding-left: 6rem; /* sm:px-24 */
+    padding-right: 6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  /* md */
+  .px-default {
+    padding-left: 11.5rem; /* md:px-46 */
+    padding-right: 11.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* lg */
+  .px-default {
+    padding-left: 16rem; /* lg:px-64 */
+    padding-right: 16rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  /* xl */
+  .px-default {
+    padding-left: 21rem; /* xl:px-84 */
+    padding-right: 21rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  /* 2xl */
+  .px-default {
+    padding-left: 32rem; /* 2xl:px-128 */
+    padding-right: 32rem;
   }
 }

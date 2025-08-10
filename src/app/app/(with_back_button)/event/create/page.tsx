@@ -5,7 +5,7 @@ import React from 'react';
 
 export default async function CreateEventPage() {
   return (
-    <div className='flex flex-col px-2 gap-2 w-full flex-1 justify-center'>
+    <div className='flex flex-col px-default gap-2 w-full flex-1 justify-center'>
       <h2>Create Event</h2>
       <ContainerLink
         href='/app/event/create/new'
