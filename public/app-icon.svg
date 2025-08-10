@@ -1,37 +1,11 @@
-<!-- Stylized outlined ghost icon (no mouth, outlined eyes, thicker stroke) -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-hidden="true">
-  <!-- Ghost outline -->
-  <path
-    d="M256 56
-       C188 56 128 116 128 184
-       V300
-       C128 336 156 360 188 344
-       C208 332 228 316 256 316
-       C284 316 304 332 324 344
-       C356 360 384 336 384 300
-       V184
-       C384 116 324 56 256 56
-       Z"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="18"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-
-  <!-- Wavy bottom -->
-  <path
-    d="M188 344
-       C212 372 236 356 256 356
-       C276 356 300 372 324 344"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="18"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-
-  <!-- Outlined eyes with thicker stroke -->
-  <circle cx="208" cy="184" r="18" fill="none" stroke="currentColor" stroke-width="12"/>
-  <circle cx="304" cy="184" r="18" fill="none" stroke="currentColor" stroke-width="12"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500" fill="none">
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="500" height="500" rx="50" ry="50" fill="#191919" />
+  
+  <!-- Ghost icon smaller, moved up and left by 50% -->
+  <g transform="translate(25, 25) scale(18.75)" stroke="#EAB308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M9 10h.01"/>
+    <path d="M15 10h.01"/>
+    <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/>
+  </g>
 </svg>

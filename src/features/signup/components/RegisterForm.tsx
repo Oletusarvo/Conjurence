@@ -79,7 +79,7 @@ export function RegisterForm() {
 
       <div className='flex gap-2 w-full'>
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/')}
           className='--outlined --secondary --full-width'
           type='button'>
           Cancel
