@@ -1,33 +1,40 @@
-// service-worker.js
+const CACHE_NAME = 'conjurence-cache-v2';
+const TIMEOUT_MS = 5000;
 
-const CACHE_NAME = 'conjurence-cache-v1';
-const STATIC_ASSETS = [
-  '/', // root document
+const PRECACHE_URLS = [
+  '/',
   '/index.html',
+  '/login',
+  '/register',
+  '/logout',
+  '/app/event/create/new',
 ];
-const NEXT_STATIC_REGEX = /^\/_next\/static\//;
 
-// Install - cache shell
+const NEXT_STATIC_REGEX = /^\/.next\/static\//;
+
+async function fetchWithTimeout(request, timeoutMs) {
+  return Promise.race([
+    fetch(request),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), timeoutMs)),
+  ]);
+}
+
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(STATIC_ASSETS);
-    })
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_URLS)));
   self.skipWaiting();
 });
 
-// Activate - remove old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches
       .keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+      .then(keys =>
+        Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))
+      )
   );
   self.clients.claim();
 });
 
-// Fetch - network first for HTML, cache-first for static
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
@@ -37,25 +44,43 @@ self.addEventListener('fetch', event => {
   if (NEXT_STATIC_REGEX.test(url.pathname)) {
     event.respondWith(
       caches.match(event.request).then(cached => {
-        return (
-          cached ||
-          fetch(event.request).then(res => {
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, res.clone()));
-            return res;
-          })
-        );
+        if (cached) return cached;
+        return fetch(event.request).then(res => {
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, res.clone()));
+          return res;
+        });
       })
     );
     return;
   }
 
-  // Network-first for HTML pages (SPA fallback)
-  if (event.request.mode === 'navigate') {
-    event.respondWith(fetch(event.request).catch(() => caches.match('/index.html')));
+  // Network-first with timeout for navigation (pages) and other GET requests
+  if (event.request.mode === 'navigate' || url.origin === self.location.origin) {
+    event.respondWith(
+      fetchWithTimeout(event.request, TIMEOUT_MS)
+        .then(async networkResponse => {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        })
+        .catch(async () => {
+          // Timeout or failure → try cache
+          const cachedResponse = await caches.match(event.request);
+          if (cachedResponse) return cachedResponse;
+
+          // For navigation fallback, return cached index.html
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+
+          // Otherwise fail
+          return new Response('Network error', { status: 408, statusText: 'Network timeout' });
+        })
+    );
     return;
   }
 
-  // Default: try cache, then network
+  // Default: try cache first, then network
   event.respondWith(
     caches.match(event.request).then(cached => {
       return (
