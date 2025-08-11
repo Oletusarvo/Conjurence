@@ -2,28 +2,56 @@
 
 import { useEventContext } from '@/features/events/providers/EventProvider';
 import { useEffect, useState } from 'react';
-import { useUserAttendanceContext } from '../providers/UserAttendanceProvider';
+import {
+  TAttendanceStatusType,
+  useUserAttendanceContext,
+} from '../providers/UserAttendanceProvider';
 import { useDistanceContext } from '@/features/distance/providers/DistanceProvider';
 import { useTimeout } from '@/hooks/useTimeout';
 import { endEventAction } from '@/features/events/actions/endEventAction';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 
-const joinThreshold = 30;
+const joinThreshold = 0;
 const leaveThreshold = 70;
-const timeout = 300;
+const timeout = 7000;
 
 /**
  * Handles automatic joining and leaving from an event when within or outside a set distance from it.
  * Will only join the event if the user has expressed interest in it.
  * @returns
  */
-export function UserAttendanceManager({ disableAutoEnding = false }) {
+export function UserAttendanceManager() {
   const { updateSession } = useUserContext();
   const { event, hasEnded } = useEventContext();
   const { distance, distancePending } = useDistanceContext();
   const attendance = useUserAttendanceContext();
+
   const currentAttendance = attendance.getAttendanceByEventId(event.id);
   const { addTimeout, removeTimeout } = useTimeout();
+
+  const handleAction = (
+    predicate: () => boolean,
+    action: TAttendanceStatusType,
+    tname: string,
+    cb: () => Promise<void>
+  ) => {
+    if (predicate()) {
+      if (attendance.currentAction !== action) {
+        attendance.setCurrentAction(action);
+        addTimeout(
+          tname,
+          async () => {
+            await cb();
+            attendance.setCurrentAction(null);
+          },
+          timeout
+        );
+      }
+    } else {
+      removeTimeout(tname);
+      attendance.setCurrentAction(null);
+    }
+  };
 
   useEffect(() => {
     if (distancePending || !currentAttendance) {
@@ -32,65 +60,36 @@ export function UserAttendanceManager({ disableAutoEnding = false }) {
 
     if (currentAttendance.status === 'interested') {
       //Automatically join an event if close enough to it.
-      if (distance <= joinThreshold) {
-        if (attendance.currentAction !== 'joining') {
-          attendance.setCurrentAction('joining');
-          addTimeout(
-            'join-timeout',
-            async () => {
-              console.log('Joining...');
-              await attendance.join(event.id);
-              attendance.setCurrentAction(null);
-            },
-            timeout
-          );
-        }
-      } else {
-        attendance.setCurrentAction(null);
-        removeTimeout('join-timeout');
-      }
+      handleAction(
+        () => distance <= joinThreshold,
+        'joining',
+        'join-timeout',
+        async () => await attendance.join(event.id)
+      );
     }
 
     if (currentAttendance.status === 'joined') {
       //Automatically leave an event if far enough from it.
-      if (distance >= leaveThreshold) {
-        if (attendance.currentAction !== 'leaving') {
-          attendance.setCurrentAction('leaving');
-          addTimeout(
-            'leave-timeout',
-            async () => {
-              await attendance.leave(event.id);
-              attendance.setCurrentAction(null);
-            },
-            timeout
-          );
-        }
-      } else {
-        removeTimeout('leave-timeout');
-        attendance.setCurrentAction(null);
-      }
+      handleAction(
+        () => distance >= leaveThreshold,
+        'leaving',
+        'leave-timeout',
+        async () => await attendance.leave(event.id)
+      );
     }
 
     if (currentAttendance.status === 'host') {
       //Automatically end the event if the host moves far enough from it.
-      if (!disableAutoEnding && distance >= leaveThreshold) {
-        if (attendance.currentAction !== 'ending') {
-          attendance.setCurrentAction('ending');
-          addTimeout(
-            'end-timeout',
-            async () => {
-              await endEventAction(event.id);
-              attendance.setCurrentAction(null);
-            },
-            timeout
-          );
+      handleAction(
+        () => distance >= leaveThreshold,
+        'ending',
+        'end-timeout',
+        async () => {
+          await endEventAction(event.id);
         }
-      } else {
-        removeTimeout('end-timeout');
-        attendance.setCurrentAction(null);
-      }
+      );
     }
-  }, [currentAttendance, distancePending, distance, event.id, attendance]);
+  }, [currentAttendance?.status, distancePending, distance, event.id]);
 
   useEffect(() => {
     if (!hasEnded) return;

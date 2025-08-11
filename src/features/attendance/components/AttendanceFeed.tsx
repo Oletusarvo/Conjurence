@@ -22,6 +22,8 @@ export function AttendanceFeed() {
             <>Joined the event!</>
           ) : item.status === 'left' ? (
             <>Left the event.</>
+          ) : item.status === 'canceled' ? (
+            <>Canceled</>
           ) : (
             'Started the event.'
           )}

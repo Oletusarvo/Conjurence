@@ -1,13 +1,13 @@
 'use client';
 
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
-import { SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { TAttendance } from '../schemas/attendanceSchema';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { updateAttendanceAction } from '../actions/updateAttendanceAction';
 import { toggleInterestAction } from '../actions/toggleInterestAction';
 
-type TAttendanceStatusType = 'joining' | 'leaving' | 'ending';
+export type TAttendanceStatusType = 'joining' | 'leaving' | 'ending';
 
 const [UserAttendanceContext, useUserAttendanceContext] = createContextWithUseHook<{
   attendanceRecords: TODO[];
@@ -17,8 +17,9 @@ const [UserAttendanceContext, useUserAttendanceContext] = createContextWithUseHo
   join: (eventId: string) => Promise<void>;
   leave: (eventId: string) => Promise<void>;
   showInterest: (eventId: string) => Promise<void>;
+  cancelInterest: (eventId: string) => Promise<void>;
   currentAction: TAttendanceStatusType;
-  setCurrentAction: React.Dispatch<SetStateAction<TAttendanceStatusType | null>>;
+  setCurrentAction: Dispatch<SetStateAction<TAttendanceStatusType>>;
 }>('useAttendanceContext can only be called within the scope of an EventAttendanceContext!');
 
 type EventParticipantProviderProps = React.PropsWithChildren & {
@@ -33,7 +34,6 @@ export function UserAttendanceProvider({
   const { user, updateSession } = useUserContext();
   const [attendanceRecords, setAttendanceRecords] = useState(initialAttendanceRecords);
   const [currentAction, setCurrentAction] = useState<TAttendanceStatusType | null>(null);
-
   const updateAttendance = (eventId: string, status: TAttendance['status']) => {
     const newAttendance = [...attendanceRecords];
     const a = newAttendance.find(a => a.event_instance_id === eventId);
@@ -49,6 +49,12 @@ export function UserAttendanceProvider({
       username: user.username,
       status: 'interested',
     });
+  };
+
+  const cancelInterest = async (eventId: string) => {
+    await updateAttendanceAction(eventId, 'canceled');
+    updateAttendance(eventId, 'canceled');
+    //setAttendanceRecords(prev => prev.filter(r => r.event_instance_id !== eventId));
   };
 
   /**Joins an event. Calls updateAttendanceAction with the given id, and afterwards updates the current attendance records, setting the attendance-status to "joined".
@@ -85,8 +91,9 @@ export function UserAttendanceProvider({
         join,
         leave,
         showInterest,
+        cancelInterest,
         currentAction,
-        setCurrentAction: setCurrentAction,
+        setCurrentAction,
       }}>
       {children}
     </UserAttendanceContext.Provider>

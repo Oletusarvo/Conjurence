@@ -33,7 +33,7 @@ const participantCountSubquery = db
     db
       .select('id AS ap_status_id')
       .from(tablenames.event_attendance_status)
-      .whereIn('label', ['interested', 'joined'])
+      .whereIn('label', ['interested', 'joined', 'left'])
   )
   .groupBy('event_instance_id')
   .as('ap');

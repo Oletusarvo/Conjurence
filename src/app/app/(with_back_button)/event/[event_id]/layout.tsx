@@ -20,6 +20,7 @@ import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBa
 import { AttendanceFeed } from '@/features/attendance/components/AttendanceFeed';
 import { CategoryBadge } from '@/features/events/components/CategoryBadge';
 import { SpotsAvailableBadge } from '@/features/events/components/SpotsAvailableBadge';
+import { HostBadge } from '@/features/events/components/HostBadge';
 
 export const revalidate = 0;
 
@@ -45,8 +46,9 @@ export default async function EventPage({ params, attendance }) {
                 <div className='flex items-start px-2 w-full'>
                   <div className='flex flex-col items-start gap-4 w-full'>
                     <div className='flex gap-2 items-center justify-between w-full'>
-                      <div className='flex items-center gap-4'>
+                      <div className='flex flex-col gap-2'>
                         <h3>{event?.title}</h3>
+                        <HostBadge />
                       </div>{' '}
                       <EventStatusBadge createdAt={event?.created_at} />
                     </div>

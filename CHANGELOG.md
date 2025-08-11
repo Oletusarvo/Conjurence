@@ -1,3 +1,16 @@
+## [0.2.1] - 11.-08-2025
+
+### Fixed
+
+- Events not showing up on the feed on first render.
+
+### Added
+
+- Conditionals to setting the current location of a user.
+- A single function to handle the attendance auto-action once they're triggered.
+- A reusable badge that shows the host of an event.
+- Ability to cancel interest, and to leave an event manually.
+
 ## [0.2.0] - 11-08-2025
 
 ### Added

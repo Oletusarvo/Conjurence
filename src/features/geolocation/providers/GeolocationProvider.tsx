@@ -3,7 +3,8 @@
 import { useSessionStorage } from '@/hooks/useSessionStorage';
 import { useToggle } from '@/hooks/useToggle';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
-import { useEffect } from 'react';
+import { getDistanceInMeters } from '@/util/geolocation/getDistanceInMeters';
+import { useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 
 const [GeolocationContext, useGeolocationContext] = createContextWithUseHook<{
@@ -23,9 +24,24 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
 
     let geoWatcher;
     if ('geolocation' in navigator) {
-      navigator.geolocation.watchPosition(
+      geoWatcher = navigator.geolocation.watchPosition(
         pos => {
-          setPosition(pos);
+          if (!position) {
+            setPosition(pos);
+          } else {
+            if (pos.coords.accuracy >= 100) {
+              //Poor accuracy, only update position if old enough.
+              const positionAge = Date.now() - position.timestamp;
+              if (positionAge >= 1000 * 60) {
+                setPosition(pos);
+              }
+            } else {
+              const distanceToLastPosition = getDistanceInMeters(pos.coords, position.coords);
+              if (distanceToLastPosition >= 10) {
+                setPosition(pos);
+              }
+            }
+          }
         },
         error => toast.error('To use the app, geolocation has to be enabled!')
       );

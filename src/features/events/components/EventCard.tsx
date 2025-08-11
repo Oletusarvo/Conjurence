@@ -1,5 +1,4 @@
-import { Armchair, AtSign, MapPin, Star } from 'lucide-react';
-import { Pill } from '../../../components/Pill';
+import { AtSign, Star } from 'lucide-react';
 import { useClassName } from '@/hooks/useClassName';
 import { EventStatusBadge } from './EventStatusBadge';
 import { useToggle } from '@/hooks/useToggle';
@@ -7,12 +6,11 @@ import { useUserAttendanceContext } from '@/features/attendance/providers/UserAt
 import { useRouter } from 'next/navigation';
 import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { useEventContext } from '../providers/EventProvider';
-import { useDistance } from '../../distance/hooks/useDistance';
-import { Spinner } from '@/components/Spinner';
 import { DistanceBadge } from '../../distance/components/DistanceBadge';
 import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
 import { SpotsAvailableBadge } from './SpotsAvailableBadge';
 import { CategoryBadge } from './CategoryBadge';
+import { HostBadge } from './HostBadge';
 
 export type EventCardProps = {
   onClick?: () => void;
@@ -72,10 +70,7 @@ function CardHeader() {
       <div className='flex flex-col justify-start items-start gap-1'>
         <h3>{title || 'Otsikko'}</h3>
 
-        <div className='flex items-center gap-1 text-sm'>
-          <AtSign size={'14px'} />
-          {host || 'host'}
-        </div>
+        <HostBadge />
         <div className='flex gap-2'>
           <CategoryBadge />
           <SpotsAvailableBadge />

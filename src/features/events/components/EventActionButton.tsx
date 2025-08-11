@@ -8,6 +8,7 @@ import { useUserAttendanceContext } from '@/features/attendance/providers/UserAt
 import { useModalStackContext } from '@/providers/ModalStackProvider';
 import { Dialog } from '@/components/Dialog';
 import { useEventActionContext } from '../providers/EventActionProvider';
+import { endEventAction } from '../actions/endEventAction';
 
 /**
  * Renders the button displayed on the app/event/[event_id] page.
@@ -25,13 +26,10 @@ export function EventActionButton(props: React.ComponentProps<'button'>) {
   const { user, sessionStatus } = useUserContext();
   const { event } = useEventContext();
   const { buttonConfig, isPending } = useEventActionButton();
-  const { getAttendanceByEventId } = useUserAttendanceContext();
-  const attendanceRecord = getAttendanceByEventId(event.id);
+  const attendance = useUserAttendanceContext();
+  const attendanceRecord = attendance.getAttendanceByEventId(event.id);
   const hideButton =
-    attendanceRecord?.status === 'interested' ||
-    attendanceRecord?.status === 'joined' ||
-    attendanceRecord?.status === 'left' ||
-    false;
+    attendanceRecord?.status === 'left' || attendanceRecord?.status === 'canceled' || false;
 
   return !hideButton ? (
     <Button
@@ -56,56 +54,16 @@ const Button = withLoader(({ children, ...props }) => (
 
 const useEventActionButton = () => {
   const { event } = useEventContext();
-  const { getAttendanceByEventId } = useUserAttendanceContext();
+  const attendance = useUserAttendanceContext();
   const { pushModal } = useModalStackContext();
 
-  const attendance = getAttendanceByEventId(event.id);
-  const userIsHost = attendance?.status === 'host' || false;
+  const currentAttendance = attendance.getAttendanceByEventId(event.id);
+  const userIsHost = currentAttendance?.status === 'host' || false;
   const { isPending } = useEventActionContext();
 
-  function ConfirmEndEventModal() {
-    const { endEvent, isPending } = useEventActionContext();
-    const { closeCurrentModal } = useModalStackContext();
-
-    const ConfirmButton = withLoader(({ children, ...props }) => (
-      <button
-        {...props}
-        className='--contained --accent --full-width'>
-        {children}
-      </button>
-    ));
-
-    return (
-      <Dialog
-        title='End Event'
-        cancelButton={
-          <button
-            className='--outlined --accent --full-width'
-            onClick={closeCurrentModal}
-            disabled={isPending}>
-            Cancel
-          </button>
-        }
-        confirmButton={
-          <ConfirmButton
-            onClick={async () => {
-              await endEvent();
-              closeCurrentModal();
-            }}
-            disabled={isPending}
-            loading={isPending}>
-            Confirm
-          </ConfirmButton>
-        }>
-        <p>Are you sure you want to end the event? This cannot be undone.</p>
-      </Dialog>
-    );
-  }
-
-  function ConfirmInterestDialog() {
+  function ConfirmDialog({ children, title, confirmContent, cancelContent, action }) {
     const [isPending, setIsPending] = useState(false);
     const { closeCurrentModal } = useModalStackContext();
-    const { addAttendanceRecord, showInterest } = useUserAttendanceContext();
 
     const ConfirmButton = withLoader(({ children, ...props }) => (
       <button
@@ -117,43 +75,78 @@ const useEventActionButton = () => {
 
     return (
       <Dialog
-        title='Confirm Interest'
+        title={title}
         cancelButton={
           <button
             className='--outlined --accent --full-width'
             onClick={closeCurrentModal}
             disabled={isPending}>
-            Cancel
+            {cancelContent}
           </button>
         }
         confirmButton={
           <ConfirmButton
             onClick={async () => {
               setIsPending(true);
-              await showInterest(event.id);
+              await action();
               setIsPending(false);
               closeCurrentModal();
             }}
             disabled={isPending}
             loading={isPending}>
-            Yes, I'm Interested!
+            {confirmContent}
           </ConfirmButton>
         }>
-        <p>
-          No pressure — marking interest just means you’re genuinely considering showing up. It
-          helps hosts get a feel for the crowd and keeps things flowing naturally. Sound good?
-        </p>
+        <p>{children}</p>
       </Dialog>
     );
   }
 
   const buttonConfig = useMemo((): { label: string; action: () => Promise<void> } => {
-    if (attendance) {
-      if (attendance.status === 'host') {
+    if (currentAttendance) {
+      if (currentAttendance.status === 'host') {
         return {
           label: 'End Event',
           action: async () => {
-            pushModal(<ConfirmEndEventModal />);
+            pushModal(
+              <ConfirmDialog
+                title='Confirm Event Ending'
+                cancelContent={'Cancel'}
+                confirmContent={'End Event'}
+                action={async () => await endEventAction(event.id)}>
+                Are you sure you want to end the event? This cannot be undone.
+              </ConfirmDialog>
+            );
+          },
+        };
+      } else if (currentAttendance.status === 'interested') {
+        return {
+          label: 'Cancel Interest',
+          action: async () => {
+            pushModal(
+              <ConfirmDialog
+                title='Confirm Interest Cancel'
+                cancelContent={'Cancel'}
+                confirmContent={'Yes, Cancel Interest'}
+                action={async () => await attendance.cancelInterest(event.id)}>
+                Are you sure you wish to cancel your interest in the event? This cannot be undone.
+              </ConfirmDialog>
+            );
+          },
+        };
+      } else if (currentAttendance.status === 'joined') {
+        return {
+          label: 'Leave Event',
+          action: async () => {
+            pushModal(
+              <ConfirmDialog
+                title='Confirm Leave'
+                cancelContent={'Cancel'}
+                confirmContent={'Yes, leave'}
+                action={async () => await attendance.leave(event.id)}>
+                Are you sure you want to leave the event? This cannot be undone.
+              </ConfirmDialog>
+            );
           },
         };
       }
@@ -161,10 +154,19 @@ const useEventActionButton = () => {
     return {
       label: "I'm Interested",
       action: async () => {
-        pushModal(<ConfirmInterestDialog />);
+        pushModal(
+          <ConfirmDialog
+            title='Confirm Interest'
+            cancelContent='Cancel'
+            confirmContent="Yes, I'm Interested!"
+            action={async () => await attendance.showInterest(event.id)}>
+            No pressure — marking interest just means you’re genuinely considering showing up. It
+            helps hosts get a feel for the crowd and keeps things flowing naturally. Sound good?
+          </ConfirmDialog>
+        );
       },
     };
-  }, [attendance?.status, userIsHost]);
+  }, [currentAttendance?.status, userIsHost, event.id]);
 
   return { buttonConfig, isPending };
 };
