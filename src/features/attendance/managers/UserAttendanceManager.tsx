@@ -10,7 +10,7 @@ import { useUserContext } from '@/features/users/providers/UserProvider';
 
 const joinThreshold = 30;
 const leaveThreshold = 70;
-const timeout = 10000;
+const timeout = 300;
 
 /**
  * Handles automatic joining and leaving from an event when within or outside a set distance from it.
