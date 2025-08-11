@@ -37,7 +37,7 @@ export default function RootLayout({
           rel='stylesheet'></link>
       </head>
 
-      <body className='flex flex-col antialiazed w-full max-h-screen h-screen'>
+      <body className='flex flex-col antialiazed w-full'>
         <AuthProvider>{children}</AuthProvider>
         <Toaster position='bottom-center' />
       </body>

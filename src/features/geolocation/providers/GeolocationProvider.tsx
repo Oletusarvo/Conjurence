@@ -25,7 +25,6 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
     if ('geolocation' in navigator) {
       navigator.geolocation.watchPosition(
         pos => {
-          console.log('Position: ', pos.coords);
           setPosition(pos);
         },
         error => toast.error('To use the app, geolocation has to be enabled!')

@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
 
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = '/login';
+    loginUrl.searchParams.delete('token');
     return NextResponse.redirect(loginUrl);
   } catch (err) {
     console.log(err.message);

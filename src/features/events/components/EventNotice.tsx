@@ -99,7 +99,7 @@ export function EventAttendancePending() {
 }
 
 export function EventAttendanceAccepted() {
-  const { cancelJoinRequest, isPending } = useEventActionContext();
+  const { isPending } = useEventActionContext();
   const { user } = useUserContext();
 
   return (
@@ -124,7 +124,7 @@ export function EventAttendanceAccepted() {
           disabled={!user || isPending}
           icon={<X />}
           variant='--outlined'
-          onClick={cancelJoinRequest}>
+          onClick={null}>
           Cancel Arrival
         </ButtonWithIcon>
       </ButtonContainer>

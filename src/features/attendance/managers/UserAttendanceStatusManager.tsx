@@ -36,12 +36,6 @@ export function UserAttendanceStatusManager() {
     }
   };
 
-  useEffect(() => {
-    if (hasEnded) {
-      updateSession({ attended_event_id: null });
-    }
-  }, [hasEnded]);
-
   return (
     <Modal
       title='Status'

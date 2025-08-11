@@ -28,7 +28,6 @@ export const options: NextAuthOptions = {
             throw new Error(AuthError.noCredentials);
           }
           const { password, email } = credentials;
-          console.log(email);
           const user = await db({ u: tablenames.user })
             .join(db.select('*').from(tablenames.user_status).as('ut'), 'u.user_status_id', 'ut.id')
             .where({ email })
@@ -61,6 +60,7 @@ export const options: NextAuthOptions = {
           };
         } catch (err) {
           console.log(err.message);
+          console.log('Email used: ', credentials.email);
           throw err;
         }
       },

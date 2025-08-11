@@ -61,7 +61,7 @@ const useEventActionButton = () => {
 
   const attendance = getAttendanceByEventId(event.id);
   const userIsHost = attendance?.status === 'host' || false;
-  const { leaveEvent, cancelJoinRequest, isPending } = useEventActionContext();
+  const { isPending } = useEventActionContext();
 
   function ConfirmEndEventModal() {
     const { endEvent, isPending } = useEventActionContext();
@@ -156,10 +156,6 @@ const useEventActionButton = () => {
             pushModal(<ConfirmEndEventModal />);
           },
         };
-      } else if (attendance.status === 'pending') {
-        return { label: 'Cancel Join Request', action: cancelJoinRequest };
-      } else if (attendance.status === 'joined') {
-        return { label: 'Leave Event', action: leaveEvent };
       }
     }
     return {

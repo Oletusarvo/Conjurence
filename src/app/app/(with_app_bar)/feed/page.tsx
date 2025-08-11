@@ -3,6 +3,9 @@ import { getEvent } from '@/features/events/dal/getEvent';
 import db from '@/dbconfig';
 import { EventFeed } from '@/features/events/components/EventFeed';
 import { SearchProvider } from '@/providers/SearchProvider';
+import { tablenames } from '@/tablenames';
+import { Pill } from '@/components/Pill';
+import { capitalize } from '@/util/capitalize';
 
 export const revalidate = 0;
 
@@ -20,10 +23,8 @@ export default async function EventFeedPage({ searchParams }: any) {
   const feed = await getFeed();
 
   return (
-    <div className='flex flex-col gap-2 w-full flex-1 py-2 px-default'>
-      <SearchProvider>
-        <EventFeed events={feed} />
-      </SearchProvider>
-    </div>
+    <SearchProvider>
+      <EventFeed events={feed} />
+    </SearchProvider>
   );
 }

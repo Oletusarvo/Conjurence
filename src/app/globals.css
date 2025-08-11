@@ -25,6 +25,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: calc(var(--vh, 1vh) * 100);
+  max-height: 100vh;
 }
 
 @keyframes SlideDown {

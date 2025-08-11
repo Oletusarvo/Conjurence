@@ -16,7 +16,7 @@ export default async function CreateEventPage() {
     .select('description', 'label', 'ec.id as id');
 
   return (
-    <div className='flex flex-col px-default w-full flex-1 justify-center'>
+    <div className='flex flex-col px-default w-full flex-1 justify-center items-center'>
       <FormContainer>
         <h2>Create event</h2>
         <CreateEventForm categories={categories} />

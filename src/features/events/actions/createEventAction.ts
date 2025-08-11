@@ -4,6 +4,7 @@ import db from '@/dbconfig';
 import { EventError, TEventError } from '@/errors/events';
 import { eventDataSchema } from '@/features/events/schemas/eventSchema';
 import { tablenames } from '@/tablenames';
+import { createGeographyRow } from '@/util/geolocation/createGeographyRow';
 import { loadSession } from '@/util/loadSession';
 
 /**Creates a new event.
@@ -70,7 +71,6 @@ export async function createEventAction(
   try {
     let newEventRecord = null;
     if (!templateId) {
-      console.log('Creating template...');
       //Not using a template; save new data.
       [newEventRecord] = await trx(tablenames.event_data)
         .insert({
@@ -79,9 +79,7 @@ export async function createEventAction(
           is_template: parsedData.is_template,
         })
         .returning('id');
-      console.log('Created new template.');
     } else {
-      console.log('Updating template...', templateId);
       //Update the current template.
       await trx(tablenames.event_data)
         .where({ id: templateId })
@@ -89,13 +87,13 @@ export async function createEventAction(
           ...parsedData,
           is_template: parsedData.is_template,
         });
-      console.log('Updated template.');
     }
 
+    const location = JSON.parse(data.location.toString());
     const [eventInstanceRecord] = await trx(tablenames.event_instance).insert(
       {
         event_data_id: templateId || newEventRecord.id,
-        location: JSON.parse(data.location.toString()),
+        position: createGeographyRow(location.coords),
       },
       ['id']
     );

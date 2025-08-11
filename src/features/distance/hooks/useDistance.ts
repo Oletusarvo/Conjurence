@@ -9,13 +9,17 @@ export function useDistance() {
   const [status, isPending, setStatus, resetStatus] = useStatus('loading');
   const { event } = useEventContext();
   const { position } = useGeolocationContext();
-  const eventCoords = event?.location.coords;
+  const eventCoords = event?.position.coordinates as number[];
+
   useEffect(() => {
     if (position === null || !eventCoords) {
       return;
     }
 
-    const d = getDistanceInMeters(position.coords, eventCoords);
+    const d = getDistanceInMeters(position.coords, {
+      latitude: eventCoords[1],
+      longitude: eventCoords[0],
+    } as GeolocationCoordinates);
     setDistance(Math.round(d));
     setStatus('idle');
   }, [position]);

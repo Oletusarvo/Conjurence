@@ -20,7 +20,10 @@ export const eventDataSchema = z.object({
 export const eventInstanceSchema = z.object({
   created_at: z.date().optional(),
   ended_at: z.date().optional(),
+
+  /**@deprecated */
   location: z.object().optional(),
+  position: z.object(),
 });
 
 export const eventSchema = z

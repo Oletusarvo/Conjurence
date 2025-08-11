@@ -10,6 +10,7 @@ import { EventError } from '@/errors/events';
 import { Notice } from '@/components/Notice';
 import { useState } from 'react';
 import { Sublabel } from '@/components/Sublabel';
+import { capitalize } from '@/util/capitalize';
 
 type CreateEventForm = {
   categories: { id: string; label: string; description?: string }[];
@@ -71,7 +72,7 @@ export function CreateEventForm({ categories, template }: CreateEventForm) {
                 onClick={() => setSelectedCategory(cat.description)}
                 key={`cat-option-${i}`}
                 value={cat.id}>
-                {cat.label.at(0).toUpperCase() + cat.label.slice(1)}
+                {capitalize(cat.label)}
               </option>
             );
           })}
