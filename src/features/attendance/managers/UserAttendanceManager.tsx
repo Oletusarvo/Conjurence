@@ -9,7 +9,7 @@ import { endEventAction } from '@/features/events/actions/endEventAction';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 
 const joinThreshold = 15;
-const leaveThreshold = 25;
+const leaveThreshold = 50;
 const timeout = 10000;
 
 /**
