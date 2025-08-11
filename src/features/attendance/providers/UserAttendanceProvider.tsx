@@ -30,7 +30,7 @@ export function UserAttendanceProvider({
   children,
   initialAttendanceRecords,
 }: EventParticipantProviderProps) {
-  const { user } = useUserContext();
+  const { user, updateSession } = useUserContext();
   const [attendanceRecords, setAttendanceRecords] = useState(initialAttendanceRecords);
   const [currentAction, setCurrentAction] = useState<TAttendanceStatusType | null>(null);
 
@@ -57,11 +57,17 @@ export function UserAttendanceProvider({
   const join = async (eventId: string) => {
     await updateAttendanceAction(eventId, 'joined');
     updateAttendance(eventId, 'joined');
+    await updateSession({
+      attended_event_id: eventId,
+    });
   };
 
   const leave = async (eventId: string) => {
     await updateAttendanceAction(eventId, 'left');
     updateAttendance(eventId, 'left');
+    await updateSession({
+      attended_event_id: null,
+    });
   };
 
   const addAttendanceRecord = (data: TAttendance) =>

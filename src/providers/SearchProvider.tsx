@@ -13,7 +13,6 @@ const [SearchContext, useSearchProvider] = createContextWithUseHook<{ order: 'de
 
 export function SearchProvider({ children }: React.PropsWithChildren) {
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-
   return (
     <SearchContext.Provider value={{ order }}>
       <div className='flex gap-2 w-full'>

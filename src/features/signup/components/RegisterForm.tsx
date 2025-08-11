@@ -11,6 +11,7 @@ import { ReactNode, useRef } from 'react';
 import { PasswordInput } from '@/components/PasswordInput';
 import { Notice } from '@/components/Notice';
 import { Form } from '@/components/Form';
+import Link from 'next/link';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -69,7 +70,14 @@ export function RegisterForm() {
       </div>
 
       <div className='flex w-full items-center justify-between'>
-        <span className='w-full text-sm'>I accept the terms of service and privacy policy</span>
+        <span className='w-full text-sm'>
+          I accept the{' '}
+          <Link
+            href='/terms.pdf'
+            target='_blank'>
+            terms of service and privacy policy
+          </Link>
+        </span>
         <input
           required
           type='checkbox'

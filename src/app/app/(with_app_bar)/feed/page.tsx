@@ -20,11 +20,11 @@ export default async function EventFeedPage({ searchParams }: any) {
     return data;
   };
 
-  const feed = await getFeed();
+  //const feed = await getFeed();
 
   return (
     <SearchProvider>
-      <EventFeed events={feed} />
+      <EventFeed />
     </SearchProvider>
   );
 }

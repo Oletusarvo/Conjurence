@@ -11,6 +11,12 @@ import { EventProvider } from '../providers/EventProvider';
 import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
 import { UserAttendanceManager } from '@/features/attendance/managers/UserAttendanceManager';
 import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
+import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
+import { useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { Spinner } from '@/components/Spinner';
+import { useRef } from 'react';
 
 type EventFeedProps = {
   events: TEvent[];
@@ -19,36 +25,62 @@ type EventFeedProps = {
 /**Renders the main event-feed.
  * @todo Implement infinite scrolling.
  */
-export function EventFeed({ events }: EventFeedProps) {
+export function EventFeed() {
   const { order } = useSearchProvider();
+  const { position } = useGeolocationContext();
+  const search = useSearchParams().get('q');
+  console.log(search);
+  const eventCache = useRef([]);
+  const { data: events, isPending } = useQuery({
+    queryKey: [`events`, position, search],
+    queryFn: async () =>
+      axios
+        .get(
+          `/api/events/get_nearby?lat=${position?.coords.latitude}&lng=${position?.coords.longitude}&q=${search}`
+        )
+        .then(res => {
+          eventCache.current = res.data;
+          return res.data || [];
+        }),
+
+    enabled: !!position,
+  });
+
   const EventList = withAlternate(List, true);
-
   return (
-    <EventList
-      showAlternate={events.length == 0}
-      alternate={<NoEvents />}
-      data={events}
-      sortFn={(a, b) => {
-        const adate = new Date(a.created_at).getTime();
-        const bdate = new Date(b.created_at).getTime();
-        return order === 'asc' ? adate - bdate : bdate - adate;
-      }}
-      component={({ item }) => {
-        const { getAttendanceByEventId } = useUserAttendanceContext();
-        const attendance = getAttendanceByEventId(item.id);
+    <>
+      <EventList
+        showAlternate={events?.length === 0}
+        alternate={<NoEvents />}
+        data={events || eventCache.current}
+        sortFn={(a, b) => {
+          const adate = new Date(a.created_at).getTime();
+          const bdate = new Date(b.created_at).getTime();
+          return order === 'asc' ? adate - bdate : bdate - adate;
+        }}
+        component={({ item }) => {
+          const { getAttendanceByEventId } = useUserAttendanceContext();
+          const attendance = getAttendanceByEventId(item.id);
 
-        return (
-          <EventProvider initialEvent={item}>
-            <DistanceProvider>
-              {attendance?.status === 'interested' || attendance?.status === 'joined' ? (
-                <UserAttendanceManager />
-              ) : null}
-              <EventCard />
-            </DistanceProvider>
-          </EventProvider>
-        );
-      }}
-    />
+          return (
+            <EventProvider initialEvent={item}>
+              <DistanceProvider>
+                {attendance?.status === 'interested' || attendance?.status === 'joined' ? (
+                  <UserAttendanceManager />
+                ) : null}
+                <EventCard />
+              </DistanceProvider>
+            </EventProvider>
+          );
+        }}
+      />
+      {isPending ? (
+        <div className='flex w-full justify-center gap-4 items-center sublabel --secondary --outlined animate-slide-down'>
+          <span>Finding events close to you</span>
+          <Spinner />
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -64,6 +96,15 @@ function NoEvents() {
           Tap here to start one!
         </span>
       </Link>
+    </div>
+  );
+}
+
+function EventsLoading() {
+  return (
+    <div className='flex flex-col flex-1 w-full items-center justify-center text-gray-400'>
+      <h2>Loading Events</h2>
+      <Spinner />
     </div>
   );
 }
