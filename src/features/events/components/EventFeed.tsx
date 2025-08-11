@@ -29,14 +29,16 @@ export function EventFeed() {
   const { order } = useSearchProvider();
   const { position } = useGeolocationContext();
   const search = useSearchParams().get('q');
-  console.log(search);
+
   const eventCache = useRef([]);
   const { data: events, isPending } = useQuery({
     queryKey: [`events`, position, search],
     queryFn: async () =>
       axios
         .get(
-          `/api/events/get_nearby?lat=${position?.coords.latitude}&lng=${position?.coords.longitude}&q=${search}`
+          `/api/events/get_nearby?lat=${position?.coords.latitude}&lng=${
+            position?.coords.longitude
+          }&q=${search || ''}`
         )
         .then(res => {
           eventCache.current = res.data;
