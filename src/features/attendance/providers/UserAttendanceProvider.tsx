@@ -6,6 +6,9 @@ import { TAttendance } from '../schemas/attendanceSchema';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { updateAttendanceAction } from '../actions/updateAttendanceAction';
 import { toggleInterestAction } from '../actions/toggleInterestAction';
+import { redirect, usePathname } from 'next/navigation';
+import { useEventSocket } from '@/features/events/hooks/useEventSocket';
+import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 
 export type TAttendanceStatusType = 'joining' | 'leaving' | 'ending';
 
@@ -31,8 +34,8 @@ export function UserAttendanceProvider({
   children,
   initialAttendanceRecords,
 }: EventParticipantProviderProps) {
-  const { user, updateSession } = useUserContext();
   const [attendanceRecords, setAttendanceRecords] = useState(initialAttendanceRecords);
+  const { user, updateSession } = useUserContext();
   const [currentAction, setCurrentAction] = useState<TAttendanceStatusType | null>(null);
   const updateAttendance = (eventId: string, status: TAttendance['status']) => {
     const newAttendance = [...attendanceRecords];

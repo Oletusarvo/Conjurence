@@ -1,11 +1,13 @@
-import { App } from '@/components/App';
 import { HeaderProvider } from '@/components/header/HeaderProvider';
 import { MainMenuButton } from '@/components/header/MainMenuButton';
 import db from '@/dbconfig';
+import { RedirectToEventManager } from '@/features/attendance/managers/RedirectToEventManager';
 import { UserAttendanceProvider } from '@/features/attendance/providers/UserAttendanceProvider';
 import { GeolocationProvider } from '@/features/geolocation/providers/GeolocationProvider';
 import { UserProvider } from '@/features/users/providers/UserProvider';
 import { TUser } from '@/features/users/schemas/userSchema';
+import { ServiceWorkerManager } from '@/managers/ServiceWorkerManager';
+import { WindowResizeManager } from '@/managers/WindowResizeManager';
 import { QueryProvider } from '@/providers/QueryProvider';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
@@ -22,10 +24,13 @@ export default async function AppLayout({ children }) {
     .select('p.*', 'ps.label as status');
 
   return (
-    <App>
+    <>
+      <ServiceWorkerManager />
+      <WindowResizeManager />
       <QueryProvider>
         <UserProvider user={session.user}>
           <UserAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
+            <RedirectToEventManager />
             <GeolocationProvider>
               <HeaderProvider>
                 <MainMenuButton />
@@ -35,6 +40,6 @@ export default async function AppLayout({ children }) {
           </UserAttendanceProvider>
         </UserProvider>
       </QueryProvider>
-    </App>
+    </>
   );
 }

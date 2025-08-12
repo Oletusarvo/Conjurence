@@ -53,7 +53,7 @@ const Button = withLoader(({ children, ...props }) => (
 ));
 
 const useEventActionButton = () => {
-  const { event } = useEventContext();
+  const { event, end: endEvent } = useEventContext();
   const attendance = useUserAttendanceContext();
   const { pushModal } = useModalStackContext();
 
@@ -113,7 +113,7 @@ const useEventActionButton = () => {
                 title='Confirm Event Ending'
                 cancelContent={'Cancel'}
                 confirmContent={'End Event'}
-                action={async () => await endEventAction(event.id)}>
+                action={async () => await endEvent()}>
                 Are you sure you want to end the event? This cannot be undone.
               </ConfirmDialog>
             );

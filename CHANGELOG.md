@@ -1,4 +1,14 @@
-## [0.2.1] - 11.-08-2025
+## [0.3.0] - 12-08-2025
+
+### Changed
+
+- Moved window resizing, service worker loading and notifications permission asking into their own manager components.
+
+### Added
+
+- RedirectToEventManager, to handle redirections when the user is attending an event.
+
+## [0.2.1] - 11-08-2025
 
 ### Fixed
 
