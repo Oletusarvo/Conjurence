@@ -22,7 +22,7 @@ export function DistanceBadge() {
     <Component
       loading={distancePending}
       icon={<MapPin size={'14px'} />}>
-      {distanceString}
+      ~{distanceString}
       {unit}
     </Component>
   );

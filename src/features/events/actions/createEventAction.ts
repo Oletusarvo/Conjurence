@@ -100,6 +100,7 @@ export async function createEventAction(
       {
         event_data_id: templateId || newEventRecord.id,
         position: createGeographyRow(location.coords),
+        position_accuracy: location.coords.accuracy,
       },
       ['id']
     );

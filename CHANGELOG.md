@@ -1,4 +1,4 @@
-## [0.3.0] - 12-08-2025
+## [0.3.0-alpha] - 12-08-2025
 
 ### Fixed
 
@@ -7,10 +7,14 @@
 ### Changed
 
 - Moved window resizing, service worker loading and notifications permission asking into their own manager components.
+- Background color to a black-to-dark-purple.
+- The color of the borders on the header, footer, inputs and event cards.
 
 ### Added
 
 - Contact host button.
+- Function to make auto-joining and leaving smoother by taking the accuracy of the measurements into account.
+- A separate interest count badge: InterestCountBadge.
 
 ## [0.2.1] - 11-08-2025
 

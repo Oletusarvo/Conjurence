@@ -10,9 +10,11 @@ import { useDistanceContext } from '@/features/distance/providers/DistanceProvid
 import { useTimeout } from '@/hooks/useTimeout';
 import { endEventAction } from '@/features/events/actions/endEventAction';
 import { useUserContext } from '@/features/users/providers/UserProvider';
+import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
+import { shouldJoin, shouldLeave } from '@/util/geolocation/autoJoin';
 
-const joinThreshold = 0;
-const leaveThreshold = 70;
+const joinThreshold = 15;
+const leaveThreshold = 25;
 const timeout = 7000;
 
 /**
@@ -23,6 +25,7 @@ const timeout = 7000;
 export function UserAttendanceManager() {
   const { updateSession } = useUserContext();
   const { event, hasEnded } = useEventContext();
+  const { position } = useGeolocationContext();
   const { distance, distancePending } = useDistanceContext();
   const attendance = useUserAttendanceContext();
 
@@ -61,7 +64,8 @@ export function UserAttendanceManager() {
     if (currentAttendance.status === 'interested') {
       //Automatically join an event if close enough to it.
       handleAction(
-        () => distance <= joinThreshold,
+        () =>
+          shouldJoin(distance, position.coords.accuracy, event.position_accuracy, joinThreshold),
         'joining',
         'join-timeout',
         async () => await attendance.join(event.id)
@@ -71,7 +75,8 @@ export function UserAttendanceManager() {
     if (currentAttendance.status === 'joined') {
       //Automatically leave an event if far enough from it.
       handleAction(
-        () => distance >= leaveThreshold,
+        () =>
+          shouldLeave(distance, position.coords.accuracy, event.position_accuracy, leaveThreshold),
         'leaving',
         'leave-timeout',
         async () => await attendance.leave(event.id)
@@ -81,7 +86,8 @@ export function UserAttendanceManager() {
     if (currentAttendance.status === 'host') {
       //Automatically end the event if the host moves far enough from it.
       handleAction(
-        () => distance >= leaveThreshold,
+        () =>
+          shouldLeave(distance, position.coords.accuracy, event.position_accuracy, leaveThreshold),
         'ending',
         'end-timeout',
         async () => {
@@ -89,7 +95,7 @@ export function UserAttendanceManager() {
         }
       );
     }
-  }, [currentAttendance?.status, distancePending, distance, event.id]);
+  }, [currentAttendance?.status, distancePending, distance, event.id, position?.coords.accuracy]);
 
   useEffect(() => {
     if (!hasEnded) return;

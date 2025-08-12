@@ -24,6 +24,7 @@ import { HostBadge } from '@/features/events/components/HostBadge';
 import { ContactHostLink } from '@/features/events/components/ContactHostLink';
 import { tablenames } from '@/tablenames';
 import { getContact } from '@/features/users/dal/getContact';
+import { InterestedCountBadge } from '@/features/events/components/InterestedCountBadge';
 
 export const revalidate = 0;
 
@@ -45,7 +46,7 @@ export default async function EventPage({ params, attendance }) {
         <EventActionProvider>
           <ModalStackProvider>
             <BaseEventModalBody>
-              <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-gray-600'>
+              <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-background-light-border'>
                 <div className='flex items-start px-2 w-full'>
                   <div className='flex flex-col items-start gap-4 w-full'>
                     <div className='flex gap-2 items-center justify-between w-full'>
@@ -53,7 +54,6 @@ export default async function EventPage({ params, attendance }) {
                         <h3>{event?.title}</h3>
                         <div className='flex gap-2'>
                           <HostBadge />
-                          
                         </div>
                       </div>{' '}
                       <EventStatusBadge createdAt={event?.created_at} />
@@ -67,6 +67,7 @@ export default async function EventPage({ params, attendance }) {
                     <p className='tracking-tight leading-[18px]'>{event?.description}</p>
                     <div className='flex gap-4 items-center'>
                       <DistanceBadge />
+                      <InterestedCountBadge />
                       <JoinedCountBadge />
                     </div>
                   </div>

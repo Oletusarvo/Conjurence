@@ -1,5 +1,5 @@
 import { createEventAction } from '../actions/createEventAction';
-import { eventSchema, TEventData } from '../schemas/eventSchema';
+import { eventDataSchema, eventSchema, TEventData } from '../schemas/eventSchema';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
@@ -43,7 +43,8 @@ export function useCreateEventForm(template?: TEventData) {
       });
       router.push(`/app/event/` + res.data);
     },
-    //validationSchema: eventSchema,
+    onParseError: err => console.log(err),
+    validationSchema: eventDataSchema,
   });
 
   return { submitEvent, status, isPending };

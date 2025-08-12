@@ -11,6 +11,7 @@ import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBa
 import { SpotsAvailableBadge } from './SpotsAvailableBadge';
 import { CategoryBadge } from './CategoryBadge';
 import { HostBadge } from './HostBadge';
+import { InterestedCountBadge } from './InterestedCountBadge';
 
 export type EventCardProps = {
   onClick?: () => void;
@@ -37,29 +38,6 @@ export function EventCard({ ...props }: EventCardProps) {
   );
 }
 
-function InterestButton({ ...props }) {
-  const { event, interestCount } = useEventContext();
-  const { getAttendanceByEventId } = useUserAttendanceContext();
-  const thisEventParticipation = getAttendanceByEventId(event.id);
-  const [selected] = useToggle(!!thisEventParticipation);
-
-  const isHost = thisEventParticipation?.status === 'host';
-
-  return (
-    <button
-      {...props}
-      //onClick={pushConfirmModal}
-      disabled={!!thisEventParticipation}
-      className='flex gap-2 items-center --no-default'>
-      <Star
-        size={'14px'}
-        fill={isHost ? 'var(--color-green-500)' : selected ? 'var(--color-accent)' : null}
-      />
-      <span>{interestCount}</span>
-    </button>
-  );
-}
-
 function CardHeader() {
   const {
     event: { title, host, category, spots_available, created_at },
@@ -83,12 +61,10 @@ function CardHeader() {
 }
 
 function CardFooter() {
-  const { event, hasEnded } = useEventContext();
-
   return (
     <div className='flex justify-between gap-2 w-full text-sm font-semibold'>
       <div className='flex items-center gap-4'>
-        {!hasEnded ? <InterestButton event={event} /> : null}
+        <InterestedCountBadge />
         <JoinedCountBadge />
       </div>
 

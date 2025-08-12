@@ -79,6 +79,7 @@ const applyEventSelectColumns = (query: Knex.QueryBuilder) => {
     'e.spots_available',
     'u.host',
     'ei.position',
+    'ei.position_accuracy',
     db.raw('COALESCE(CAST(ap.interested_count AS INTEGER), 0) AS interested_count'),
     db.raw('COALESCE(CAST(ac.attendance_count AS INTEGER), 0) AS attendance_count'),
     db.raw('ST_AsGeoJSON(position)::json AS location')
@@ -118,6 +119,7 @@ export function getEvent(
     'e.title',
     'e.description',
     'ei.position',
+    'ei.position_accuracy',
     'ei.id',
     'ec.label',
     'e.spots_available',
