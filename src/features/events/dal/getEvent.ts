@@ -72,7 +72,6 @@ const applyEventSelectColumns = (query: Knex.QueryBuilder) => {
   return query.select(
     'e.title',
     'e.description',
-    'ei.location',
     'ei.id as id',
     'ec.label as category',
     'ei.created_at',
@@ -118,7 +117,6 @@ export function getEvent(
   q.groupBy(
     'e.title',
     'e.description',
-    'ei.location',
     'ei.position',
     'ei.id',
     'ec.label',

@@ -6,6 +6,8 @@ const schemas = {
 const tables = {
   user: 'user',
   user_status: 'user_status',
+  user_contact: 'user_contact',
+  user_contact_type: 'user_contact_type',
   /**The table containing the data for each event instance. */
   event_data: 'event_data',
   /**
@@ -24,11 +26,14 @@ const tables = {
   notification_type: 'notification_type',
 };
 
-const getFullTableName = (schema: string, table: string) => `${schema}.${table}`;
+const getFullTableName = <ST extends string, TT extends string>(schema: ST, table: TT) =>
+  `${schema}.${table}` as `${ST}.${TT}`;
 
 export const tablenames = {
   user: getFullTableName(schemas.users, tables.user),
   user_status: getFullTableName(schemas.users, tables.user_status),
+  user_contact: getFullTableName(schemas.users, tables.user_contact),
+  user_contact_type: getFullTableName(schemas.users, tables.user_contact_type),
   event_data: getFullTableName(schemas.events, tables.event_data),
   event_instance: getFullTableName(schemas.events, tables.event_instance),
   event_category: getFullTableName(schemas.events, tables.event_category),

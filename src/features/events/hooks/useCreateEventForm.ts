@@ -1,5 +1,5 @@
 import { createEventAction } from '../actions/createEventAction';
-import { TEventData } from '../schemas/eventSchema';
+import { eventSchema, TEventData } from '../schemas/eventSchema';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
@@ -23,11 +23,11 @@ export function useCreateEventForm(template?: TEventData) {
       if (!position) {
         return { success: false, error: EventError.locationDisabled };
       }
-
-      const pos = position.toJSON();
+      console.log(position);
+      const pos = JSON.stringify(position);
 
       console.log(pos);
-      payload.set('location', JSON.stringify(pos));
+      payload.set('location', pos);
 
       return await createEventAction(payload, template?.id);
     },
@@ -43,6 +43,7 @@ export function useCreateEventForm(template?: TEventData) {
       });
       router.push(`/app/event/` + res.data);
     },
+    //validationSchema: eventSchema,
   });
 
   return { submitEvent, status, isPending };

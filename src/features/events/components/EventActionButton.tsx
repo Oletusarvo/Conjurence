@@ -53,7 +53,8 @@ const Button = withLoader(({ children, ...props }) => (
 ));
 
 const useEventActionButton = () => {
-  const { event, end: endEvent } = useEventContext();
+  const { event } = useEventContext();
+  const { endEvent } = useEventActionContext();
   const attendance = useUserAttendanceContext();
   const { pushModal } = useModalStackContext();
 

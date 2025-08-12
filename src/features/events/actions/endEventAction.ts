@@ -66,16 +66,22 @@ export async function endEventAction(event_id: string): Promise<ActionResponse<v
     //await db(tablenames.event_data).where({ id: eventRecord.event_data_id }).del();
   }
 
-  await db(tablenames.event_instance).where({ id: eventRecord.id }).update({
-    ended_at: new Date(),
-  });
+  const trx = await db.transaction();
+  try {
+    await trx(tablenames.event_instance).where({ id: eventRecord.id }).update({
+      ended_at: new Date(),
+    });
 
-  //Mark the event as ended on each participant.
-  await db(tablenames.event_attendance).where({ event_instance_id: event_id }).update({
-    event_ended: true,
-  });
-
-  //global.io.to('user:' + session.user.id).emit('event_ended');
-  global.io.to('event:' + event_id).emit('event:end', { eventId: event_id });
-  return { success: true };
+    //Mark the event as ended on each participant.
+    await trx(tablenames.event_attendance).where({ event_instance_id: event_id }).update({
+      event_ended: true,
+    });
+    await trx.commit();
+    //global.io.to('user:' + session.user.id).emit('event_ended');
+    global.io.to('event:' + event_id).emit('event:end', { eventId: event_id });
+    return { success: true };
+  } catch (err) {
+    await trx.rollback();
+    throw err;
+  }
 }

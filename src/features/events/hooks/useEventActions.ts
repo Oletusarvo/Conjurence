@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { endEventAction } from '../actions/endEventAction';
 import { toggleInterestAction } from '@/features/attendance/actions/toggleInterestAction';
+import { getSession } from 'next-auth/react';
 
 export function useEventActions(eventId: string) {
   const [status, isPending, setStatus] = useStatus();
@@ -11,7 +12,7 @@ export function useEventActions(eventId: string) {
   const router = useRouter();
 
   /**Attempts to update the user's session with a new attended event id.
-   * @todo figure out why sometimes the attended event id does not update.
+   * @todo figure out why sometimes the updateSession does not update the attended event id.
    */
   const updateAttendanceOnAction = async ({
     action,
@@ -21,7 +22,10 @@ export function useEventActions(eventId: string) {
     attended_event_id: string | null;
   }) => {
     await action();
-    await updateSession({ attended_event_id });
+    const currentSession = await getSession();
+    if (currentSession) {
+      await updateSession({ ...currentSession, attended_event_id });
+    }
   };
 
   /**@deprecated */
@@ -54,8 +58,7 @@ export function useEventActions(eventId: string) {
         attended_event_id: null,
       });
 
-      toast.success('Event ended!');
-      router.push('/app/feed');
+      //router.push('/app/feed');
     } catch (err) {
       toast.error(err.message);
     } finally {

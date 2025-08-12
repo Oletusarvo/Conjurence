@@ -20,5 +20,5 @@ export function WindowResizeManager() {
     };
   }, []);
 
-  return null;
+  return <></>;
 }

@@ -21,6 +21,9 @@ import { AttendanceFeed } from '@/features/attendance/components/AttendanceFeed'
 import { CategoryBadge } from '@/features/events/components/CategoryBadge';
 import { SpotsAvailableBadge } from '@/features/events/components/SpotsAvailableBadge';
 import { HostBadge } from '@/features/events/components/HostBadge';
+import { ContactHostLink } from '@/features/events/components/ContactHostLink';
+import { tablenames } from '@/tablenames';
+import { getContact } from '@/features/users/dal/getContact';
 
 export const revalidate = 0;
 
@@ -33,6 +36,9 @@ export default async function EventPage({ params, attendance }) {
   const { event_id } = await params;
   const event = await getData(event_id);
   if (!event) return <span>Event does not exist!</span>;
+  const hostInfo = await getContact(event.host, db);
+
+  console.log(hostInfo);
 
   return (
     <EventProvider initialEvent={event}>
@@ -48,7 +54,10 @@ export default async function EventPage({ params, attendance }) {
                     <div className='flex gap-2 items-center justify-between w-full'>
                       <div className='flex flex-col gap-2'>
                         <h3>{event?.title}</h3>
-                        <HostBadge />
+                        <div className='flex gap-2'>
+                          <HostBadge />
+                          <ContactHostLink hostInfo={hostInfo} />
+                        </div>
                       </div>{' '}
                       <EventStatusBadge createdAt={event?.created_at} />
                     </div>

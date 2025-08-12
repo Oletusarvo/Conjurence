@@ -21,17 +21,14 @@ export default async function middleware(req: NextRequestWithAuth) {
       return NextResponse.redirect(newUrl);
     }
 
-    /*if (token.attended_event_id) {
-      if (
-        url.pathname === '/' ||
-        url.pathname.startsWith('/app/event/create') ||
-        url.pathname === '/app/feed'
-      ) {
+    if (token.attended_event_id) {
+      const anchoredUrl = `/app/event/${token.attended_event_id}`;
+      if (url.pathname !== anchoredUrl) {
         const newUrl = url.clone();
-        newUrl.pathname = '/app/event/' + token.attended_event_id;
+        newUrl.pathname = anchoredUrl;
         return NextResponse.redirect(newUrl);
       }
-    } else*/ if (
+    } else if (
       url.pathname === '/' ||
       url.pathname.includes('/login') ||
       url.pathname.includes('/register') ||

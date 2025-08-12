@@ -47,6 +47,7 @@ export const options: NextAuthOptions = {
                 .from(tablenames.event_attendance_status)
                 .where({ label: 'host' })
                 .limit(1),
+              event_ended: false,
             })
             .orderBy('requested_at', 'desc')
             .first();

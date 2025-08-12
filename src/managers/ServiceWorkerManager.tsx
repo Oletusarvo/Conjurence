@@ -13,5 +13,5 @@ export function ServiceWorkerManager() {
     }
   }, []);
 
-  return null;
+  return <></>;
 }

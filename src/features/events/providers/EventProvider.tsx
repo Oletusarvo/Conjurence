@@ -19,13 +19,11 @@ type EventProviderProps = React.PropsWithChildren & {
 
 const [EventContext, useEventContext] = createContextWithUseHook<{
   event: EventProviderProps['initialEvent'];
-  end: () => Promise<void>;
   hasEnded: boolean;
   interestCount: number;
 }>('useEventContext can only be used within the scope of an EventContext!');
 
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
-  const attendance = useUserAttendanceContext();
   const [event, setEvent] = useState(initialEvent);
   const hasEnded = event.ended_at !== null;
   const interestCount = event.interested_count;
@@ -38,11 +36,6 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
     300
   );
 
-  const end = async () => {
-    await endEventAction(event.id);
-    await attendance.leave(event.id);
-  };
-
   useEventSocket({
     eventId: event.id,
     onEnd: () => reloadEvent(),
@@ -50,7 +43,7 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
   });
 
   return (
-    <EventContext.Provider value={{ event, hasEnded, interestCount, end }}>
+    <EventContext.Provider value={{ event, hasEnded, interestCount }}>
       {children}
     </EventContext.Provider>
   );

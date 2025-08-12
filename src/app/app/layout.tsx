@@ -1,7 +1,6 @@
 import { HeaderProvider } from '@/components/header/HeaderProvider';
 import { MainMenuButton } from '@/components/header/MainMenuButton';
 import db from '@/dbconfig';
-import { RedirectToEventManager } from '@/features/attendance/managers/RedirectToEventManager';
 import { UserAttendanceProvider } from '@/features/attendance/providers/UserAttendanceProvider';
 import { GeolocationProvider } from '@/features/geolocation/providers/GeolocationProvider';
 import { UserProvider } from '@/features/users/providers/UserProvider';
@@ -25,12 +24,11 @@ export default async function AppLayout({ children }) {
 
   return (
     <>
-      <ServiceWorkerManager />
-      <WindowResizeManager />
       <QueryProvider>
         <UserProvider user={session.user}>
+          <ServiceWorkerManager />
+          <WindowResizeManager />
           <UserAttendanceProvider initialAttendanceRecords={initialAttendanceRecords}>
-            <RedirectToEventManager />
             <GeolocationProvider>
               <HeaderProvider>
                 <MainMenuButton />

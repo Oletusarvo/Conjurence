@@ -9,6 +9,7 @@ import { toggleInterestAction } from '../actions/toggleInterestAction';
 import { redirect, usePathname } from 'next/navigation';
 import { useEventSocket } from '@/features/events/hooks/useEventSocket';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
+import { getSession } from 'next-auth/react';
 
 export type TAttendanceStatusType = 'joining' | 'leaving' | 'ending';
 
@@ -66,17 +67,19 @@ export function UserAttendanceProvider({
   const join = async (eventId: string) => {
     await updateAttendanceAction(eventId, 'joined');
     updateAttendance(eventId, 'joined');
-    await updateSession({
-      attended_event_id: eventId,
-    });
+    const currentSession = await getSession();
+    if (currentSession) {
+      await updateSession({ ...currentSession, attended_event_id: eventId });
+    }
   };
 
   const leave = async (eventId: string) => {
     await updateAttendanceAction(eventId, 'left');
     updateAttendance(eventId, 'left');
-    await updateSession({
-      attended_event_id: null,
-    });
+    const currentSession = await getSession();
+    if (currentSession) {
+      await updateSession({ ...currentSession, attended_event_id: eventId });
+    }
   };
 
   const addAttendanceRecord = (data: TAttendance) =>

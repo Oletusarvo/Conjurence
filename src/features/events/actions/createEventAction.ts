@@ -18,7 +18,13 @@ export async function createEventAction(
   const session = await loadSession();
   const data = Object.fromEntries(payload);
 
-  const parsedData = eventDataSchema.parse(data);
+  const parseResult = eventDataSchema.safeParse(data);
+  if (!parseResult.success) {
+    const msg = parseResult.error.issues.at(0)?.message as TEventError;
+    return { success: false, error: msg };
+  }
+
+  const parsedData = parseResult.data;
 
   //Prevent adding more templates than allowed
   if (parsedData.is_template) {

@@ -1,12 +1,16 @@
 ## [0.3.0] - 12-08-2025
 
+### Fixed
+
+- The unexpected error occuring on the CreateEventForm due to incorrect JSON-conversion of the geolocation position.
+
 ### Changed
 
 - Moved window resizing, service worker loading and notifications permission asking into their own manager components.
 
 ### Added
 
-- RedirectToEventManager, to handle redirections when the user is attending an event.
+- Contact host button.
 
 ## [0.2.1] - 11-08-2025
 

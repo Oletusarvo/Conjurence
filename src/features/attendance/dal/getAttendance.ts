@@ -4,13 +4,6 @@ import { Knex } from 'knex';
 
 const getAttendanceQuery = (ctx: Knex | Knex.Transaction) =>
   ctx(db.raw('?? as ejr', [tablenames.event_attendance]))
-    .leftJoin(
-      db.raw('(SELECT id, ended_at FROM ?? WHERE ended_at IS NOT NULL) AS e', [
-        tablenames.event_instance,
-      ]),
-      'e.id',
-      'ejr.event_instance_id'
-    )
     .join(db.raw('?? as u on u.id = ejr.user_id', [tablenames.user]))
     .join(
       db.raw('?? as ejs on ejs.id = ejr.attendance_status_id', [tablenames.event_attendance_status])
