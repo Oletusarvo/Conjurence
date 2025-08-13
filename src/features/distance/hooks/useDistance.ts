@@ -1,6 +1,6 @@
 import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
 import { useEventContext } from '../../events/providers/EventProvider';
-import { getDistanceInMeters } from '@/util/geolocation/getDistanceInMeters';
+import { getDistanceInMeters } from '@/features/distance/util/getDistanceInMeters';
 import { useEffect, useState } from 'react';
 import { useStatus } from '@/hooks/useStatus';
 

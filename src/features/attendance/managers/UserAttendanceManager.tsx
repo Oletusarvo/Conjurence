@@ -1,7 +1,7 @@
 'use client';
 
 import { useEventContext } from '@/features/events/providers/EventProvider';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   TAttendanceStatusType,
   useUserAttendanceContext,
@@ -11,7 +11,7 @@ import { useTimeout } from '@/hooks/useTimeout';
 import { endEventAction } from '@/features/events/actions/endEventAction';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
-import { shouldJoin, shouldLeave } from '@/util/geolocation/autoJoin';
+import { shouldJoin, shouldLeave } from '@/features/attendance/util/autoJoin';
 
 const joinThreshold = 15;
 const leaveThreshold = 25;
@@ -65,6 +65,7 @@ export function UserAttendanceManager() {
       //Automatically join an event if close enough to it.
       handleAction(
         () =>
+          !hasEnded &&
           shouldJoin(distance, position.coords.accuracy, event.position_accuracy, joinThreshold),
         'joining',
         'join-timeout',
@@ -87,6 +88,7 @@ export function UserAttendanceManager() {
       //Automatically end the event if the host moves far enough from it.
       handleAction(
         () =>
+          !hasEnded &&
           shouldLeave(distance, position.coords.accuracy, event.position_accuracy, leaveThreshold),
         'ending',
         'end-timeout',
@@ -95,7 +97,14 @@ export function UserAttendanceManager() {
         }
       );
     }
-  }, [currentAttendance?.status, distancePending, distance, event.id, position?.coords.accuracy]);
+  }, [
+    currentAttendance?.status,
+    distancePending,
+    distance,
+    event.id,
+    position?.coords.accuracy,
+    hasEnded,
+  ]);
 
   useEffect(() => {
     if (!hasEnded) return;

@@ -4,7 +4,7 @@ import db from '@/dbconfig';
 import { EventError, TEventError } from '@/errors/events';
 import { eventDataSchema } from '@/features/events/schemas/eventSchema';
 import { tablenames } from '@/tablenames';
-import { createGeographyRow } from '@/util/geolocation/createGeographyRow';
+import { createGeographyRow } from '@/features/geolocation/util/createGeographyRow';
 import { loadSession } from '@/util/loadSession';
 
 /**Creates a new event.

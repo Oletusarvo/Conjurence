@@ -1,4 +1,9 @@
-## [0.4.0-alpha.1] -
+## [0.3.0-beta.2] - 13-08-2025
+
+### Changed
+
+- Moved distance and geolocation utils under their feature-folder.
+- Event auto-ending and joining to include a check against if the event has ended.
 
 ### Added
 

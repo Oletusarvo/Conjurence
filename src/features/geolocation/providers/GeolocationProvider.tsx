@@ -3,7 +3,7 @@
 import { useSessionStorage } from '@/hooks/useSessionStorage';
 import { useToggle } from '@/hooks/useToggle';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
-import { getDistanceInMeters } from '@/util/geolocation/getDistanceInMeters';
+import { getDistanceInMeters } from '@/features/distance/util/getDistanceInMeters';
 import { useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 

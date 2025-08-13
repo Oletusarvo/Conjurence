@@ -1,4 +1,4 @@
-function adjustedProximityThreshold(
+export function adjustedProximityThreshold(
   baseThreshold: number,
   a1: number,
   a2: number,
