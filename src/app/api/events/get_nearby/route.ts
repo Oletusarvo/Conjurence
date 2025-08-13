@@ -15,8 +15,6 @@ export async function GET(req: NextRequest) {
     const latitude = typeof lat === 'string' ? parseFloat(lat) : 0;
     const longitude = typeof lng === 'string' ? parseFloat(lng) : 0;
 
-    console.log(latitude, longitude);
-
     const events = await getEvent(db, { search: q })
       .whereRaw(
         `ST_DWithin(
@@ -29,7 +27,6 @@ export async function GET(req: NextRequest) {
       )
       .where({ ended_at: null });
 
-    console.log(events);
     return new NextResponse(JSON.stringify(events), { status: 200 });
   } catch (err: any) {
     console.log(err.message);

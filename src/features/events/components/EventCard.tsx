@@ -1,3 +1,5 @@
+'use client';
+
 import { AtSign, Star } from 'lucide-react';
 import { useClassName } from '@/hooks/useClassName';
 import { EventStatusBadge } from './EventStatusBadge';
@@ -26,10 +28,8 @@ export function EventCard({ ...props }: EventCardProps) {
     <ModalStackProvider>
       <div
         {...props}
-        onClick={() => (event ? router.push('/app/event/' + event.id) : null)}
+        onClick={() => (event && !hasEnded ? router.push('/app/event/' + event.id) : null)}
         className={cardClassName}>
-        {hasEnded && <div className='absolute top-0 left-0 backdrop-blur-xs w-full h-full'></div>}
-
         <CardHeader />
         <p className='tracking-tight leading-[18px]'>{event?.description || 'No description'}</p>
         <CardFooter />
@@ -61,6 +61,7 @@ function CardHeader() {
 }
 
 function CardFooter() {
+  const { hasEnded } = useEventContext();
   return (
     <div className='flex justify-between gap-2 w-full text-sm font-semibold'>
       <div className='flex items-center gap-4'>
@@ -68,7 +69,7 @@ function CardFooter() {
         <JoinedCountBadge />
       </div>
 
-      <DistanceBadge />
+      {!hasEnded && <DistanceBadge />}
     </div>
   );
 }

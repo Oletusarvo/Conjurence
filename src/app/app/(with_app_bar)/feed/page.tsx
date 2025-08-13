@@ -6,6 +6,7 @@ import { SearchProvider } from '@/providers/SearchProvider';
 import { tablenames } from '@/tablenames';
 import { Pill } from '@/components/Pill';
 import { capitalize } from '@/util/capitalize';
+import { EventFeedTabs } from '@/features/events/components/EventFeedTabs';
 
 export const revalidate = 0;
 
@@ -24,7 +25,7 @@ export default async function EventFeedPage({ searchParams }: any) {
 
   return (
     <SearchProvider>
-      <EventFeed />
+      <EventFeedTabs />
     </SearchProvider>
   );
 }

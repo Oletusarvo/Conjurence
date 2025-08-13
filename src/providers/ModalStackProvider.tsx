@@ -1,17 +1,7 @@
 'use client';
 
-import { Modal } from '@/components/Modal';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
 import { ReactNode, useState } from 'react';
-
-type ButtonConfigProps = { props?: React.ComponentProps<'button'>; content: ReactNode };
-
-type ModalConfig = {
-  title: string;
-  content: ReactNode;
-  confirmButtonConfig: ButtonConfigProps;
-  cancelButtonConfig: ButtonConfigProps;
-};
 
 const [ModalStackContext, useModalStackContext] = createContextWithUseHook<{
   pushModal: (config: ReactNode) => void;

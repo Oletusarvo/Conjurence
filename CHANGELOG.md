@@ -1,3 +1,9 @@
+## [0.4.0-alpha.1] -
+
+### Added
+
+- Tabs into the event feed for viewing nearby events, as well as attended events.
+
 ## [0.3.0-beta.1] - 13-08-2025
 
 ### Fixed

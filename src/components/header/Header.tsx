@@ -15,8 +15,6 @@ export function Header({ children, ...props }: React.ComponentProps<'header'>) {
 }
 
 export function Logo() {
-  const versionString = version.split('-').at(1);
-
   return (
     <Link
       href='/'
@@ -30,7 +28,7 @@ export function Logo() {
           className='font-semibold tracking-wider text-[10px]'>
           {name}
         </h2>
-        <small className='text-accent'>{versionString && capitalize(versionString)}</small>
+        <small className='text-accent'>{version}</small>
       </div>
     </Link>
   );
