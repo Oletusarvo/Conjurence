@@ -6,10 +6,6 @@ import { TAttendance } from '../schemas/attendanceSchema';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { updateAttendanceAction } from '../actions/updateAttendanceAction';
 import { toggleInterestAction } from '../actions/toggleInterestAction';
-import { redirect, usePathname } from 'next/navigation';
-import { useEventSocket } from '@/features/events/hooks/useEventSocket';
-import { useSocketHandlers } from '@/hooks/useSocketHandlers';
-import { getSession } from 'next-auth/react';
 
 export type TAttendanceStatusType = 'joining' | 'leaving' | 'ending';
 
@@ -53,11 +49,13 @@ export function UserAttendanceProvider({
       username: user.username,
       status: 'interested',
     });
+    await updateSession({ attended_event_id: eventId });
   };
 
   const cancelInterest = async (eventId: string) => {
     await updateAttendanceAction(eventId, 'canceled');
     updateAttendance(eventId, 'canceled');
+    await updateSession({ attended_event_id: null });
     //setAttendanceRecords(prev => prev.filter(r => r.event_instance_id !== eventId));
   };
 
@@ -67,19 +65,13 @@ export function UserAttendanceProvider({
   const join = async (eventId: string) => {
     await updateAttendanceAction(eventId, 'joined');
     updateAttendance(eventId, 'joined');
-    const currentSession = await getSession();
-    if (currentSession) {
-      await updateSession({ ...currentSession, attended_event_id: eventId });
-    }
+    await updateSession({ attended_event_id: eventId });
   };
 
   const leave = async (eventId: string) => {
     await updateAttendanceAction(eventId, 'left');
     updateAttendance(eventId, 'left');
-    const currentSession = await getSession();
-    if (currentSession) {
-      await updateSession({ ...currentSession, attended_event_id: eventId });
-    }
+    await updateSession({ attended_event_id: null });
   };
 
   const addAttendanceRecord = (data: TAttendance) =>

@@ -15,7 +15,10 @@ type EventAttendanceProviderProps = React.PropsWithChildren & {
   initialAttendanceRecords: TAttendance[];
 };
 
-/**Holds the attendees to on event. Responsible for listening to socket-events related to them and updating each accordingly. */
+/**Holds the attendees to on event. Responsible for listening to socket-events related to them and updating each accordingly.
+ * This provider is different from the UserAttendanceProvider, in that it holds the data of all users attending the event, not
+ * which events the logged in user is attending.
+ */
 export function EventAttendanceProvider({
   children,
   initialAttendanceRecords,
@@ -44,7 +47,6 @@ export function EventAttendanceProvider({
   useEventSocket({
     eventId: event.id,
     onInterest: payload => {
-      console.log('Payload at interest: ', payload);
       setAttendanceRecords(prev => [payload.newAttendanceRecord, ...prev]);
     },
     onAttendanceUpdate: payload => updateAttendee(payload),

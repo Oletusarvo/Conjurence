@@ -13,7 +13,6 @@ import { useUserContext } from '@/features/users/providers/UserProvider';
 import { useEventContext } from '../../events/providers/EventProvider';
 
 export function UserAttendanceStatusManager() {
-  const { updateSession } = useUserContext();
   const attendance = useUserAttendanceContext();
   const { event, hasEnded } = useEventContext();
   const currentAttendance = attendance.getAttendanceByEventId(event.id);

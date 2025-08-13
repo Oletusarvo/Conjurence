@@ -1,3 +1,9 @@
+## [0.3.0-beta.1] - 13-08-2025
+
+### Fixed
+
+- The bug causing unreliable attended_event_id updates on joining, ending or leaving an event.
+
 ## [0.3.0-alpha] - 12-08-2025
 
 ### Fixed

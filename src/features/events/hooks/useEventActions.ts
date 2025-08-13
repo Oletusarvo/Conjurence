@@ -22,10 +22,7 @@ export function useEventActions(eventId: string) {
     attended_event_id: string | null;
   }) => {
     await action();
-    const currentSession = await getSession();
-    if (currentSession) {
-      await updateSession({ ...currentSession, attended_event_id });
-    }
+    await updateSession({ attended_event_id });
   };
 
   /**@deprecated */
