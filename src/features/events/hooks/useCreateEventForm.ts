@@ -23,12 +23,8 @@ export function useCreateEventForm(template?: TEventData) {
       if (!position) {
         return { success: false, error: EventError.locationDisabled };
       }
-      console.log(position);
-      const pos = JSON.stringify(position);
 
-      console.log(pos);
-      payload.set('location', pos);
-
+      payload.set('location', JSON.stringify(position));
       return await createEventAction(payload, template?.id);
     },
     onSuccess: async res => {

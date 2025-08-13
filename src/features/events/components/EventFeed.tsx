@@ -76,12 +76,6 @@ export function EventFeed() {
           );
         }}
       />
-      {isPending ? (
-        <div className='flex w-full justify-center gap-4 items-center sublabel --secondary --outlined animate-slide-down'>
-          <span>Finding events close to you</span>
-          <Spinner />
-        </div>
-      ) : null}
     </>
   );
 }

@@ -34,6 +34,7 @@ export function UserAttendanceProvider({
   const [attendanceRecords, setAttendanceRecords] = useState(initialAttendanceRecords);
   const { user, updateSession } = useUserContext();
   const [currentAction, setCurrentAction] = useState<TAttendanceStatusType | null>(null);
+
   const updateAttendance = (eventId: string, status: TAttendance['status']) => {
     const newAttendance = [...attendanceRecords];
     const a = newAttendance.find(a => a.event_instance_id === eventId);

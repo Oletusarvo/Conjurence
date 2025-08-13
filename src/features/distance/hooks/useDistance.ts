@@ -9,7 +9,6 @@ export function useDistance() {
   const [status, isPending, setStatus, resetStatus] = useStatus('loading');
   const { event } = useEventContext();
   const { position } = useGeolocationContext();
-  console.log(event);
   const eventCoords = event?.location.coordinates as number[];
 
   useEffect(() => {

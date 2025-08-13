@@ -10,12 +10,21 @@ import toast from 'react-hot-toast';
 const [GeolocationContext, useGeolocationContext] = createContextWithUseHook<{
   toggleLocationEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   position: GeolocationPosition | null;
+  getPosition: () => Promise<GeolocationPosition>;
   locationEnabled: boolean;
 }>('useGeolocationContext can only be used within the scope of a GeolocationContext!');
 
 export function GeolocationProvider({ children }: React.PropsWithChildren) {
   const [locationEnabled, toggleLocationEnabled] = useToggle(true);
   const [position, setPosition] = useSessionStorage<GeolocationPosition | null>('incant-pos', null);
+
+  const getPosition = () =>
+    new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        pos => resolve(pos),
+        error => reject(error)
+      );
+    });
 
   useEffect(() => {
     if (typeof window === 'undefined' || !locationEnabled) {
@@ -29,17 +38,9 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
           if (!position) {
             setPosition(pos);
           } else {
-            if (pos.coords.accuracy >= 100) {
-              //Poor accuracy, only update position if old enough.
-              const positionAge = Date.now() - position.timestamp;
-              if (positionAge >= 1000 * 60) {
-                setPosition(pos);
-              }
-            } else {
-              const distanceToLastPosition = getDistanceInMeters(pos.coords, position.coords);
-              if (distanceToLastPosition >= 10) {
-                setPosition(pos);
-              }
+            const posAge = Date.now() - position.timestamp;
+            if (posAge >= 1000 * 15) {
+              setPosition(pos);
             }
           }
         },
@@ -52,7 +53,8 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
   }, [locationEnabled]);
 
   return (
-    <GeolocationContext.Provider value={{ locationEnabled, toggleLocationEnabled, position }}>
+    <GeolocationContext.Provider
+      value={{ locationEnabled, toggleLocationEnabled, position, getPosition }}>
       {children}
     </GeolocationContext.Provider>
   );

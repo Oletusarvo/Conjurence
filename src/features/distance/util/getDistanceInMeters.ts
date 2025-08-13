@@ -2,8 +2,8 @@ const R = 6371000; // Earth's radius in meters
 const toRadians = (deg: number) => deg * (Math.PI / 180);
 
 export function getDistanceInMeters(
-  coords1: GeolocationCoordinates,
-  coords2: GeolocationCoordinates
+  coords1: Pick<GeolocationCoordinates, 'longitude' | 'latitude'>,
+  coords2: Pick<GeolocationCoordinates, 'longitude' | 'latitude'>
 ): number {
   const dLat = toRadians(coords2.latitude - coords1.latitude);
   const dLon = toRadians(coords2.longitude - coords1.longitude);

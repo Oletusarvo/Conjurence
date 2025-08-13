@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 
+/**Creates a context and a hook to use it. */
 export function createContextWithUseHook<T extends {}>(errorMsg?: string) {
   const Ctx = createContext<T | null>(null);
   const useContextHook = () => {

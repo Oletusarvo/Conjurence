@@ -1,3 +1,13 @@
+## [0.3.2-beta] - 13-08-2025
+
+### Fixed
+
+- Auto-joining not working in production.
+
+### Added
+
+- JSDoc comments on some methods.
+
 ## [0.3.1-beta.2] - 13-08-2025
 
 ### Fixed

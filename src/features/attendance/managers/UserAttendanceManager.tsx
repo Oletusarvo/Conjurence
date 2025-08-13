@@ -32,34 +32,39 @@ export function UserAttendanceManager() {
   const currentAttendance = attendance.getAttendanceByEventId(event.id);
   const { addTimeout, removeTimeout } = useTimeout();
 
-  const handleAction = (
-    predicate: () => boolean,
-    action: TAttendanceStatusType,
-    tname: string,
-    cb: () => Promise<void>
-  ) => {
-    if (predicate()) {
-      if (attendance.currentAction !== action) {
-        attendance.setCurrentAction(action);
-        addTimeout(
-          tname,
-          async () => {
-            await cb();
-            attendance.setCurrentAction(null);
-          },
-          timeout
-        );
-      }
-    } else {
-      removeTimeout(tname);
-      attendance.setCurrentAction(null);
-    }
-  };
-
   useEffect(() => {
     if (distancePending || !currentAttendance) {
       return;
     }
+
+    const handleAction = (
+      predicate: () => boolean,
+      action: TAttendanceStatusType,
+      tname: string,
+      cb: () => Promise<void>
+    ) => {
+      if (predicate()) {
+        if (attendance.currentAction !== action) {
+          attendance.setCurrentAction(action);
+          addTimeout(
+            tname,
+            async () => {
+              try {
+                await cb();
+              } catch (err) {
+                console.log('Action failed!');
+              }
+
+              attendance.setCurrentAction(null);
+            },
+            timeout
+          );
+        }
+      } else {
+        removeTimeout(tname);
+        attendance.setCurrentAction(null);
+      }
+    };
 
     if (currentAttendance.status === 'interested') {
       //Automatically join an event if close enough to it.
@@ -69,7 +74,9 @@ export function UserAttendanceManager() {
           shouldJoin(distance, position.coords.accuracy, event.position_accuracy, joinThreshold),
         'joining',
         'join-timeout',
-        async () => await attendance.join(event.id)
+        async () => {
+          await attendance.join(event.id);
+        }
       );
     }
 
@@ -102,8 +109,16 @@ export function UserAttendanceManager() {
     distancePending,
     distance,
     event.id,
+    event.position_accuracy,
+    position.coords.accuracy,
     position?.coords.accuracy,
     hasEnded,
+    attendance?.currentAction,
+    addTimeout,
+    removeTimeout,
+    shouldJoin,
+    shouldLeave,
+    endEventAction,
   ]);
 
   useEffect(() => {
