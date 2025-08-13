@@ -1,3 +1,9 @@
+## [0.3.1-beta.2] - 13-08-2025
+
+### Fixed
+
+- The content inside the Tab-component being pushed upwards when the border appears on selection.
+
 ## [0.3.0-beta.2] - 13-08-2025
 
 ### Changed
