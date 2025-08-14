@@ -7,15 +7,14 @@ require('dotenv').config();
 module.exports = {
   development: {
     client: 'pg',
-    connection:
-      'postgresql://neondb_owner:npg_6gHpl2hQtUqb@ep-muddy-dew-a254w1uf-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' /*{
+    connection: process.env.DB_DEV_URL,
+    /*{
       user: 'dev_user',
       database: 'socialize_dev_db',
       password: process.env.DB_DEV_PASSWORD,
       host: 'localhost',
       port: 5432,
-    }*/,
-    pool: {
+    }*/ pool: {
       min: 0,
       max: 2,
     },

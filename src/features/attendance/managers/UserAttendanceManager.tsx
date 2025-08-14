@@ -12,6 +12,7 @@ import { endEventAction } from '@/features/events/actions/endEventAction';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
 import { shouldJoin, shouldLeave } from '@/features/attendance/util/autoJoin';
+import toast from 'react-hot-toast';
 
 const joinThreshold = 15;
 const leaveThreshold = 25;
@@ -52,7 +53,7 @@ export function UserAttendanceManager() {
               try {
                 await cb();
               } catch (err) {
-                console.log('Action failed!');
+                toast.error('Something went wrong!');
               }
 
               attendance.setCurrentAction(null);
@@ -110,8 +111,8 @@ export function UserAttendanceManager() {
     distance,
     event.id,
     event.position_accuracy,
-    position.coords.accuracy,
     position?.coords.accuracy,
+
     hasEnded,
     attendance?.currentAction,
     addTimeout,

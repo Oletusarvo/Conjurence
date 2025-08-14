@@ -1,3 +1,18 @@
+## [0.3.3-beta] - 14-08-2025
+
+### Fixed
+
+- Incorrect version number in package.json
+
+### Changed
+
+- knexfile development database connection to use a .env variable.
+- Wrapped UserAttendanceProvider method-contents inside try-catch blocks.
+
+### Removed
+
+- The tabs from the event feed.
+
 ## [0.3.2-beta] - 13-08-2025
 
 ### Fixed

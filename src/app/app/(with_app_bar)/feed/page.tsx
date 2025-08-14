@@ -25,7 +25,7 @@ export default async function EventFeedPage({ searchParams }: any) {
 
   return (
     <SearchProvider>
-      <EventFeedTabs />
+      <EventFeed />
     </SearchProvider>
   );
 }

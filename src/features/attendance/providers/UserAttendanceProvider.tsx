@@ -6,6 +6,7 @@ import { TAttendance } from '../schemas/attendanceSchema';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { updateAttendanceAction } from '../actions/updateAttendanceAction';
 import { toggleInterestAction } from '../actions/toggleInterestAction';
+import toast from 'react-hot-toast';
 
 export type TAttendanceStatusType = 'joining' | 'leaving' | 'ending';
 
@@ -44,35 +45,51 @@ export function UserAttendanceProvider({
   };
 
   const showInterest = async (eventId: string) => {
-    await toggleInterestAction(eventId);
-    addAttendanceRecord({
-      event_instance_id: eventId,
-      username: user.username,
-      status: 'interested',
-    });
-    await updateSession({ attended_event_id: eventId });
+    try {
+      await toggleInterestAction(eventId);
+      addAttendanceRecord({
+        event_instance_id: eventId,
+        username: user.username,
+        status: 'interested',
+      });
+      await updateSession({ attended_event_id: eventId });
+    } catch (err) {
+      toast.error('Something went wrong!');
+    }
   };
 
   const cancelInterest = async (eventId: string) => {
-    await updateAttendanceAction(eventId, 'canceled');
-    updateAttendance(eventId, 'canceled');
-    await updateSession({ attended_event_id: null });
-    //setAttendanceRecords(prev => prev.filter(r => r.event_instance_id !== eventId));
+    try {
+      await updateAttendanceAction(eventId, 'canceled');
+      updateAttendance(eventId, 'canceled');
+      await updateSession({ attended_event_id: null });
+      //setAttendanceRecords(prev => prev.filter(r => r.event_instance_id !== eventId));
+    } catch (err) {
+      toast.error('Something went wrong!');
+    }
   };
 
   /**Joins an event. Calls updateAttendanceAction with the given id, and afterwards updates the current attendance records, setting the attendance-status to "joined".
    * @param args The id of the event to join to.
    */
   const join = async (eventId: string) => {
-    await updateAttendanceAction(eventId, 'joined');
-    updateAttendance(eventId, 'joined');
-    await updateSession({ attended_event_id: eventId });
+    try {
+      await updateAttendanceAction(eventId, 'joined');
+      updateAttendance(eventId, 'joined');
+      await updateSession({ attended_event_id: eventId });
+    } catch (err) {
+      toast.error('Something went wrong!');
+    }
   };
 
   const leave = async (eventId: string) => {
-    await updateAttendanceAction(eventId, 'left');
-    updateAttendance(eventId, 'left');
-    await updateSession({ attended_event_id: null });
+    try {
+      await updateAttendanceAction(eventId, 'left');
+      updateAttendance(eventId, 'left');
+      await updateSession({ attended_event_id: null });
+    } catch (err) {
+      toast.error('Something went wrong!');
+    }
   };
 
   const addAttendanceRecord = (data: TAttendance) =>
