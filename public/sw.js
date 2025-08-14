@@ -59,8 +59,14 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetchWithTimeout(event.request, TIMEOUT_MS)
         .then(async networkResponse => {
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(event.request, networkResponse.clone());
+          if (networkResponse.status === 200) {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(event.request, networkResponse.clone());
+          } else {
+            //Load from cache.
+            const cachedResponse = await caches.match(event.request);
+            if (cachedResponse) return cachedResponse;
+          }
           return networkResponse;
         })
         .catch(async () => {

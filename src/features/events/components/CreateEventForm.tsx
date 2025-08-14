@@ -11,6 +11,7 @@ import { Notice } from '@/components/Notice';
 import { useState } from 'react';
 import { Sublabel } from '@/components/Sublabel';
 import { capitalize } from '@/util/capitalize';
+import { List } from '@/components/List';
 
 type CreateEventForm = {
   categories: { id: string; label: string; description?: string }[];
@@ -20,7 +21,7 @@ type CreateEventForm = {
 export function CreateEventForm({ categories, template }: CreateEventForm) {
   const { submitEvent, isPending, status } = useCreateEventForm(template);
   const [selectedCategory, setSelectedCategory] = useState(() => {
-    return categories.at(0)?.description || null;
+    return categories.at(0) || null;
   });
 
   const router = useRouter();
@@ -65,19 +66,24 @@ export function CreateEventForm({ categories, template }: CreateEventForm) {
         <select
           name='event_category_id'
           defaultValue={template?.event_category_id}
+          value={selectedCategory.id}
           required>
-          {categories.map((cat, i) => {
-            return (
-              <option
-                onClick={() => setSelectedCategory(cat.description)}
-                key={`cat-option-${i}`}
-                value={cat.id}>
-                {capitalize(cat.label)}
-              </option>
-            );
-          })}
+          <List
+            data={categories}
+            component={({ item: cat }) => {
+              return (
+                <option
+                  onChange={() => setSelectedCategory(cat)}
+                  value={cat.id}>
+                  {capitalize(cat.label)}
+                </option>
+              );
+            }}
+          />
         </select>
-        {selectedCategory && <Sublabel>{selectedCategory || 'No description.'}</Sublabel>}
+        {selectedCategory && (
+          <Sublabel>{selectedCategory.description || 'No description.'}</Sublabel>
+        )}
       </div>
 
       <div className='flex gap-4 w-full justify-between'>

@@ -1,10 +1,7 @@
 'use client';
 
-import { AtSign, Star } from 'lucide-react';
 import { useClassName } from '@/hooks/useClassName';
 import { EventStatusBadge } from './EventStatusBadge';
-import { useToggle } from '@/hooks/useToggle';
-import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
 import { useRouter } from 'next/navigation';
 import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { useEventContext } from '../providers/EventProvider';
@@ -40,7 +37,7 @@ export function EventCard({ ...props }: EventCardProps) {
 
 function CardHeader() {
   const {
-    event: { title, host, category, spots_available, created_at },
+    event: { title, created_at },
   } = useEventContext();
 
   return (

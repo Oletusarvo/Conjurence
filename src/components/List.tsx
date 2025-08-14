@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useId, useMemo } from 'react';
 
 type ListProps<T> = {
   data: T[];
@@ -10,12 +10,12 @@ type ListProps<T> = {
 
 export function List<T>({ data, component: Component, sortFn }: ListProps<T>) {
   const sorted = sortFn ? data.sort(sortFn) : data;
-
+  const listId = useId();
   return useMemo(() => {
     return sorted.map((item, index) => {
       return (
         <Component
-          key={`list-item-${JSON.stringify(item)}-${index}`}
+          key={`list-item-${listId}-${index}`}
           item={item}
         />
       );

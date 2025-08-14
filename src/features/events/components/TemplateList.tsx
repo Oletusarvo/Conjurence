@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ContainerLink } from '../../../components/ContainerLink';
 import { Dice5, NotepadTextDashed } from 'lucide-react';
 import { withAlternate } from '@/hoc/withAlternate';
-import { SearchProvider } from '@/providers/SearchProvider';
+import { SearchProvider, useSearchProvider } from '@/providers/SearchProvider';
 
 type TemplateListProps = {
   templates: Omit<
@@ -17,12 +17,16 @@ type TemplateListProps = {
 
 export function TemplateList({ templates }: TemplateListProps) {
   const Component = withAlternate(List, true);
+  const { order } = useSearchProvider();
 
   return (
     <Component
       showAlternate={templates.length == 0}
       alternate={<NoTemplates />}
       data={templates}
+      sortFn={(a, b) => {
+        return order === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title);
+      }}
       component={({ item }) => (
         <ContainerLink
           href={'/app/event/create/from_template/' + item.id}

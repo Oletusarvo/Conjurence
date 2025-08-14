@@ -1,3 +1,16 @@
+## [0.3.4] - 14-08-2025
+
+### Fixed
+
+- The description not changing in production when selecting an event category.
+- The sorting button not working when viewing event templates.
+
+### Changed
+
+- Serviceworker to return a cached response if the fetch returns a status other than 200.
+- CreateEventForm to use a List-component to render the options for the event category-select.
+- List-component creates an id for itself using useId, and adds it in the key for each item.
+
 ## [0.3.3-beta] - 14-08-2025
 
 ### Fixed
