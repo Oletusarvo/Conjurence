@@ -65,8 +65,7 @@ export function CreateEventForm({ categories, template }: CreateEventForm) {
       <div className='form-input-group'>
         <select
           name='event_category_id'
-          defaultValue={template?.event_category_id}
-          value={selectedCategory.id}
+          defaultValue={selectedCategory.id}
           required>
           <List
             data={categories}

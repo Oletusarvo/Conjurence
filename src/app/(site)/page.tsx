@@ -26,9 +26,8 @@ export default async function HomePage() {
         <h1>Welcome To {packageName}</h1>
         <article>
           <p className='text-gray-300'>
-            Conjure a casual hangout for curious folks nearby to discover. Whether it’s a rooftop
-            chat, a twilight walk, or a low-key game night, just set the title, description and
-            vibe. Let the evening take shape and see who drifts in!
+            Discover spontaneous local gatherings and join in when the mood strikes. Create events,
+            meet new people, and connect in real life — all with a tap.
           </p>
         </article>
         <div className='flex gap-2 w-full justify-center'>
@@ -43,51 +42,33 @@ export default async function HomePage() {
       <section className='flex flex-col gap-8 py-24 items-center px-default bg-background-light'>
         <h2>What Is {packageName}?</h2>
         <p className='text-gray-300'>
-          Here’s how it works: conjure up an event by setting a title, description, and how many
-          people you’re hoping to summon. Your location is set automatically, so nearby wanderers
-          can spot your gathering.
-          <br />
-          <br />
-          If someone feels the pull, they can show interest with a single click — no binding pacts,
-          just a gentle signal. Once they drift close to the event’s location, they’ll be marked as
-          attending. You can always see who’s circling your event, and decide if you want to join
-          others’ gatherings too.
-          <br />
-          <br />
-          It’s all about spontaneous, real-world connections. No pressure, no fuss — just a little
-          magic in the mix.
+          {packageName} is a platform for creating and discovering unofficial, small, local social
+          events. Whether you're hosting a board game night, a casual meetup, or just hanging out,
+          you can list your event for others nearby to find and join. The app makes it easy to
+          connect with people in your area, join gatherings spontaneously, and meet new friends in
+          real life.
         </p>
       </section>
       <section className='flex flex-col gap-8 py-24 items-center px-default'>
         <h2>Features</h2>
         <ul className='flex flex-col gap-4'>
-          <FeatureListItem>
-            <h3>Create Events</h3>
-            <p className='text-gray-300'>
-              Start something simple — a rooftop hangout, poker night, street chess, or night walk.
-              Add a title, description, and location. That’s it.
-            </p>
+          <FeatureListItem title='Create Local Events'>
+            Easily set up spontaneous gatherings with a title, description, category, and available
+            spots. Your location is automatically set so nearby users can discover your event.
           </FeatureListItem>
-          <FeatureListItem>
-            <h3>Show Interest</h3>
-            <p className='text-gray-300'>
-              Click the star to let others know you're intrigued — it's not a commitment, just a
-              signal. Hosts and other users can see who's circling the vibe.
-            </p>
+          <FeatureListItem title='Automatic Joining & Leaving'>
+            Show interest in any event and you'll be joined automatically when you're close by. Move
+            away, and you'll leave the event — no manual check-ins needed.
           </FeatureListItem>
-
-          <FeatureListItem>
-            <h3>Local & Real</h3>
-            <p className='text-gray-300'>
-              Everything here happens in the real world. Browse events around you and decide for
-              yourself if you want to show up.
-            </p>
+          <FeatureListItem title='Host Controls'>
+            Hosts can end events by moving away, or tapping a button, ensuring gatherings stay
+            relevant and local.
           </FeatureListItem>
         </ul>
       </section>
       <footer className='py-24 bg-background-light px-default flex flex-col gap-8 items-center'>
         <div className='flex flex-col gap-2'>
-          <Link href='/terms'>Terms Of Service</Link>
+          <Link href='/terms.pdf'>Terms Of Service</Link>
         </div>
 
         <div className='flex flex-col gap-2 items-center'>
@@ -100,10 +81,11 @@ export default async function HomePage() {
   );
 }
 
-function FeatureListItem({ children }) {
+function FeatureListItem({ children, title }) {
   return (
     <li className='flex flex-col bg-background-light rounded-xl p-4 border border-gray-400'>
-      {children}
+      <h3>{title}</h3>
+      <p className='text-gray-300'>{children}</p>
     </li>
   );
 }

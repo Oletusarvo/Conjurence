@@ -8,18 +8,13 @@ import { useUserAttendanceContext } from '@/features/attendance/providers/UserAt
 import { useModalStackContext } from '@/providers/ModalStackProvider';
 import { Dialog } from '@/components/Dialog';
 import { useEventActionContext } from '../providers/EventActionProvider';
-import { endEventAction } from '../actions/endEventAction';
 
 /**
  * Renders the button displayed on the app/event/[event_id] page.
  * Does a different action based on the participant status of the user:
- * User is not joined - will make a new join request.
- * User has made a request, but is still pending - will cancel the request.
- * User is host - will end the event.
+ * User is not joined - will show interest on the event.
  * User is joined - will leave the event.
- *
- * @todo Implement handling for when users are rejected.
- * @todo Implement handling for when users have left.
+ * User is host - will end the event.
  */
 
 export function EventActionButton(props: React.ComponentProps<'button'>) {

@@ -2,7 +2,7 @@
 @import 'tailwindcss';
 
 :root {
-  --background: linear-gradient(to bottom, #191919 40%, rgb(36, 0, 36));
+  --background: #191919;
   --foreground: #ffffff;
   --background-light: #222222;
   --accent: var(--color-yellow-500);

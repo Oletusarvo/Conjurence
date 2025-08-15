@@ -1,3 +1,18 @@
+## [0.4.0-alpha.1] - 15-08-2025
+
+### Changed
+
+- Removed manual position age checking, instead using the options for the watchPosition-function.
+- Moved event-actions within the EventActionProvider file.
+- The JSDoc for the EventActionButton.
+- The autoJoin-methods to use the getThresholdAdjusted-function when comparing to a threshold.
+
+### Removed
+
+- Deprecated event-actions from the useEventActions-hook.
+- The empty managers-folder from under the events-folder.
+- The empty dialogs-folder from under the events-folder.
+
 ## [0.3.4] - 14-08-2025
 
 ### Fixed

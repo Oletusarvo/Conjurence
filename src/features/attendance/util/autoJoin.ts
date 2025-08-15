@@ -1,3 +1,5 @@
+import { getThresholdAdjusted } from '@/features/distance/util/getThresholdAdjusted';
+
 export function adjustedProximityThreshold(
   baseThreshold: number,
   a1: number,
@@ -15,7 +17,7 @@ export function shouldJoin(
   baseJoinThreshold: number,
   k: number = 1.0
 ) {
-  return d_measured <= adjustedProximityThreshold(baseJoinThreshold, a1, a2, k);
+  return d_measured <= getThresholdAdjusted(baseJoinThreshold, a1, a2);
 }
 
 export function shouldLeave(
@@ -25,5 +27,5 @@ export function shouldLeave(
   baseLeaveThreshold: number,
   k: number = 1.0
 ) {
-  return d_measured > adjustedProximityThreshold(baseLeaveThreshold, a1, a2, k);
+  return d_measured > getThresholdAdjusted(baseLeaveThreshold, a1, a2);
 }

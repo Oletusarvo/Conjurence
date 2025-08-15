@@ -2,16 +2,9 @@
 
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
 import { TEvent } from '../schemas/eventSchema';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useEventSocket } from '../hooks/useEventSocket';
-import axios from 'axios';
-import { useAbortSignal } from '@/hooks/useAbortController';
 import { useReloadData } from '@/hooks/useReloadData';
-import { useRouter } from 'next/navigation';
-import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
-import { useDistance } from '../../distance/hooks/useDistance';
-import { endEventAction } from '../actions/endEventAction';
-import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
 
 type EventProviderProps = React.PropsWithChildren & {
   initialEvent: TEvent;

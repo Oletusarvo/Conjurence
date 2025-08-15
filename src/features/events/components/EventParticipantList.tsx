@@ -12,6 +12,7 @@ import { useEventContext } from '@/features/events/providers/EventProvider';
 import { rejectJoinRequestAction } from '@/features/attendance/actions/experimental/rejectJoinRequestAction';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 import { useSocketRoom } from '@/hooks/useSocketRoom';
+import { List } from '@/components/List';
 
 export function AttendantList({ initialAttendants }) {
   const { event } = useEventContext();
@@ -62,24 +63,26 @@ export function AttendantList({ initialAttendants }) {
 
         <div className='flex flex-col gap-1 py-2 px-4 w-full'>
           <TabsProvider.Tab tabIndex={0}>
-            {joined.map((u, i) => {
-              return (
+            <List
+              data={joined}
+              component={({ item }) => (
                 <ParticipantListing
                   hostUsername={host}
-                  key={`joined-participant-${i}`}
-                  participant={u}></ParticipantListing>
-              );
-            })}
+                  participant={item}
+                />
+              )}
+            />
           </TabsProvider.Tab>
           <TabsProvider.Tab tabIndex={1}>
-            {pending.map((u, i) => {
-              return (
+            <List
+              data={pending}
+              component={({ item }) => (
                 <ParticipantListing
                   hostUsername={host}
-                  key={`pending-participant-${i}`}
-                  participant={u}></ParticipantListing>
-              );
-            })}
+                  participant={item}
+                />
+              )}
+            />
           </TabsProvider.Tab>
         </div>
       </TabsProvider>
