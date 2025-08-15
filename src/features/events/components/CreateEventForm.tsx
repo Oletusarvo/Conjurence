@@ -15,14 +15,14 @@ import { List } from '@/components/List';
 
 type CreateEventForm = {
   categories: { id: string; label: string; description?: string }[];
+  thresholds: { id: number; label: string; description: string }[];
   template?: TEventData;
 };
 
-export function CreateEventForm({ categories, template }: CreateEventForm) {
+export function CreateEventForm({ categories, thresholds, template }: CreateEventForm) {
   const { submitEvent, isPending, status } = useCreateEventForm(template);
-  const [selectedCategory, setSelectedCategory] = useState(() => {
-    return categories.at(0) || null;
-  });
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedThreshold, setSelectedThreshold] = useState(null);
 
   const router = useRouter();
 
@@ -36,6 +36,7 @@ export function CreateEventForm({ categories, template }: CreateEventForm) {
     );
   });
 
+  console.log(selectedThreshold, thresholds);
   return (
     <form
       className='flex flex-col gap-2 sm:w-[450px] xs:w-full'
@@ -65,23 +66,52 @@ export function CreateEventForm({ categories, template }: CreateEventForm) {
       <div className='form-input-group'>
         <select
           name='event_category_id'
-          defaultValue={selectedCategory.id}
+          value={selectedCategory}
+          onChange={e => setSelectedCategory(e.target.value)}
           required>
+          <option
+            value='null'
+            disabled>
+            Select event type...
+          </option>
           <List
             data={categories}
             component={({ item: cat }) => {
-              return (
-                <option
-                  onChange={() => setSelectedCategory(cat)}
-                  value={cat.id}>
-                  {capitalize(cat.label)}
-                </option>
-              );
+              return <option value={cat.id}>{capitalize(cat.label)}</option>;
             }}
           />
         </select>
         {selectedCategory && (
-          <Sublabel>{selectedCategory.description || 'No description.'}</Sublabel>
+          <Sublabel>
+            {categories.find(c => c.id == selectedCategory)?.description || 'No description.'}
+          </Sublabel>
+        )}
+      </div>
+
+      <div className='form-input-group'>
+        <select
+          name='event_threshold_id'
+          value={selectedThreshold || 'null'}
+          onChange={e => {
+            setSelectedThreshold(e.target.value);
+          }}
+          required>
+          <option
+            value='null'
+            disabled>
+            Select event size...
+          </option>
+          <List
+            data={thresholds}
+            component={({ item }) => {
+              return <option value={item.id}>{capitalize(item.label)}</option>;
+            }}
+          />
+        </select>
+        {selectedThreshold && (
+          <Sublabel>
+            {thresholds.find(t => t.id == selectedThreshold)?.description || 'No description.'}
+          </Sublabel>
         )}
       </div>
 

@@ -26,6 +26,17 @@ export default async function CreateEventFromTemplatePage({ params }) {
     )
     .select('description', 'label', 'ec.id as id');
 
+  const thresholds = await db({ et: tablenames.event_threshold })
+    .leftJoin(
+      db
+        .select('event_threshold_id', 'description')
+        .from(tablenames.event_threshold_description)
+        .as('etd'),
+      'etd.event_threshold_id',
+      'et.id'
+    )
+    .select('et.id', 'et.label', 'etd.description');
+
   return (
     <div className='flex flex-col px-default w-full flex-1 justify-center items-center'>
       <FormContainer>
@@ -33,6 +44,7 @@ export default async function CreateEventFromTemplatePage({ params }) {
         <CreateEventForm
           categories={categories}
           template={templateRecord}
+          thresholds={thresholds}
         />
       </FormContainer>
     </div>

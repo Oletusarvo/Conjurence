@@ -22,6 +22,8 @@ const tables = {
    */
   event_participant: 'event_attendance',
   event_participant_status: 'event_attendance_status',
+  event_threshold: 'event_threshold',
+  event_threshold_description: 'event_threshold_description',
   notification: 'notification',
   notification_type: 'notification_type',
 };
@@ -40,6 +42,8 @@ export const tablenames = {
   event_category_description: getFullTableName(schemas.events, tables.event_category_description),
   event_attendance: getFullTableName(schemas.events, tables.event_participant),
   event_attendance_status: getFullTableName(schemas.events, tables.event_participant_status),
+  event_threshold: getFullTableName(schemas.events, tables.event_threshold),
+  event_threshold_description: getFullTableName(schemas.events, tables.event_threshold_description),
   notification: getFullTableName(schemas.users, tables.notification),
   notification_type: getFullTableName(schemas.users, tables.notification_type),
 };

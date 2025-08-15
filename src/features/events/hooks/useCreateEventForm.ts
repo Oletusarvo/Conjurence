@@ -25,6 +25,7 @@ export function useCreateEventForm(template?: TEventData) {
       }
 
       payload.set('location', JSON.stringify(position));
+      console.log(payload);
       return await createEventAction(payload, template?.id);
     },
     onSuccess: async res => {

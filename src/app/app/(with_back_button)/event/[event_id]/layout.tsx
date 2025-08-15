@@ -2,31 +2,22 @@ import { BaseEventModalBody } from '@/features/events/components/BaseEventModalB
 import { EventStatusBadge } from '@/features/events/components/EventStatusBadge';
 import { getEvent } from '@/features/events/dal/getEvent';
 import db from '@/dbconfig';
-import { loadSession } from '@/util/loadSession';
-import { getAttendance } from '@/features/attendance/dal/getAttendance';
 import { UserAttendanceStatusManager } from '@/features/attendance/managers/UserAttendanceStatusManager';
 import { Suspense } from 'react';
 import { Spinner } from '@/components/Spinner';
 import { EventProvider } from '@/features/events/providers/EventProvider';
 import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { EventActionProvider } from '@/features/events/providers/EventActionProvider';
-import { MapPin } from 'lucide-react';
 import { DistanceBadge } from '@/features/distance/components/DistanceBadge';
 import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
 import { UserAttendanceManager } from '@/features/attendance/managers/UserAttendanceManager';
 import { EventActionButton } from '@/features/events/components/EventActionButton';
-import { EventAttendanceProvider } from '@/features/attendance/providers/EventAttendanceProvider';
 import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
-import { AttendanceFeed } from '@/features/attendance/components/AttendanceFeed';
 import { CategoryBadge } from '@/features/events/components/CategoryBadge';
 import { SpotsAvailableBadge } from '@/features/events/components/SpotsAvailableBadge';
 import { HostBadge } from '@/features/events/components/HostBadge';
-import { ContactHostLink } from '@/features/events/components/ContactHostLink';
-import { tablenames } from '@/tablenames';
-import { getContact } from '@/features/users/dal/getContact';
 import { InterestedCountBadge } from '@/features/events/components/InterestedCountBadge';
-import { JoinDistanceBadge } from '@/features/distance/components/JoinDistanceBadge';
-import { LeaveDistanceBadge } from '@/features/distance/components/LeaveDistanceBadge';
+import { DistanceThresholdDisplay } from '@/features/distance/components/DistanceThresholdDisplay';
 
 export const revalidate = 0;
 
@@ -51,7 +42,7 @@ export default async function EventPage({ params, attendance }) {
               <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-background-light-border'>
                 <div className='flex items-start px-2 w-full'>
                   <div className='flex flex-col items-start gap-4 w-full'>
-                    <div className='flex gap-2 items-center justify-between w-full'>
+                    <div className='flex gap-2 items-start justify-between w-full'>
                       <div className='flex flex-col gap-2'>
                         <h3>{event?.title}</h3>
                         <div className='flex gap-2'>
@@ -66,19 +57,18 @@ export default async function EventPage({ params, attendance }) {
                         <CategoryBadge />
                         <SpotsAvailableBadge />
                       </div>
-
-                      <div className='flex gap-2'>
-                        <JoinDistanceBadge />
-                        <LeaveDistanceBadge />
-                      </div>
                     </div>
 
                     <p className='tracking-tight leading-[18px]'>{event?.description}</p>
-                    <div className='flex flex-col gap-4 w-full'>
+                    <div className='flex w-full justify-between'>
                       <div className='flex gap-4'>
                         <InterestedCountBadge />
                         <JoinedCountBadge />
+                      </div>
+
+                      <div className='flex gap-2'>
                         <DistanceBadge />
+                        <DistanceThresholdDisplay />
                       </div>
                     </div>
                   </div>

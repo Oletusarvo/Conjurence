@@ -9,7 +9,7 @@ export function InterestedCountBadge({ ...props }) {
   const { event, interestCount } = useEventContext();
   const { getAttendanceByEventId } = useUserAttendanceContext();
   const thisEventParticipation = getAttendanceByEventId(event.id);
-  const [selected] = useToggle(!!thisEventParticipation);
+  const selected = !!thisEventParticipation;
 
   const isHost = thisEventParticipation?.status === 'host';
 

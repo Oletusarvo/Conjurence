@@ -2,10 +2,11 @@
 
 import db from '@/dbconfig';
 import { EventError, TEventError } from '@/errors/events';
-import { eventDataSchema } from '@/features/events/schemas/eventSchema';
+import { eventDataSchema, eventInstanceSchema } from '@/features/events/schemas/eventSchema';
 import { tablenames } from '@/tablenames';
 import { createGeographyRow } from '@/features/geolocation/util/createGeographyRow';
 import { loadSession } from '@/util/loadSession';
+import { parseFormDataUsingSchema } from '@/util/parseUsingSchema';
 
 /**Creates a new event.
  * @param payload The data for the event.
@@ -18,13 +19,14 @@ export async function createEventAction(
   const session = await loadSession();
   const data = Object.fromEntries(payload);
 
-  const parseResult = eventDataSchema.safeParse(data);
+  const parseResult = parseFormDataUsingSchema(payload, eventDataSchema);
   if (!parseResult.success) {
     const msg = parseResult.error.issues.at(0)?.message as TEventError;
     return { success: false, error: msg };
   }
 
   const parsedData = parseResult.data;
+  const parsedInstance = eventInstanceSchema.parse(Object.fromEntries(payload));
 
   //Prevent adding more templates than allowed
   if (parsedData.is_template) {
@@ -101,6 +103,7 @@ export async function createEventAction(
         event_data_id: templateId || newEventRecord.id,
         position: createGeographyRow(location.coords),
         position_accuracy: location.coords.accuracy,
+        event_threshold_id: parsedInstance.event_threshold_id,
       },
       ['id']
     );

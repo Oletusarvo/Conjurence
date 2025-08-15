@@ -10,6 +10,7 @@ input[type='checkbox'] {
   appearance: none;
   cursor: pointer;
   transition: background-color 0.2s ease-out;
+  border-color: var(--color-accent);
 }
 
 input[type='checkbox']:checked {

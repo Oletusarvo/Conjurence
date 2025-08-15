@@ -18,14 +18,14 @@ export function DistanceProvider({ children }: React.PropsWithChildren) {
   const { distance, isPending } = useDistance();
   const { event } = useEventContext();
   const joinThreshold = getThresholdAdjusted(
-    5,
+    event.auto_join_threshold,
     position?.coords.accuracy || 0,
     event.position_accuracy
   );
 
   const leaveThreshold = getThresholdAdjusted(
-    15,
-    position?.coords.accuracy,
+    event.auto_leave_threshold,
+    position?.coords.accuracy || 0,
     event.position_accuracy
   );
 

@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 
 const joinThreshold = 5;
 const leaveThreshold = 15;
-const timeout = 7000;
+const timeout = 3000;
 
 /**
  * Handles automatic joining and leaving from an event when within or outside a set distance from it.
@@ -85,7 +85,12 @@ export function UserAttendanceManager() {
       //Automatically leave an event if far enough from it.
       handleAction(
         () =>
-          shouldLeave(distance, position.coords.accuracy, event.position_accuracy, leaveThreshold),
+          shouldLeave(
+            distance,
+            position.coords.accuracy,
+            event.position_accuracy,
+            event.auto_leave_threshold
+          ),
         'leaving',
         'leave-timeout',
         async () => await attendance.leave(event.id)

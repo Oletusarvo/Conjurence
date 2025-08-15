@@ -20,9 +20,10 @@ export const eventDataSchema = z.object({
 export const eventInstanceSchema = z.object({
   created_at: z.date().optional(),
   ended_at: z.date().optional(),
-  location: z.object().optional(),
-  position: z.object().optional(),
+  location: z.string().optional(),
+  location_title: z.string().optional(),
   position_accuracy: z.number().optional(),
+  event_threshold_id: z.string().transform(val => parseInt(val)),
 });
 
 export const eventSchema = z
@@ -32,6 +33,8 @@ export const eventSchema = z
     host: z.string(),
     interested_count: z.number(),
     attendance_count: z.number(),
+    auto_join_threshold: z.number(),
+    auto_leave_threshold: z.number(),
   })
   .extend(eventDataSchema.shape)
   .extend(eventInstanceSchema.shape)

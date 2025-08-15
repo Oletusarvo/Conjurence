@@ -23,6 +23,11 @@ const hostUsernameSubquery = db(tablenames.user)
   .select('id as host_user_id', 'username as host')
   .as('u');
 
+//Get the thresholds.
+const thresholdsQuery = db(tablenames.event_threshold)
+  .select('auto_join_threshold', 'auto_leave_threshold', 'id as threshold_id')
+  .as('event_threshold');
+
 //Get interested users count.
 const participantCountSubquery = db
   .select('event_instance_id AS ap_instance_id')
@@ -63,6 +68,7 @@ const getEventQuery = (ctx: Knex | Knex.Transaction, includeParticipants?: boole
     .join(hostUsernameSubquery, 'u.host_user_id', 'hp.host_user_id')
     .leftJoin(participantCountSubquery, 'ap.ap_instance_id', 'ei.id')
     .leftJoin(attendantCountSubquery, 'ac.ac_instance_id', 'ei.id')
+    .leftJoin(thresholdsQuery, 'event_threshold.threshold_id', 'ei.event_threshold_id')
     .join(eventCategorySubquery, 'ec.category_id', 'e.event_category_id');
 
   return q;
@@ -80,6 +86,9 @@ const applyEventSelectColumns = (query: Knex.QueryBuilder) => {
     'u.host',
     'ei.position',
     'ei.position_accuracy',
+    'event_threshold.auto_join_threshold',
+    'event_threshold.auto_leave_threshold',
+
     db.raw('COALESCE(CAST(ap.interested_count AS INTEGER), 0) AS interested_count'),
     db.raw('COALESCE(CAST(ac.attendance_count AS INTEGER), 0) AS attendance_count'),
     db.raw('ST_AsGeoJSON(position)::json AS location')
@@ -127,7 +136,9 @@ export function getEvent(
     'ap.interested_count',
     'ac.attendance_count',
     'ei.created_at',
-    'ei.ended_at'
+    'ei.ended_at',
+    'event_threshold.auto_join_threshold',
+    'event_threshold.auto_leave_threshold'
   );
   q.orderBy('ei.created_at', 'asc');
   return q;

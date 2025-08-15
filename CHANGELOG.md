@@ -1,5 +1,9 @@
 ## [0.4.0-alpha.3] - 15-08-2025
 
+### Fixed
+
+- Wonky alignment of the event title and status badge on the event screen.
+
 ### Added
 
 - Optional cleanup-method for timeouts created using useTimeout.
@@ -7,6 +11,7 @@
 - A generic reusable Distance-component for creating other distance displaying components.
 - The badges JoinDistanceBadge and LeaveDistanceBadge for displaying the leave and join thresholds when viewing an event.
 - A utility function returning a distance formatted to meters or kilometers.
+- Individual leave and join thresholds for events, selectable on the CreateEventForm.
 
 ### Changed
 
