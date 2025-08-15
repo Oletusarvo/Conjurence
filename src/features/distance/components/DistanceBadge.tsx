@@ -1,29 +1,12 @@
 'use client';
 
-import { withLoader } from '@/hoc/withLoader';
-import { MapPin } from 'lucide-react';
-import { withIcon } from '@/hoc/withIcon';
 import { useDistanceContext } from '@/features/distance/providers/DistanceProvider';
+import { getDistanceString } from '../util/getDistanceString';
+import { Distance } from './Distance';
 
 export function DistanceBadge() {
-  const { distance, distancePending } = useDistanceContext();
-  const Component = withIcon(
-    withLoader(({ children, ...props }) => {
-      return <div className='flex gap-1 items-center'>{children}</div>;
-    })
-  );
+  const { distance } = useDistanceContext();
+  const distanceString = getDistanceString(distance);
 
-  const unit = distance < 1000 ? 'm' : 'km';
-  const distanceString = (
-    Math.round((distance < 1000 ? distance : distance / 1000) * 100) / 100
-  ).toLocaleString('fi');
-
-  return (
-    <Component
-      loading={distancePending}
-      icon={<MapPin size={'14px'} />}>
-      ~{distanceString}
-      {unit}
-    </Component>
-  );
+  return <Distance>~{distanceString}</Distance>;
 }

@@ -1,3 +1,17 @@
+## [0.4.0-alpha.3] - 15-08-2025
+
+### Added
+
+- Optional cleanup-method for timeouts created using useTimeout.
+- the join- and leave thresholds on the DistanceProvider.
+- A generic reusable Distance-component for creating other distance displaying components.
+- The badges JoinDistanceBadge and LeaveDistanceBadge for displaying the leave and join thresholds when viewing an event.
+- A utility function returning a distance formatted to meters or kilometers.
+
+### Changed
+
+- Put the final state change inside a finally-block within the UserAttendanceManager handleAction-function.
+
 ## [0.4.0-alpha.2] - 15-08-2025
 
 ### Changed

@@ -14,8 +14,8 @@ import { useGeolocationContext } from '@/features/geolocation/providers/Geolocat
 import { shouldJoin, shouldLeave } from '@/features/attendance/util/autoJoin';
 import toast from 'react-hot-toast';
 
-const joinThreshold = 15;
-const leaveThreshold = 25;
+const joinThreshold = 5;
+const leaveThreshold = 15;
 const timeout = 7000;
 
 /**
@@ -54,9 +54,9 @@ export function UserAttendanceManager() {
                 await cb();
               } catch (err) {
                 toast.error('Something went wrong!');
+              } finally {
+                attendance.setCurrentAction(null);
               }
-
-              attendance.setCurrentAction(null);
             },
             timeout
           );

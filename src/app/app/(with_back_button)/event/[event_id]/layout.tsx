@@ -25,6 +25,8 @@ import { ContactHostLink } from '@/features/events/components/ContactHostLink';
 import { tablenames } from '@/tablenames';
 import { getContact } from '@/features/users/dal/getContact';
 import { InterestedCountBadge } from '@/features/events/components/InterestedCountBadge';
+import { JoinDistanceBadge } from '@/features/distance/components/JoinDistanceBadge';
+import { LeaveDistanceBadge } from '@/features/distance/components/LeaveDistanceBadge';
 
 export const revalidate = 0;
 
@@ -65,10 +67,17 @@ export default async function EventPage({ params, attendance }) {
                     </div>
 
                     <p className='tracking-tight leading-[18px]'>{event?.description}</p>
-                    <div className='flex gap-4 items-center'>
-                      <DistanceBadge />
-                      <InterestedCountBadge />
-                      <JoinedCountBadge />
+                    <div className='flex gap-4 items-center justify-between w-full'>
+                      <div className='flex gap-4'>
+                        <InterestedCountBadge />
+                        <JoinedCountBadge />
+                      </div>
+
+                      <div className='flex gap-4'>
+                        <DistanceBadge />
+                        <JoinDistanceBadge />
+                        <LeaveDistanceBadge />
+                      </div>
                     </div>
                   </div>
                 </div>
