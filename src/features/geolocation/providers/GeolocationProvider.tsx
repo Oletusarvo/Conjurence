@@ -21,7 +21,7 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
     let geoWatcher;
     if ('geolocation' in navigator) {
       const options: PositionOptions = {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         maximumAge: 30000,
         timeout: Infinity,
       };

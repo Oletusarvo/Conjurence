@@ -1,3 +1,9 @@
+## [0.4.0-alpha.2] - 15-08-2025
+
+### Changed
+
+- Disabled high-accuracy on geolocation.
+
 ## [0.4.0-alpha.1] - 15-08-2025
 
 ### Changed
