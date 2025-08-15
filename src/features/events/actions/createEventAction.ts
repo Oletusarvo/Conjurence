@@ -100,6 +100,7 @@ export async function createEventAction(
     const location = JSON.parse(data.location.toString());
     const [eventInstanceRecord] = await trx(tablenames.event_instance).insert(
       {
+        ...parsedInstance,
         event_data_id: templateId || newEventRecord.id,
         position: createGeographyRow(location.coords),
         position_accuracy: location.coords.accuracy,

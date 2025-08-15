@@ -5,7 +5,6 @@ export const eventDataSchema = z.object({
   id: z.uuid().optional(),
   title: z.string().min(3, EventError.titleTooShort).max(24, EventError.titleTooLong).trim(),
   description: z.string().max(256, EventError.descriptionTooLong).trim(),
-  //location: z.string().max(32, EventError.locationTooLong).trim(),
   spots_available: z
     .string()
     .optional()
@@ -20,8 +19,8 @@ export const eventDataSchema = z.object({
 export const eventInstanceSchema = z.object({
   created_at: z.date().optional(),
   ended_at: z.date().optional(),
-  location: z.string().optional(),
-  location_title: z.string().optional(),
+  position: z.string().optional(),
+  location_title: z.string().min(3).max(64).trim().optional(),
   position_accuracy: z.number().optional(),
   event_threshold_id: z.string().transform(val => parseInt(val)),
 });
@@ -40,8 +39,9 @@ export const eventSchema = z
   .extend(eventInstanceSchema.shape)
   .omit({
     event_category_id: true,
+    position: true,
   });
 
 export type TEventData = z.infer<typeof eventDataSchema>;
 export type TEventInstance = z.infer<typeof eventInstanceSchema>;
-export type TEvent = z.infer<typeof eventSchema>;
+export type TEvent = z.infer<typeof eventSchema> & { position: { coordinates: number[] } };

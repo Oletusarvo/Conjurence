@@ -1,11 +1,11 @@
 'use client';
 
-import { Armchair, Heading, MapPin, Text } from 'lucide-react';
+import { Armchair, Heading, MapPin, Pin, Text } from 'lucide-react';
 import { Input } from '../../../components/Input';
 import { withLoader } from '@/hoc/withLoader';
 import { useCreateEventForm } from '../hooks/useCreateEventForm';
 import { useRouter } from 'next/navigation';
-import { TEventData } from '../schemas/eventSchema';
+import { TEvent, TEventData } from '../schemas/eventSchema';
 import { EventError } from '@/errors/events';
 import { Notice } from '@/components/Notice';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ import { List } from '@/components/List';
 type CreateEventForm = {
   categories: { id: string; label: string; description?: string }[];
   thresholds: { id: number; label: string; description: string }[];
-  template?: TEventData;
+  template?: TEventData & Pick<TEvent, 'location_title'>;
 };
 
 export function CreateEventForm({ categories, thresholds, template }: CreateEventForm) {
@@ -48,6 +48,15 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
         required
         defaultValue={template?.title}
       />
+
+      <Input
+        icon={<Pin />}
+        name='location_title'
+        placeholder='Location title...'
+        required
+        defaultValue={template?.location_title}
+      />
+
       <Input
         icon={<Text />}
         name='description'
@@ -66,7 +75,7 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
       <div className='form-input-group'>
         <select
           name='event_category_id'
-          value={selectedCategory}
+          value={selectedCategory || 'null'}
           onChange={e => setSelectedCategory(e.target.value)}
           required>
           <option

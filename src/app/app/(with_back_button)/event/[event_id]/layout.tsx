@@ -18,6 +18,7 @@ import { SpotsAvailableBadge } from '@/features/events/components/SpotsAvailable
 import { HostBadge } from '@/features/events/components/HostBadge';
 import { InterestedCountBadge } from '@/features/events/components/InterestedCountBadge';
 import { DistanceThresholdDisplay } from '@/features/distance/components/DistanceThresholdDisplay';
+import { LocationTitleBadge } from '@/features/events/components/LocationTitleBadge';
 
 export const revalidate = 0;
 
@@ -41,9 +42,9 @@ export default async function EventPage({ params, attendance }) {
             <BaseEventModalBody>
               <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-background-light-border'>
                 <div className='flex items-start px-2 w-full'>
-                  <div className='flex flex-col items-start gap-4 w-full'>
+                  <div className='flex flex-col items-start gap-2 w-full'>
                     <div className='flex gap-2 items-start justify-between w-full'>
-                      <div className='flex flex-col gap-2'>
+                      <div className='flex flex-col gap-1'>
                         <h3>{event?.title}</h3>
                         <div className='flex gap-2'>
                           <HostBadge />
@@ -51,7 +52,7 @@ export default async function EventPage({ params, attendance }) {
                       </div>{' '}
                       <EventStatusBadge createdAt={event?.created_at} />
                     </div>
-
+                    <LocationTitleBadge />
                     <div className='flex gap-2 justify-between w-full'>
                       <div className='flex gap-2'>
                         <CategoryBadge />
