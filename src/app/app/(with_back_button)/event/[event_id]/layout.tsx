@@ -61,22 +61,24 @@ export default async function EventPage({ params, attendance }) {
                       <EventStatusBadge createdAt={event?.created_at} />
                     </div>
 
-                    <div className='flex gap-2'>
-                      <CategoryBadge />
-                      <SpotsAvailableBadge />
+                    <div className='flex gap-2 justify-between w-full'>
+                      <div className='flex gap-2'>
+                        <CategoryBadge />
+                        <SpotsAvailableBadge />
+                      </div>
+
+                      <div className='flex gap-2'>
+                        <JoinDistanceBadge />
+                        <LeaveDistanceBadge />
+                      </div>
                     </div>
 
                     <p className='tracking-tight leading-[18px]'>{event?.description}</p>
-                    <div className='flex gap-4 items-center justify-between w-full'>
+                    <div className='flex flex-col gap-4 w-full'>
                       <div className='flex gap-4'>
                         <InterestedCountBadge />
                         <JoinedCountBadge />
-                      </div>
-
-                      <div className='flex gap-4'>
                         <DistanceBadge />
-                        <JoinDistanceBadge />
-                        <LeaveDistanceBadge />
                       </div>
                     </div>
                   </div>
