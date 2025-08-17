@@ -28,7 +28,10 @@ export const eventInstanceSchema = z.object({
     .optional(),
   position_accuracy: z.number().optional(),
   event_threshold_id: z.string().transform(val => parseInt(val)),
-  is_mobile: z.boolean().optional(),
+  is_mobile: z
+    .string()
+    .transform(val => (val === 'false' ? false : true))
+    .optional(),
 });
 
 export const eventSchema = z

@@ -60,7 +60,8 @@ export const options: NextAuthOptions = {
                 .where({ id: user.id })
                 .limit(1),
             })
-            .select('allow_templates', 'allow_mobile_events', 'max_event_size');
+            .select('allow_templates', 'allow_mobile_events', 'maximum_event_size_id')
+            .first();
 
           return {
             id: user.id,
@@ -92,6 +93,7 @@ export const options: NextAuthOptions = {
         token.username = user.username;
         token.status = user.status;
         token.attended_event_id = user.attended_event_id;
+        token.subscription = user.subscription;
       }
 
       return token;
@@ -105,6 +107,7 @@ export const options: NextAuthOptions = {
           email: token.email,
           attended_event_id: token.attended_event_id,
           status: token.status,
+          subscription: token.subscription,
         };
       }
       return session;

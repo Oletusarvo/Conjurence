@@ -45,63 +45,31 @@ export async function createEventAction(
     })
     .first();
 
-  //Prevent adding more templates than allowed
-  if (parsedData.is_template) {
-    if (!subscriptionRecord) {
-      return { success: false, error: 'Failed to load subscription record!' };
-    } else {
-      if (!subscriptionRecord.allow_templates) {
-        return { success: false, error: 'Your subscription does not allow templates!' };
-      }
-    }
-
-    const maxTemplateCount = process.env.MAX_TEMPLATE_COUNT;
-    if (maxTemplateCount) {
-      const currentTemplateCountRecord = await db(tablenames.event_data)
-        .where({ author_id: session.user.id, is_template: true })
-        .count('* AS count')
-        .first();
-      if (
-        currentTemplateCountRecord &&
-        +currentTemplateCountRecord.count >= parseInt(maxTemplateCount)
-      ) {
-        return {
-          success: false,
-          error: EventError.maximumTemplateCount,
-        };
-      }
-    }
+  if (!subscriptionRecord) {
+    return { success: false, error: 'Failed to load subscription record!' };
   }
 
-  //Prevent mobile events if the subscription does not allow it.
+  //Prevent adding templates if the subscription disallows it.
+  if (parsedData.is_template && !subscriptionRecord.allow_templates) {
+    return { success: false, error: 'event:templates_not_allowed' };
+  }
+
+  //Prevent mobile events if the subscription disallows it.
   if (parsedInstance.is_mobile && !subscriptionRecord.allow_mobile_events) {
-    return { success: false, error: 'Your subscription does not allow mobile events!' };
+    return { success: false, error: 'event:mobile_not_allowed' };
   }
 
-  const oldParticipantRecord = await db(tablenames.event_attendance)
-    .whereIn(
-      'attendance_status_id',
-      db
-        .select('id')
-        .from(tablenames.event_attendance_status)
-        .whereIn('label', ['host', 'verified'])
-    )
-    .andWhere({ user_id: session.user.id })
-    .select('user_id', 'event_instance_id')
-    .first();
+  //Prevent adding events of bigger size than allowed by the subscription.
+  if (
+    parsedInstance.event_threshold_id &&
+    parsedInstance.event_threshold_id > subscriptionRecord.maximum_event_size_id
+  ) {
+    return { success: false, error: 'event:size_not_allowed' };
+  }
 
-  if (oldParticipantRecord) {
-    const oldEventRecord = await db(tablenames.event_instance)
-      .where({ id: oldParticipantRecord.event_instance_id })
-      .select('ended_at')
-      .first();
-
-    if (oldEventRecord.ended_at === null) {
-      return {
-        success: false,
-        error: EventError.singleAttendance,
-      };
-    }
+  //Prevent creation of events if already hosting or joined to another.
+  if (await isAttending(session)) {
+    return { success: false, error: 'event:single_attendance' };
   }
 
   const trx = await db.transaction();
@@ -158,4 +126,31 @@ export async function createEventAction(
     await trx.rollback();
     throw err;
   }
+}
+
+async function isAttending(session: TODO) {
+  const currentAttendanceRecord = await db(tablenames.event_attendance)
+    .whereIn(
+      'attendance_status_id',
+      db
+        .select('id')
+        .from(tablenames.event_attendance_status)
+        .whereIn('label', ['host', 'joined', 'interested'])
+    )
+    .andWhere({ user_id: session.user.id })
+    .select('user_id', 'event_instance_id')
+    .orderBy('requested_at', 'desc')
+    .first();
+
+  if (currentAttendanceRecord) {
+    const oldEventRecord = await db(tablenames.event_instance)
+      .where({ id: currentAttendanceRecord.event_instance_id })
+      .select('ended_at')
+      .first();
+
+    if (oldEventRecord.ended_at === null) {
+      return true;
+    }
+  }
+  return false;
 }

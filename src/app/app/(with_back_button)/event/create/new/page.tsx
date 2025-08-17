@@ -5,18 +5,18 @@ import { FormContainer } from '@/components/Form';
 import { loadSession } from '@/util/loadSession';
 
 export default async function CreateEventPage({ searchParams }) {
-  const { template_id } = await searchParams;
-  const [template_author_id] = await db(tablenames.event_data)
-    .where({ id: template_id })
-    .pluck('author_id');
   const session = await loadSession();
+  const { template_id } = await searchParams;
 
-  //Check that the template is by the logged in user.
-  if (template_author_id !== session.user.id) {
-    return <span>Only the author of a template can use it!</span>;
+  let templateRecord = null;
+  if (template_id) {
+    templateRecord = await db(tablenames.event_data).where({ id: template_id }).first();
+
+    //Check that the template is by the logged in user.
+    if (templateRecord.author_id !== session.user.id) {
+      return <span>Only the author of a template can use it!</span>;
+    }
   }
-
-  const templateRecord = await db(tablenames.event_data).where({ id: template_id }).first();
 
   const categories = await db({ ec: tablenames.event_category })
     .leftJoin(
@@ -38,10 +38,11 @@ export default async function CreateEventPage({ searchParams }) {
       'etd.event_threshold_id',
       'et.id'
     )
+    .where('et.id', '<=', session.user.subscription.maximum_event_size_id)
     .select('et.id', 'et.label', 'etd.description');
 
   return (
-    <div className='flex flex-col px-default w-full flex-1 justify-center items-center'>
+    <div className='flex flex-col px-default w-full flex-1 items-center'>
       <FormContainer>
         <h2>Create event</h2>
         <CreateEventForm

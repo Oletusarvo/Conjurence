@@ -4,9 +4,22 @@ input {
   color: var(--color-gray-300);
 }
 
+input[type='text'],
+textarea {
+  padding: --spacing(2) --spacing(4);
+  background-color: var(--color-background-light);
+}
+
+textarea {
+  resize: none;
+  outline: none;
+  color: var(--color-gray-300);
+}
+
 input[type='checkbox'] {
-  width: 1.5rem;
-  height: 1.5rem;
+  border-radius: 1px;
+  width: 1.2rem;
+  height: 1.2rem;
   appearance: none;
   cursor: pointer;
   transition: background-color 0.2s ease-out;
@@ -28,4 +41,34 @@ input[type='checkbox']:checked::after {
 
 input[type='number'] {
   appearance: none;
+}
+
+select {
+  width: 100%;
+  padding: --spacing(2) --spacing(4);
+}
+
+input,
+select {
+  border: 1px solid var(--color-background-light-border);
+}
+
+input,
+textarea,
+select {
+  border-radius: 8px;
+}
+
+select {
+  appearance: none;
+  cursor: pointer;
+  background-color: var(--color-background-light);
+}
+
+option {
+  background-color: var(--color-background-light);
+}
+
+option:hover {
+  background-color: var(--color-background);
 }

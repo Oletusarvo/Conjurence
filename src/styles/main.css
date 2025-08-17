@@ -27,44 +27,6 @@
 label {
   margin-left: --spacing(1);
 }
-select {
-  width: 100%;
-  padding: --spacing(2) --spacing(4);
-}
-
-textarea {
-  outline: none;
-  color: var(--color-gray-300);
-}
-
-input,
-select {
-  border: 1px solid var(--color-background-light-border);
-}
-
-input,
-select,
-button {
-  border-radius: 8px;
-}
-
-input[type='checkbox'] {
-  border-radius: 1px;
-}
-
-select {
-  appearance: none;
-  cursor: pointer;
-  background-color: var(--color-background-light);
-}
-
-option {
-  background-color: var(--color-background-light);
-}
-
-option:hover {
-  background-color: var(--color-background);
-}
 
 h1,
 h2,

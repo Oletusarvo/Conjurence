@@ -3,6 +3,7 @@
 import { PassProps } from '@/components/PassProps';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
 import { useEffect, useState } from 'react';
+import { useStep } from './StepProvider';
 
 const [TabsContext, useTabsContext] = createContextWithUseHook<{
   currentTab: number;
@@ -14,7 +15,7 @@ export function TabsProvider({
   initialTab = 0,
   onChange,
 }: React.PropsWithChildren & { onChange?: (tabIndex: number) => void; initialTab?: number }) {
-  const [currentTab, setCurrentTab] = useState(initialTab);
+  const { current: currentTab, set: setCurrentTab } = useStep(initialTab);
 
   useEffect(() => {
     if (!onChange) return;

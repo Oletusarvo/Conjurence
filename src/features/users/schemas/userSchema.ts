@@ -4,7 +4,7 @@ export const userSchema = z.object({
   id: z.uuid(),
   username: z.string(),
   status: z.string(),
-  subcription: z.object({
+  subscription: z.object({
     allow_templates: z.boolean().optional(),
     allow_mobile_events: z.boolean().optional(),
     maximum_event_size_id: z.int(),

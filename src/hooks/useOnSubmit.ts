@@ -7,6 +7,8 @@ type UseOnSubmitProps<
   E extends string,
   TAction extends (payload: FormData) => Promise<ActionResponse<T, E>>
 > = {
+  /**Alternative FormData-source to use. Will ignore the form contents if defined. */
+  payload?: FormData;
   action: TAction;
   validationSchema?: z.ZodType;
   /**Called when the action returns a response with success set to true. */
@@ -28,6 +30,7 @@ export function useOnSubmit<
   E extends string,
   TAction extends (e: FormData) => Promise<ActionResponse<T, E>>
 >({
+  payload,
   action,
   validationSchema,
   onSuccess,
@@ -42,9 +45,9 @@ export function useOnSubmit<
     setStatus('loading');
 
     try {
-      const payload = new FormData(e.currentTarget);
+      const p = payload || new FormData(e.currentTarget);
       if (validationSchema) {
-        const parseResult = parseFormDataUsingSchema(payload, validationSchema);
+        const parseResult = parseFormDataUsingSchema(p, validationSchema);
         if (!parseResult.success) {
           const msg = parseResult.error.issues.at(0)?.message || null;
           setStatus(msg);
