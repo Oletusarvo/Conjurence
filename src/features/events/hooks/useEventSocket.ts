@@ -1,6 +1,7 @@
 import { TAttendance } from '@/features/attendance/schemas/attendanceSchema';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 import { useSocketRoom } from '@/hooks/useSocketRoom';
+import { TEvent } from '../schemas/eventSchema';
 
 /**
  * Sets up the local socket instance to handle events related to the events made by users. Joins the room event:eventId using useSocketRoom.
@@ -11,6 +12,7 @@ export function useEventSocket({
   eventId,
   onInterest,
   onEnd,
+  onUpdate,
   onAttendanceUpdate,
 }: {
   eventId: string;
@@ -19,6 +21,7 @@ export function useEventSocket({
     newAttendanceRecord: TAttendance;
   }) => void;
   onEnd?: (payload: { eventId: string }) => void;
+  onUpdate?: (payload: Partial<TEvent>) => void;
   onAttendanceUpdate?: (newAttendanceRecord: {
     username: string;
     status: TAttendance['status'];
@@ -35,7 +38,10 @@ export function useEventSocket({
       if (payload.eventId !== eventId) return;
       onEnd && onEnd(payload);
     },
-
+    'event:update': payload => {
+      if (payload.eventId !== eventId) return;
+      onUpdate && onUpdate(payload);
+    },
     'event:attendance_update': (payload: {
       eventId: string;
       newAttendanceRecord: {

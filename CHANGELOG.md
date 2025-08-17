@@ -1,3 +1,14 @@
+## [0.5.0-alpha.1] - 17-08-2025
+
+### Added
+
+- User subscriptions.
+- Support for mobile events.
+
+### Changed
+
+- Event creation from template or from scratch is done on the same page.
+
 ## [0.4.0-alpha.3] - 15-08-2025
 
 ### Fixed

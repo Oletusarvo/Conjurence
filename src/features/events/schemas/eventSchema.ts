@@ -20,9 +20,15 @@ export const eventInstanceSchema = z.object({
   created_at: z.date().optional(),
   ended_at: z.date().optional(),
   position: z.string().optional(),
-  location_title: z.string().min(3).max(64).trim().optional(),
+  location_title: z
+    .string()
+    .min(3, EventError.locationTooShort)
+    .max(64, EventError.locationTooLong)
+    .trim()
+    .optional(),
   position_accuracy: z.number().optional(),
   event_threshold_id: z.string().transform(val => parseInt(val)),
+  is_mobile: z.boolean().optional(),
 });
 
 export const eventSchema = z

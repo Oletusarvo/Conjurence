@@ -7,6 +7,7 @@ import { tablenames } from '@/tablenames';
 import { createGeographyRow } from '@/features/geolocation/util/createGeographyRow';
 import { loadSession } from '@/util/loadSession';
 import { parseFormDataUsingSchema } from '@/util/parseUsingSchema';
+import { getParseResultErrorMessage } from '@/util/getParseResultErrorMessage';
 
 /**Creates a new event.
  * @param payload The data for the event.
@@ -15,21 +16,45 @@ import { parseFormDataUsingSchema } from '@/util/parseUsingSchema';
 export async function createEventAction(
   payload: FormData,
   templateId?: string
-): Promise<ActionResponse<string, TEventError>> {
+): Promise<ActionResponse<string, TEventError | string>> {
   const session = await loadSession();
-  const data = Object.fromEntries(payload);
 
-  const parseResult = parseFormDataUsingSchema(payload, eventDataSchema);
-  if (!parseResult.success) {
-    const msg = parseResult.error.issues.at(0)?.message as TEventError;
+  const parsedDataResult = parseFormDataUsingSchema(payload, eventDataSchema);
+  if (!parsedDataResult.success) {
+    const msg = getParseResultErrorMessage<TEventError>(parsedDataResult);
     return { success: false, error: msg };
   }
+  const parsedInstanceResult = parseFormDataUsingSchema(payload, eventInstanceSchema);
+  if (!parsedInstanceResult.success) {
+    return {
+      success: false,
+      error: getParseResultErrorMessage<TEventError>(parsedInstanceResult),
+    };
+  }
 
-  const parsedData = parseResult.data;
-  const parsedInstance = eventInstanceSchema.parse(Object.fromEntries(payload));
+  const parsedData = parsedDataResult.data;
+  const parsedInstance = parsedInstanceResult.data;
+
+  const subscriptionRecord = await db(tablenames.user_subscription)
+    .where({
+      id: db
+        .select('user_subscription_id')
+        .from(tablenames.user)
+        .where({ id: session.user.id })
+        .limit(1),
+    })
+    .first();
 
   //Prevent adding more templates than allowed
   if (parsedData.is_template) {
+    if (!subscriptionRecord) {
+      return { success: false, error: 'Failed to load subscription record!' };
+    } else {
+      if (!subscriptionRecord.allow_templates) {
+        return { success: false, error: 'Your subscription does not allow templates!' };
+      }
+    }
+
     const maxTemplateCount = process.env.MAX_TEMPLATE_COUNT;
     if (maxTemplateCount) {
       const currentTemplateCountRecord = await db(tablenames.event_data)
@@ -46,6 +71,11 @@ export async function createEventAction(
         };
       }
     }
+  }
+
+  //Prevent mobile events if the subscription does not allow it.
+  if (parsedInstance.is_mobile && !subscriptionRecord.allow_mobile_events) {
+    return { success: false, error: 'Your subscription does not allow mobile events!' };
   }
 
   const oldParticipantRecord = await db(tablenames.event_attendance)
@@ -97,7 +127,7 @@ export async function createEventAction(
         });
     }
 
-    const location = JSON.parse(data.location.toString());
+    const location = JSON.parse(payload.get('location').toString());
     const [eventInstanceRecord] = await trx(tablenames.event_instance).insert(
       {
         ...parsedInstance,

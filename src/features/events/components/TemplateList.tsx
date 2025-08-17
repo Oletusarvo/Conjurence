@@ -29,7 +29,7 @@ export function TemplateList({ templates }: TemplateListProps) {
       }}
       component={({ item }) => (
         <ContainerLink
-          href={'/app/event/create/from_template/' + item.id}
+          href={`/app/event/create/new?template_id=${item.id}`}
           icon={Dice5}>
           <h3>{item.title}</h3>
           <p className='text-yellow-50'>{item.description}</p>

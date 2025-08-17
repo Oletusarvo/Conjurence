@@ -52,12 +52,23 @@ export const options: NextAuthOptions = {
             .orderBy('requested_at', 'desc')
             .first();
 
+          const subscriptionRecord = await db(tablenames.user_subscription)
+            .where({
+              id: db
+                .select('user_subscription_id')
+                .from(tablenames.user)
+                .where({ id: user.id })
+                .limit(1),
+            })
+            .select('allow_templates', 'allow_mobile_events', 'max_event_size');
+
           return {
             id: user.id,
             username: user.username,
             email: user.email,
             status: user.status,
             attended_event_id: pr?.event_instance_id || null,
+            subscription: subscriptionRecord,
           };
         } catch (err) {
           console.log(err.message);

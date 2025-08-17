@@ -7,6 +7,7 @@ export const EventError = {
   descriptionTooLong: getError('description_too_long'),
   maximumTemplateCount: getError('maximum_template_count'),
   singleAttendance: getError('single_attendance'),
+  locationTooShort: getError('location_too_short'),
   locationTooLong: getError('location_too_long'),
   locationDisabled: getError('location_disabled'),
 };

@@ -2,8 +2,22 @@ import { CreateEventForm } from '@/features/events/components/CreateEventForm';
 import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { FormContainer } from '@/components/Form';
+import { loadSession } from '@/util/loadSession';
 
-export default async function CreateEventPage() {
+export default async function CreateEventPage({ searchParams }) {
+  const { template_id } = await searchParams;
+  const [template_author_id] = await db(tablenames.event_data)
+    .where({ id: template_id })
+    .pluck('author_id');
+  const session = await loadSession();
+
+  //Check that the template is by the logged in user.
+  if (template_author_id !== session.user.id) {
+    return <span>Only the author of a template can use it!</span>;
+  }
+
+  const templateRecord = await db(tablenames.event_data).where({ id: template_id }).first();
+
   const categories = await db({ ec: tablenames.event_category })
     .leftJoin(
       db
@@ -33,6 +47,7 @@ export default async function CreateEventPage() {
         <CreateEventForm
           categories={categories}
           thresholds={thresholds}
+          template={templateRecord}
         />
       </FormContainer>
     </div>

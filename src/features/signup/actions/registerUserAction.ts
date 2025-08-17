@@ -32,6 +32,11 @@ export async function registerUserAction(
         email,
         password: await hashPassword(password),
         terms_accepted_on: new Date(),
+        user_subscription_id: db
+          .select('id')
+          .from(tablenames.user_subscription)
+          .where({ label: 'free' })
+          .limit(1),
       },
       ['id']
     );

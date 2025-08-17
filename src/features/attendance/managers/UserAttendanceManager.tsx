@@ -98,10 +98,11 @@ export function UserAttendanceManager() {
     }
 
     if (currentAttendance.status === 'host') {
-      //Automatically end the event if the host moves far enough from it.
+      //Automatically end the event if it isn't mobile and the host moves far enough from it.
       handleAction(
         () =>
           !hasEnded &&
+          !event.is_mobile &&
           shouldLeave(distance, position.coords.accuracy, event.position_accuracy, leaveThreshold),
         'ending',
         'end-timeout',
@@ -116,6 +117,7 @@ export function UserAttendanceManager() {
     distance,
     event.id,
     event.position_accuracy,
+    event.is_mobile,
     position?.coords.accuracy,
 
     hasEnded,
