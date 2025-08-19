@@ -89,6 +89,7 @@ const applyEventSelectColumns = (query: Knex.QueryBuilder) => {
     'event_threshold.auto_join_threshold',
     'event_threshold.auto_leave_threshold',
     'ei.location_title',
+    'ei.is_mobile',
     db.raw('COALESCE(CAST(ap.interested_count AS INTEGER), 0) AS interested_count'),
     db.raw('COALESCE(CAST(ac.attendance_count AS INTEGER), 0) AS attendance_count'),
     db.raw('ST_AsGeoJSON(position)::json AS position')
@@ -137,6 +138,7 @@ export function getEvent(
     'ac.attendance_count',
     'ei.created_at',
     'ei.ended_at',
+    'ei.is_mobile',
     'event_threshold.auto_join_threshold',
     'event_threshold.auto_leave_threshold',
     'ei.location_title'

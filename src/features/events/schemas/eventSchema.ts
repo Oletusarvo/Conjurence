@@ -1,10 +1,18 @@
 import { EventError } from '@/errors/events';
 import z from 'zod';
 
+export const eventTitleSchema = z
+  .string()
+  .min(3, EventError.titleTooShort)
+  .max(24, EventError.titleTooLong)
+  .trim();
+
+export const eventDescriptionSchema = z.string().max(256, EventError.descriptionTooLong).trim();
+
 export const eventDataSchema = z.object({
   id: z.uuid().optional(),
-  title: z.string().min(3, EventError.titleTooShort).max(24, EventError.titleTooLong).trim(),
-  description: z.string().max(256, EventError.descriptionTooLong).trim(),
+  title: eventTitleSchema,
+  description: eventDescriptionSchema,
   spots_available: z
     .string()
     .optional()
@@ -12,25 +20,27 @@ export const eventDataSchema = z.object({
   event_category_id: z.string().transform(val => parseInt(val)),
   is_template: z
     .string()
-    .transform(val => (val === 'on' ? true : false))
+    .transform(val => val === 'true')
     .optional(),
 });
+
+export const eventLocationTitleSchema = z
+  .string()
+  .min(3, EventError.locationTooShort)
+  .max(64, EventError.locationTooLong)
+  .trim()
+  .optional();
 
 export const eventInstanceSchema = z.object({
   created_at: z.date().optional(),
   ended_at: z.date().optional(),
   position: z.string().optional(),
-  location_title: z
-    .string()
-    .min(3, EventError.locationTooShort)
-    .max(64, EventError.locationTooLong)
-    .trim()
-    .optional(),
+  location_title: eventLocationTitleSchema,
   position_accuracy: z.number().optional(),
   event_threshold_id: z.string().transform(val => parseInt(val)),
   is_mobile: z
     .string()
-    .transform(val => (val === 'false' ? false : true))
+    .transform(val => val === 'true')
     .optional(),
 });
 

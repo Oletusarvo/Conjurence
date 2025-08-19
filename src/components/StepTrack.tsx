@@ -8,7 +8,11 @@ export function StepTrack({ currentStep, max }) {
         i <= currentStep ? 'bg-accent' : 'bg-background-light',
         'h-1 w-full'
       );
-      pips.push(<div className={pipClassName}></div>);
+      pips.push(
+        <div
+          className={pipClassName}
+          key={`step-track-slot-${i}`}></div>
+      );
     }
     return pips;
   };

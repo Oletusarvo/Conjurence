@@ -61,15 +61,9 @@ export function EventFeed() {
           return order === 'asc' ? adate - bdate : bdate - adate;
         }}
         component={({ item }) => {
-          const { getAttendanceByEventId } = useUserAttendanceContext();
-          const attendance = getAttendanceByEventId(item.id);
-
           return (
             <EventProvider initialEvent={item}>
               <DistanceProvider>
-                {attendance?.status === 'interested' || attendance?.status === 'joined' ? (
-                  <UserAttendanceManager />
-                ) : null}
                 <EventCard />
               </DistanceProvider>
             </EventProvider>

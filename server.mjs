@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import next from 'next';
 import { Server } from 'socket.io';
+import { socketServer } from './socketServer/index.mjs';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTNAME || 'localhost';
@@ -14,18 +15,7 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
   global.io = io;
-  io.on('connection', socket => {
-    console.log('New connection: ', socket.id);
-
-    socket.on('join_room', async roomName => {
-      socket.join(roomName);
-      //socket.emit('participant_update');
-    });
-
-    socket.on('leave_room', roomName => {
-      socket.leave(roomName);
-    });
-  });
+  socketServer(io);
 
   httpServer
     .once('error', err => {

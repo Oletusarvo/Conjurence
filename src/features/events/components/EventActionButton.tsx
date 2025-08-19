@@ -22,20 +22,21 @@ export function EventActionButton(props: React.ComponentProps<'button'>) {
   const { event } = useEventContext();
   const { buttonConfig, isPending } = useEventActionButton();
   const attendance = useUserAttendanceContext();
-  const attendanceRecord = attendance.getAttendanceByEventId(event.id);
-  const hideButton =
-    attendanceRecord?.status === 'left' || attendanceRecord?.status === 'canceled' || false;
+  const attendanceRecord = attendance.attendanceRecord;
+  const hideButton = attendanceRecord?.status === 'canceled';
 
-  return !hideButton ? (
-    <Button
-      {...props}
-      type='button'
-      loading={isPending || sessionStatus === 'loading'}
-      disabled={props.disabled || isPending || !user}
-      onClick={buttonConfig.action}>
-      {buttonConfig.label}
-    </Button>
-  ) : null;
+  return (
+    !hideButton && (
+      <Button
+        {...props}
+        type='button'
+        loading={isPending || sessionStatus === 'loading'}
+        disabled={props.disabled || isPending || !user}
+        onClick={buttonConfig.action}>
+        {buttonConfig.label}
+      </Button>
+    )
+  );
 }
 
 const Button = withLoader(({ children, ...props }) => (
@@ -53,7 +54,7 @@ const useEventActionButton = () => {
   const attendance = useUserAttendanceContext();
   const { pushModal } = useModalStackContext();
 
-  const currentAttendance = attendance.getAttendanceByEventId(event.id);
+  const currentAttendance = attendance.attendanceRecord;
   const userIsHost = currentAttendance?.status === 'host' || false;
   const { isPending } = useEventActionContext();
 
@@ -141,6 +142,21 @@ const useEventActionButton = () => {
                 confirmContent={'Yes, leave'}
                 action={async () => await attendance.leave(event.id)}>
                 Are you sure you want to leave the event? This cannot be undone.
+              </ConfirmDialog>
+            );
+          },
+        };
+      } else if (currentAttendance.status === 'left') {
+        return {
+          label: 'Rejoin Event',
+          action: async () => {
+            pushModal(
+              <ConfirmDialog
+                title='Confirm Rejoin'
+                cancelContent={'Cancel'}
+                confirmContent={'Yes, Rejoin'}
+                action={async () => await attendance.join(event.id)}>
+                Are you sure you wish to rejoin the event?
               </ConfirmDialog>
             );
           },

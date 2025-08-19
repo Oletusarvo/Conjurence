@@ -14,12 +14,12 @@ import { useEventContext } from '../../events/providers/EventProvider';
 
 export function UserAttendanceStatusManager() {
   const attendance = useUserAttendanceContext();
-  const { event, hasEnded } = useEventContext();
-  const currentAttendance = attendance.getAttendanceByEventId(event.id);
+  const { hasEnded } = useEventContext();
+  const currentAttendance = attendance.attendanceRecord;
 
   const getModalContent = () => {
     if (hasEnded) {
-      if (currentAttendance.status !== 'host') {
+      if (currentAttendance?.status !== 'host') {
         return <EventEndedNotice variant='attendee' />;
       } else {
         return <EventEndedNotice variant='host' />;

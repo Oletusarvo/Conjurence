@@ -7,18 +7,47 @@ import { useOnSubmit } from '@/hooks/useOnSubmit';
 import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
 import { EventError } from '@/errors/events';
 import { useRef, useState } from 'react';
+import { ZodType } from 'zod';
+import { useStep } from '@/providers/StepProvider';
+import { TAttendance } from '@/features/attendance/schemas/attendanceSchema';
 
 export function useCreateEventForm(template?: TEventData) {
   const { user, updateSession } = useUserContext();
-  const [payload, setPayload] = useState(new FormData());
 
-  const { addAttendanceRecord } = useUserAttendanceContext();
+  const [payload, setPayload] = useState(() => {
+    const fd = new FormData();
+    if (template) {
+      for (const [key, val] of Object.entries(template)) {
+        fd.set(key, val.toString());
+      }
+    }
+    return fd;
+  });
 
-  const router = useRouter();
-  const { position } = useGeolocationContext();
+  const steps = useStep(0);
 
-  const handleChange = e => {
-    console.log('val at handle', e.target.checked);
+  const [inputStatus, setStatus] = useState({
+    title: template?.title ? 'success' : null,
+    location_title: null,
+    description: template?.description ? 'success' : null,
+  });
+
+  console.log(Object.values(inputStatus));
+
+  const handleChange = (e: TODO, schema?: ZodType) => {
+    if (schema) {
+      const key = e.target.name;
+      const parseResult = schema.safeParse(e.target.value);
+      if (!parseResult.success) {
+        setStatus(prev => ({
+          ...prev,
+          [key]: parseResult.error.issues.at(0)?.message,
+        }));
+      } else {
+        setStatus(prev => ({ ...prev, [key]: 'success' }));
+      }
+    }
+
     setPayload(prev => {
       const newPayload = new FormData();
       for (const [key, val] of prev) {
@@ -32,6 +61,11 @@ export function useCreateEventForm(template?: TEventData) {
       return newPayload;
     });
   };
+
+  const attendance = useUserAttendanceContext();
+
+  const router = useRouter();
+  const { position } = useGeolocationContext();
 
   const {
     onSubmit: submitEvent,
@@ -51,13 +85,9 @@ export function useCreateEventForm(template?: TEventData) {
       await updateSession({
         attended_event_id: res.data,
       });
-
-      addAttendanceRecord({
-        event_instance_id: res.data as string,
-        status: 'host',
-        username: user.username,
-      });
-      router.push(`/app/event/` + res.data);
+      const at = res.data as TAttendance;
+      await attendance.updateAttendanceRecord(at);
+      router.push(`/app/event/` + at.event_instance_id);
     },
     onParseError: err => {
       console.log(payload);
@@ -68,5 +98,5 @@ export function useCreateEventForm(template?: TEventData) {
     validationSchema: eventDataSchema,
   });
 
-  return { payload, submitEvent, status, isPending, handleChange };
+  return { payload, submitEvent, status, isPending, handleChange, steps, inputStatus };
 }

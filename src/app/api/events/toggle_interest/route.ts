@@ -1,4 +1,4 @@
-import { toggleInterestAction } from '@/features/attendance/actions/toggleInterestAction';
+import { toggleInterestAction } from '@/features/attendance/actions/createAttendanceAction';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {

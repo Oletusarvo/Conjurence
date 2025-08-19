@@ -6,9 +6,9 @@ import { useToggle } from '@/hooks/useToggle';
 import { Star } from 'lucide-react';
 
 export function InterestedCountBadge({ ...props }) {
-  const { event, interestCount } = useEventContext();
-  const { getAttendanceByEventId } = useUserAttendanceContext();
-  const thisEventParticipation = getAttendanceByEventId(event.id);
+  const { interestCount } = useEventContext();
+  const { attendanceRecord } = useUserAttendanceContext();
+  const thisEventParticipation = attendanceRecord;
   const selected = !!thisEventParticipation;
 
   const isHost = thisEventParticipation?.status === 'host';

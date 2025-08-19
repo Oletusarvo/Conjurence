@@ -12,6 +12,7 @@ import { PasswordInput } from '@/components/PasswordInput';
 import { Notice } from '@/components/Notice';
 import { Form } from '@/components/Form';
 import Link from 'next/link';
+import { CheckboxContainer } from '@/components/CheckboxContainer';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -70,18 +71,21 @@ export function RegisterForm() {
       </div>
 
       <div className='flex w-full items-center justify-between'>
-        <span className='w-full text-sm'>
-          I accept the{' '}
-          <Link
-            href='/terms.pdf'
-            target='_blank'>
-            terms of service and privacy policy
-          </Link>
-        </span>
-        <input
+        <CheckboxContainer
+          label={
+            <span className='w-full text-sm'>
+              I accept the{' '}
+              <Link
+                href='/terms.pdf'
+                target='_blank'>
+                terms of service and privacy policy
+              </Link>
+            </span>
+          }
           required
           type='checkbox'
           name='terms_accepted'
+          component={props => <input {...props} />}
         />
       </div>
 

@@ -5,16 +5,16 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { TAttendance } from '../schemas/attendanceSchema';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { updateAttendanceAction } from '../actions/updateAttendanceAction';
-import { toggleInterestAction } from '../actions/toggleInterestAction';
+import { createAttendanceAction } from '../actions/createAttendanceAction';
 import toast from 'react-hot-toast';
+import { useEventSocket } from '@/features/events/hooks/useEventSocket';
+import { useReloadData } from '@/hooks/useReloadData';
 
 export type TAttendanceStatusType = 'joining' | 'leaving' | 'ending';
 
 const [UserAttendanceContext, useUserAttendanceContext] = createContextWithUseHook<{
-  attendanceRecords: TODO[];
-  /**@deprecated */
-  addAttendanceRecord: (data: TAttendance) => void;
-  getAttendanceByEventId: (eventId: string) => TAttendance;
+  attendanceRecord: TAttendance | null;
+  updateAttendanceRecord: (attendance: TAttendance | null) => Promise<void>;
   join: (eventId: string) => Promise<void>;
   leave: (eventId: string) => Promise<void>;
   showInterest: (eventId: string) => Promise<void>;
@@ -24,35 +24,35 @@ const [UserAttendanceContext, useUserAttendanceContext] = createContextWithUseHo
 }>('useAttendanceContext can only be called within the scope of an EventAttendanceContext!');
 
 type EventParticipantProviderProps = React.PropsWithChildren & {
-  initialAttendanceRecords: TODO[];
+  initialAttendanceRecord: TAttendance | null;
 };
 
 /**Holds the event attendance-records of the current user. Provides methods to join, leave and showing interest on events. */
 export function UserAttendanceProvider({
   children,
-  initialAttendanceRecords,
+  initialAttendanceRecord,
 }: EventParticipantProviderProps) {
-  const [attendanceRecords, setAttendanceRecords] = useState(initialAttendanceRecords);
+  const [attendanceRecord, setAttendanceRecord] = useState(initialAttendanceRecord);
   const { user, updateSession } = useUserContext();
   const [currentAction, setCurrentAction] = useState<TAttendanceStatusType | null>(null);
 
-  const updateAttendance = (eventId: string, status: TAttendance['status']) => {
-    const newAttendance = [...attendanceRecords];
-    const a = newAttendance.find(a => a.event_instance_id === eventId);
-    if (!a) return;
-    a.status = status;
-    setAttendanceRecords(newAttendance);
+  const reloadAttendance = useReloadData(
+    `/api/attendance?event_id=${attendanceRecord?.event_instance_id || ''}`,
+    setAttendanceRecord,
+    300
+  );
+
+  const updateAttendanceRecord = async (attendance: TAttendance | null) => {
+    setAttendanceRecord(attendance);
+    await updateSession({ attended_event_id: attendance?.event_instance_id || null });
   };
 
   const showInterest = async (eventId: string) => {
     try {
-      await toggleInterestAction(eventId);
-      addAttendanceRecord({
-        event_instance_id: eventId,
-        username: user.username,
-        status: 'interested',
-      });
-      await updateSession({ attended_event_id: eventId });
+      const res = await createAttendanceAction(eventId, 'interested');
+      if (res.success) {
+        await updateAttendanceRecord(res.data);
+      }
     } catch (err) {
       toast.error('Something went wrong!');
     }
@@ -60,9 +60,11 @@ export function UserAttendanceProvider({
 
   const cancelInterest = async (eventId: string) => {
     try {
-      await updateAttendanceAction(eventId, 'canceled');
-      updateAttendance(eventId, 'canceled');
-      await updateSession({ attended_event_id: null });
+      const res = await updateAttendanceAction(eventId, 'canceled');
+      if (res.success) {
+        await updateAttendanceRecord(null);
+      }
+
       //setAttendanceRecords(prev => prev.filter(r => r.event_instance_id !== eventId));
     } catch (err) {
       toast.error('Something went wrong!');
@@ -74,9 +76,13 @@ export function UserAttendanceProvider({
    */
   const join = async (eventId: string) => {
     try {
-      await updateAttendanceAction(eventId, 'joined');
-      updateAttendance(eventId, 'joined');
-      await updateSession({ attended_event_id: eventId });
+      const res = await updateAttendanceAction(eventId, 'joined');
+      if (res.success) {
+        await updateAttendanceRecord({
+          ...attendanceRecord,
+          status: 'joined',
+        });
+      }
     } catch (err) {
       toast.error('Something went wrong!');
     }
@@ -84,26 +90,27 @@ export function UserAttendanceProvider({
 
   const leave = async (eventId: string) => {
     try {
-      await updateAttendanceAction(eventId, 'left');
-      updateAttendance(eventId, 'left');
-      await updateSession({ attended_event_id: null });
+      const res = await updateAttendanceAction(eventId, 'left');
+      if (res.success) {
+        await updateAttendanceRecord(res.data);
+      }
     } catch (err) {
       toast.error('Something went wrong!');
     }
   };
 
-  const addAttendanceRecord = (data: TAttendance) =>
-    setAttendanceRecords([...attendanceRecords, data]);
-
-  const getAttendanceByEventId = (eventId: string) =>
-    attendanceRecords.find(a => a.event_instance_id === eventId);
+  useEventSocket({
+    eventId: attendanceRecord?.event_instance_id,
+    onEnd: () => {
+      updateAttendanceRecord(null);
+    },
+  });
 
   return (
     <UserAttendanceContext.Provider
       value={{
-        attendanceRecords,
-        addAttendanceRecord,
-        getAttendanceByEventId,
+        attendanceRecord,
+        updateAttendanceRecord,
         join,
         leave,
         showInterest,

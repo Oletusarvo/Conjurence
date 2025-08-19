@@ -5,7 +5,14 @@ import { Input } from '../../../components/Input';
 import { withLoader } from '@/hoc/withLoader';
 import { useCreateEventForm } from '../hooks/useCreateEventForm';
 import { useRouter } from 'next/navigation';
-import { TEvent, TEventData, TEventInstance } from '../schemas/eventSchema';
+import {
+  eventDescriptionSchema,
+  eventLocationTitleSchema,
+  eventTitleSchema,
+  TEvent,
+  TEventData,
+  TEventInstance,
+} from '../schemas/eventSchema';
 import { EventError } from '@/errors/events';
 import { Notice } from '@/components/Notice';
 import { useRef, useState } from 'react';
@@ -17,13 +24,15 @@ import { createContextWithUseHook } from '@/util/createContextWithUseHook';
 import { useStep } from '@/providers/StepProvider';
 import { StepTrack } from '@/components/StepTrack';
 import { CheckboxContainer } from '@/components/CheckboxContainer';
+import { LocationTitleBadge } from './LocationTitleBadge';
+import { ZodType } from 'zod';
 
 type TemplateType = TEventData & TEventInstance & Pick<TEvent, 'location_title'>;
 type CategoriesType = { id: number; label: string; description?: string }[];
 type ThresholdsType = { id: number; label: string; description: string }[];
 
 const [CreateEventFormContext, useCreateEventFormContext] = createContextWithUseHook<
-  Omit<ReturnType<typeof useCreateEventForm> & { template: TemplateType }, 'submitEvent'>
+  ReturnType<typeof useCreateEventForm> & { template: TemplateType }
 >('useCreateEventForm can only be called from within the scope of a CreateEventFormContext!');
 
 type CreateEventFormProps = {
@@ -33,10 +42,16 @@ type CreateEventFormProps = {
 };
 
 export function CreateEventForm({ categories, thresholds, template }: CreateEventFormProps) {
-  const { submitEvent, isPending, status, ...hook } = useCreateEventForm(template);
-  const { current: currentStep, backward, forward } = useStep(0);
+  const form = useCreateEventForm(template);
   const router = useRouter();
-
+  const isForwardButtonDisabled = () => {
+    const { inputStatus, steps } = form;
+    if (steps.current == 0) {
+      return inputStatus.title !== 'success' || inputStatus.location_title !== 'success';
+    } else if (steps.current == 2) {
+      return inputStatus.description !== 'success';
+    }
+  };
   const SubmitButton = withLoader(({ children, ...props }: React.ComponentProps<'button'>) => {
     return (
       <button
@@ -49,8 +64,9 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
 
   const ForwardButton = () => (
     <button
+      disabled={isForwardButtonDisabled()}
       className='--contained --accent --full-width'
-      onClick={() => forward()}
+      onClick={() => form.steps.forward()}
       type='button'>
       Next
     </button>
@@ -61,28 +77,28 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
       type='button'
       className='--outlined --secondary --full-width'
       onClick={() => {
-        if (currentStep === 0) {
+        if (form.steps.current === 0) {
           router.push('/app/feed');
         } else {
-          backward();
+          form.steps.backward();
         }
       }}>
-      {currentStep === 0 ? 'Cancel' : 'Back'}
+      {form.steps.current === 0 ? 'Cancel' : 'Back'}
     </button>
   );
 
   return (
     <form
       className='flex flex-col gap-2 sm:w-[450px] xs:w-full h-full'
-      onSubmit={submitEvent}>
+      onSubmit={form.submitEvent}>
       <StepTrack
-        currentStep={currentStep}
+        currentStep={form.steps.current}
         max={3}
       />
-      <CreateEventFormContext.Provider value={{ template, isPending, status, ...hook }}>
-        {currentStep === 0 ? (
+      <CreateEventFormContext.Provider value={{ template, ...form }}>
+        {form.steps.current === 0 ? (
           <OverviewStep />
-        ) : currentStep === 1 ? (
+        ) : form.steps.current === 1 ? (
           <TypesStep
             categories={categories}
             thresholds={thresholds}
@@ -90,16 +106,16 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
         ) : (
           <DescriptionStep />
         )}
-        <StatusNotice status={status} />
+        <StatusNotice status={form.status} />
 
         <div className='flex gap-2 w-full mt-auto'>
           <BackwardButton />
-          {currentStep < 2 ? (
+          {form.steps.current < 2 ? (
             <ForwardButton />
           ) : (
             <SubmitButton
-              loading={isPending}
-              disabled={isPending || status === 'success'}
+              loading={form.isPending}
+              disabled={form.isPending || form.status === 'success' || isForwardButtonDisabled()}
               type='submit'>
               Submit
             </SubmitButton>
@@ -112,30 +128,53 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
 
 function OverviewStep() {
   const { user } = useUserContext();
-  const { payload, template, handleChange } = useCreateEventFormContext();
+
+  const { payload, template, handleChange, inputStatus } = useCreateEventFormContext();
   console.log(payload.get('is_mobile'));
+
   return (
     <>
-      <Input
-        onChange={handleChange}
-        icon={<Heading />}
-        name='title'
-        placeholder='Title...'
-        required
-        defaultValue={template?.title || payload.get('title')?.toString()}
-      />
+      <div className='form-input-group'>
+        <Input
+          autoComplete='off'
+          onChange={e => {
+            handleChange(e, eventTitleSchema);
+          }}
+          icon={<Heading />}
+          name='title'
+          placeholder='Title...'
+          required
+          defaultValue={template?.title || payload.get('title')?.toString()}
+        />
+        {inputStatus.title === EventError.titleTooShort ? (
+          <Sublabel variant='error'>The title is too short!</Sublabel>
+        ) : inputStatus.title === EventError.titleTooLong ? (
+          <Sublabel variant='error'>The title is too long!</Sublabel>
+        ) : null}
+      </div>
+
+      <div className='form-input-group'>
+        <Input
+          autoComplete='off'
+          onChange={e => {
+            handleChange(e, eventLocationTitleSchema);
+          }}
+          icon={<Pin />}
+          name='location_title'
+          placeholder='Location title...'
+          required
+          defaultValue={template?.location_title || payload.get('location_title')?.toString()}
+        />
+        {inputStatus.location_title === EventError.locationTooShort ? (
+          <Sublabel variant='error'>The location is too short!</Sublabel>
+        ) : inputStatus.location_title === EventError.locationTooLong ? (
+          <Sublabel variant='error'>The location is too long!</Sublabel>
+        ) : null}
+      </div>
 
       <Input
-        onChange={handleChange}
-        icon={<Pin />}
-        name='location_title'
-        placeholder='Location title...'
-        required
-        defaultValue={template?.location_title || payload.get('location_title')?.toString()}
-      />
-
-      <Input
-        onChange={handleChange}
+        min={1}
+        onChange={e => handleChange(e)}
         icon={<Armchair />}
         name='spots_available'
         placeholder='Spots available...'
@@ -241,23 +280,29 @@ function TypesStep({
 function DescriptionStep() {
   const { user } = useUserContext();
 
-  const { handleChange, template, payload } = useCreateEventFormContext();
+  const { handleChange, template, payload, inputStatus } = useCreateEventFormContext();
   return (
     <>
-      <textarea
-        onChange={handleChange}
-        name='description'
-        placeholder='Description...'
-        required
-        spellCheck={false}
-        defaultValue={template?.description || payload.get('description')?.toString()}
-        className='w-full h-[50%]'
-      />
+      <div className='form-input-group h-[50%]'>
+        <textarea
+          autoComplete='off'
+          onChange={e => handleChange(e, eventDescriptionSchema)}
+          name='description'
+          placeholder='Description...'
+          required
+          spellCheck={false}
+          defaultValue={template?.description || payload.get('description')?.toString()}
+          className='w-full h-full'
+        />
+        {inputStatus.description === EventError.descriptionTooLong ? (
+          <Sublabel variant='error'>The description is too long!</Sublabel>
+        ) : null}
+      </div>
+
       <CheckboxContainer
         onChange={handleChange}
         type='checkbox'
         name='is_template'
-        defaultChecked={template?.is_template}
         checked={payload.get('is_template') == 'true'}
         hidden={!user.subscription.allow_templates}
         label={<span>Save event as template?</span>}

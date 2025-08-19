@@ -26,7 +26,7 @@ export function LoginForm() {
 
   return (
     <form
-      className='flex flex-col gap-2 sm:w-[450px] xs:w-full'
+      className='flex flex-col gap-2 sm:w-[450px] xs:w-full h-full justify-center'
       onSubmit={submitCredentials}>
       <Input
         icon={<Mail />}
@@ -51,6 +51,7 @@ export function LoginForm() {
           required
         />
       </div>
+
       <div className='flex gap-2 w-full'>
         <button
           onClick={() => router.push('/')}
@@ -65,15 +66,17 @@ export function LoginForm() {
           Login
         </SubmitButton>
       </div>
-      {status === AuthError.invalidCredentials ? (
-        <Notice variant='error'>Invalid credentials!</Notice>
-      ) : status === 'error' ? (
-        <Notice variant='error'>An unexpected error occured!</Notice>
-      ) : status === 'success' ? (
-        <Notice variant='success'>
-          Login successful! You will be redirected to the event feed...
-        </Notice>
-      ) : null}
+      <StatusNotice status={status} />
     </form>
   );
+}
+
+function StatusNotice({ status }) {
+  return status === AuthError.invalidCredentials ? (
+    <Notice variant='error'>Invalid credentials!</Notice>
+  ) : status === 'error' ? (
+    <Notice variant='error'>An unexpected error occured!</Notice>
+  ) : status === 'success' ? (
+    <Notice variant='success'>Login successful! You will be redirected to the event feed...</Notice>
+  ) : null;
 }

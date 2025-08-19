@@ -17,7 +17,7 @@ export function StepProvider({ children, initialStep = 0, max = Infinity }: Step
 }
 
 export function useStep(initialStep: number = 0, max: number = Infinity) {
-  const [current, setCurrent] = useSessionStorage('conjurence-step', initialStep);
+  const [current, setCurrent] = useState(initialStep);
   const forward = () => {
     if (current < max) {
       setCurrent(prev => prev + 1);

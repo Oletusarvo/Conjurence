@@ -13,6 +13,7 @@ export function useEventSocket({
   onInterest,
   onEnd,
   onUpdate,
+  onPositionUpdate,
   onAttendanceUpdate,
 }: {
   eventId: string;
@@ -22,6 +23,7 @@ export function useEventSocket({
   }) => void;
   onEnd?: (payload: { eventId: string }) => void;
   onUpdate?: (payload: Partial<TEvent>) => void;
+  onPositionUpdate?: (payload: { eventId: string; position: GeolocationPosition }) => void;
   onAttendanceUpdate?: (newAttendanceRecord: {
     username: string;
     status: TAttendance['status'];
@@ -42,15 +44,19 @@ export function useEventSocket({
       if (payload.eventId !== eventId) return;
       onUpdate && onUpdate(payload);
     },
+    'event:position_update': (payload: { eventId: string; position: GeolocationPosition }) => {
+      if (eventId !== payload.eventId) return;
+      onPositionUpdate && onPositionUpdate(payload);
+    },
     'event:attendance_update': (payload: {
       eventId: string;
-      newAttendanceRecord: {
+      updatedAttendanceRecord: {
         username: string;
         status: TAttendance['status'];
       };
     }) => {
       if (payload.eventId !== eventId) return;
-      onAttendanceUpdate && onAttendanceUpdate(payload.newAttendanceRecord);
+      onAttendanceUpdate && onAttendanceUpdate(payload.updatedAttendanceRecord);
     },
   });
 }

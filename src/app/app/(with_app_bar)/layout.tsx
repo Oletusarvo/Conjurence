@@ -1,8 +1,7 @@
+import { AddEventButton } from '@/components/AddEventButton';
 import { AppFooter } from '@/components/AppFooter';
 import { HighlightLink } from '@/components/HighlightLink';
-import { Spinner } from '@/components/Spinner';
-import { Plus, Search, User } from 'lucide-react';
-import { Suspense } from 'react';
+import { Search } from 'lucide-react';
 
 export default async function ApplicationLayout({ children }: React.PropsWithChildren) {
   return (
@@ -14,10 +13,7 @@ export default async function ApplicationLayout({ children }: React.PropsWithChi
         <HighlightLink href='/app/feed'>
           <Search />
         </HighlightLink>
-
-        <HighlightLink href='/app/event/create'>
-          <Plus />
-        </HighlightLink>
+        <AddEventButton />
       </AppFooter>
     </>
   );

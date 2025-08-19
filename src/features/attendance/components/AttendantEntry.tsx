@@ -11,9 +11,9 @@ export function AttendantEntry({ children, username, timestamp }: AttendantEntry
       <div className='flex items-center gap-2 flex-1'>
         <UsernameContainer>{username}</UsernameContainer>
       </div>
-      <div className='flex-1'>{children}</div>
 
-      <div className='flex-1 justify-end flex'>
+      <div className='flex-1 justify-end flex gap-2'>
+        {children}
         <span>{timestamp}</span>
       </div>
     </div>

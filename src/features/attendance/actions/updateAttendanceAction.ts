@@ -3,13 +3,15 @@
 import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
+import { getAttendance } from '../dal/getAttendance';
+import { TAttendance } from '../schemas/attendanceSchema';
 
 export async function updateAttendanceAction(
   eventId: string,
   status: string
-): Promise<ActionResponse<void, string>> {
+): Promise<ActionResponse<TAttendance, string>> {
   const session = await loadSession();
-  await db(tablenames.event_attendance)
+  const updatedAttendanceRecord = await db(tablenames.event_attendance)
     .where({ event_instance_id: eventId, user_id: session.user.id })
     .update({
       attendance_status_id: db
@@ -18,11 +20,17 @@ export async function updateAttendanceAction(
         .where({ label: status })
         .limit(1),
       updated_at: new Date(),
+    })
+    .then(async () => {
+      return (await getAttendance(db)
+        .where({ event_instance_id: eventId, user_id: session.user.id })
+        .orderBy('requested_at', 'desc')
+        .first()) as TAttendance;
     });
 
   global.io.to(`event:${eventId}`).emit('event:attendance_update', {
     eventId,
-    newAttendanceRecord: { username: session.user.username, status },
+    updatedAttendanceRecord,
   });
-  return { success: true };
+  return { success: true, data: updatedAttendanceRecord };
 }

@@ -30,11 +30,11 @@ export function UserAttendanceManager() {
   const { distance, distancePending } = useDistanceContext();
   const attendance = useUserAttendanceContext();
 
-  const currentAttendance = attendance.getAttendanceByEventId(event.id);
+  const currentAttendance = attendance.attendanceRecord;
   const { addTimeout, removeTimeout } = useTimeout();
 
   useEffect(() => {
-    if (distancePending || !currentAttendance) {
+    if (distancePending || !currentAttendance || !event) {
       return;
     }
 
@@ -115,9 +115,9 @@ export function UserAttendanceManager() {
     currentAttendance?.status,
     distancePending,
     distance,
-    event.id,
-    event.position_accuracy,
-    event.is_mobile,
+    event?.id,
+    event?.position_accuracy,
+    event?.is_mobile,
     position?.coords.accuracy,
 
     hasEnded,

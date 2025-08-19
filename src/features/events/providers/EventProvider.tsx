@@ -7,6 +7,8 @@ import { useEventSocket } from '../hooks/useEventSocket';
 import { useReloadData } from '@/hooks/useReloadData';
 import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
 import { updateEventAction } from '../actions/updateEventAction';
+import { socket } from '@/socket';
+import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 
 type EventProviderProps = React.PropsWithChildren & {
   initialEvent: TEvent;
@@ -21,11 +23,11 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
   const { position } = useGeolocationContext();
   const [event, setEvent] = useState(initialEvent);
-  const hasEnded = event.ended_at !== null;
-  const interestCount = event.interested_count;
+  const hasEnded = event?.ended_at !== null;
+  const interestCount = event?.interested_count;
 
   const reloadEvent = useReloadData<TEvent>(
-    `/api/events/${event.id}`,
+    `/api/events/${event?.id}`,
     data => {
       setEvent(data);
     },
@@ -33,25 +35,23 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
   );
 
   useEventSocket({
-    eventId: event.id,
+    eventId: event?.id,
     onEnd: () => reloadEvent(),
-    onUpdate: payload =>
-      setEvent(prev => {
-        return {
-          ...prev,
-          ...payload,
-        };
-      }),
     onAttendanceUpdate: () => reloadEvent(),
+    onPositionUpdate: payload => {
+      const { position } = payload;
+      setEvent(prev => ({
+        ...prev,
+        position: { coordinates: [position.coords.longitude, position.coords.latitude] },
+        position_accuracy: position.coords.accuracy,
+      }));
+    },
   });
 
   useEffect(() => {
     //Update the position of mobile events.
-    if (!event.is_mobile) return;
-
-    const fd = new FormData();
-    fd.append('position', JSON.stringify(position));
-    updateEventAction(fd);
+    if (!event || !event.is_mobile) return;
+    socket.emit('event:position_update', { eventId: event.id, position });
   }, [position]);
 
   return (

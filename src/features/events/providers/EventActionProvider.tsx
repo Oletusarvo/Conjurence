@@ -6,6 +6,7 @@ import { useStatus } from '@/hooks/useStatus';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { endEventAction } from '../actions/endEventAction';
 import toast from 'react-hot-toast';
+import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
 
 const [EventActionContext, useEventActionContext] = createContextWithUseHook<
   ReturnType<typeof useEventActions>
@@ -25,7 +26,7 @@ export function EventActionProvider({ children }) {
 function useEventActions(eventId: string) {
   const [status, isPending, setStatus] = useStatus();
   const { updateSession } = useUserContext();
-
+  const { updateAttendanceRecord } = useUserAttendanceContext();
   /**Attempts to update the user's session with a new attended event id.
    * @todo figure out why sometimes the updateSession does not update the attended event id.
    */
@@ -37,6 +38,7 @@ function useEventActions(eventId: string) {
     attended_event_id: string | null;
   }) => {
     await updateSession({ attended_event_id });
+
     await action();
   };
 
@@ -51,6 +53,7 @@ function useEventActions(eventId: string) {
           if (res.success === false) {
             toast.error(res.error);
           }
+          await updateAttendanceRecord(null);
         },
         attended_event_id: null,
       });

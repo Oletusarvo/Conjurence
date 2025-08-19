@@ -4,10 +4,19 @@
 
 - User subscriptions.
 - Support for mobile events.
+- StepProvider.
+- Ability to rejoin an event after leaving.
 
 ### Changed
 
 - Event creation from template or from scratch is done on the same page.
+- UserAttendanceProvider to manage a single attendance at a time.
+- Split the event creation form into steps.
+- The alignment of the contents of AttendanceEntry.
+
+### Removed
+
+- The UserAttendanceManagers associated with each event-card in the feed.
 
 ## [0.4.0-alpha.3] - 15-08-2025
 

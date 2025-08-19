@@ -58,7 +58,7 @@ export function useOnSubmit<
         }
       }
 
-      const res = await action(payload);
+      const res = await action(p);
       if (res.success === false) {
         setStatus(res.error);
         if (onFailure) {

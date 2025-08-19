@@ -18,7 +18,10 @@ export function CheckboxContainer({
   return (
     <div
       hidden={hidden}
-      onClick={() => componentRef.current?.click()}
+      onClick={e => {
+        if (e.target === componentRef.current) return; // ignore clicks directly on checkbox
+        componentRef.current?.click();
+      }}
       className={
         'w-full p-2 rounded-md flex items-center justify-between text-gray-300 cursor-pointer'
       }

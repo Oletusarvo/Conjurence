@@ -2,12 +2,18 @@
 
 import db from '@/dbconfig';
 import { EventError, TEventError } from '@/errors/events';
-import { eventDataSchema, eventInstanceSchema } from '@/features/events/schemas/eventSchema';
+import {
+  eventDataSchema,
+  eventInstanceSchema,
+  TEvent,
+} from '@/features/events/schemas/eventSchema';
 import { tablenames } from '@/tablenames';
 import { createGeographyRow } from '@/features/geolocation/util/createGeographyRow';
 import { loadSession } from '@/util/loadSession';
 import { parseFormDataUsingSchema } from '@/util/parseUsingSchema';
 import { getParseResultErrorMessage } from '@/util/getParseResultErrorMessage';
+import { TAttendance } from '@/features/attendance/schemas/attendanceSchema';
+import { getAttendance } from '@/features/attendance/dal/getAttendance';
 
 /**Creates a new event.
  * @param payload The data for the event.
@@ -16,7 +22,7 @@ import { getParseResultErrorMessage } from '@/util/getParseResultErrorMessage';
 export async function createEventAction(
   payload: FormData,
   templateId?: string
-): Promise<ActionResponse<string, TEventError | string>> {
+): Promise<ActionResponse<TAttendance, TEventError | string>> {
   const session = await loadSession();
 
   const parsedDataResult = parseFormDataUsingSchema(payload, eventDataSchema);
@@ -116,10 +122,15 @@ export async function createEventAction(
         .limit(1),
     });
 
+    const attendance = await getAttendance(trx)
+      .where({ event_instance_id: eventInstanceRecord.id, user_id: session.user.id })
+      .orderBy('requested_at', 'desc')
+      .first();
+
     await trx.commit();
     return {
       success: true,
-      data: eventInstanceRecord.id,
+      data: attendance,
     };
   } catch (err) {
     console.log(err.message);
