@@ -6,6 +6,7 @@
 - Support for mobile events.
 - StepProvider.
 - Ability to rejoin an event after leaving.
+- MobileBadge.
 
 ### Changed
 

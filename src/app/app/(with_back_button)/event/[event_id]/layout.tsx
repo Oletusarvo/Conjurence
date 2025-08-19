@@ -19,6 +19,7 @@ import { HostBadge } from '@/features/events/components/HostBadge';
 import { InterestedCountBadge } from '@/features/events/components/InterestedCountBadge';
 import { DistanceThresholdDisplay } from '@/features/distance/components/DistanceThresholdDisplay';
 import { LocationTitleBadge } from '@/features/events/components/LocationTitleBadge';
+import { MobileEventBadge } from '@/features/events/components/MobileEventBadge';
 
 export const revalidate = 0;
 
@@ -41,11 +42,17 @@ export default async function EventPage({ params, attendance }) {
           <ModalStackProvider>
             <BaseEventModalBody>
               <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-background-light-border'>
-                <div className='flex items-start px-2 w-full'>
+                <div className='flex items-start w-full'>
                   <div className='flex flex-col items-start gap-2 w-full'>
-                    <div className='flex gap-2 items-start justify-between w-full'>
+                    <div
+                      id='event-header'
+                      className='flex gap-2 items-start justify-between w-full'>
                       <div className='flex flex-col gap-1'>
-                        <h3>{event?.title}</h3>
+                        <div className='flex gap-2'>
+                          <h2>{event?.title}</h2>
+                          {event.is_mobile && <MobileEventBadge />}
+                        </div>
+
                         <div className='flex gap-2'>
                           <HostBadge />
                         </div>

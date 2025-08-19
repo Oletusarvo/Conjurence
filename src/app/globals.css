@@ -68,8 +68,8 @@ body {
 @media (min-width: 360px) {
   /* xs */
   .px-default {
-    padding-left: 0.5rem; /* xs:px-2 */
-    padding-right: 0.5rem;
+    padding-left: --spacing(4); /* xs:px-2 */
+    padding-right: --spacing(4);
   }
 }
 

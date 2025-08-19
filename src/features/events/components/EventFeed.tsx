@@ -42,7 +42,7 @@ export function EventFeed() {
         )
         .then(res => {
           eventCache.current = res.data;
-          return res.data || [];
+          return res.data;
         }),
 
     enabled: !!position,
