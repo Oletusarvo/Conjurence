@@ -1,10 +1,10 @@
-import { toggleInterestAction } from '@/features/attendance/actions/createAttendanceAction';
+import { createAttendanceAction } from '@/features/attendance/actions/createAttendanceAction';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const res = await toggleInterestAction(body.data.eventId);
+    const res = await createAttendanceAction(body.data.eventId, 'interested');
     if (res.success === true) {
       return new NextResponse(JSON.stringify(res.data), { status: 200 });
     } else {

@@ -34,6 +34,6 @@ export const tablenames = {
   event_attendance_status: getFullTableName('events', 'event_attendance_status'),
   event_threshold: getFullTableName('events', 'event_size'),
   event_threshold_description: getFullTableName('events', 'event_size_description'),
-  //notification: getFullTableName('users', tables.notification),
-  //notification_type: getFullTableName('users', tables.notification_type),
+  notification: getFullTableName('users', 'notification'),
+  notification_type: getFullTableName('users', 'notification_type'),
 };
