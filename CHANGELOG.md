@@ -1,3 +1,14 @@
+## [0.6.0-alpha.1] - 20-08-2025
+
+### Added
+
+- An indicator the session is being updated, and disabling the back-to-feed button while it is, once an event has ended.
+
+### Changed
+
+- The bottom-bar is now only displayed when creating events, and hidden on the event-screen.
+- Shortened the time-string of the EventStatusBadge to allow more room on the screen.
+
 ## [0.5.0-alpha.1] - 17-08-2025
 
 ### Added

@@ -1,7 +1,7 @@
 'use client';
 
 import { Pill } from '@/components/Pill';
-import { useEventContext } from '../providers/EventProvider';
+import { useEventContext } from '../../providers/EventProvider';
 import { capitalize } from '@/util/capitalize';
 
 export function CategoryBadge() {

@@ -134,10 +134,6 @@ export function UserAttendanceManager() {
 
     updateSession({
       attended_event_id: null,
-    }).then(res => {
-      if (res === null) {
-        console.log('UserAttendanceManager: Session update failed!');
-      }
     });
   }, [hasEnded]);
 

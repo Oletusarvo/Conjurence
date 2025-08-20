@@ -3,17 +3,17 @@
 import { useClassName } from '@/hooks/useClassName';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 
-type CheckboxContainerProps = React.ComponentProps<'input'> & {
+type CheckboxInputProps = React.ComponentProps<'input'> & {
   label: ReactNode;
   component: (props: React.ComponentProps<'input'>) => ReactNode;
 };
-export function CheckboxContainer({
+export function CheckboxInput({
   label,
   component: Component,
   checked,
   hidden,
   ...props
-}: CheckboxContainerProps) {
+}: CheckboxInputProps) {
   const componentRef = useRef<HTMLInputElement>(null);
   return (
     <div

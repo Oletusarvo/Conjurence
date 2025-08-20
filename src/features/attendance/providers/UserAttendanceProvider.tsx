@@ -33,7 +33,7 @@ export function UserAttendanceProvider({
   initialAttendanceRecord,
 }: EventParticipantProviderProps) {
   const [attendanceRecord, setAttendanceRecord] = useState(initialAttendanceRecord);
-  const { user, updateSession } = useUserContext();
+  const { updateSession } = useUserContext();
   const [currentAction, setCurrentAction] = useState<TAttendanceStatusType | null>(null);
 
   const reloadAttendance = useReloadData(
@@ -44,7 +44,7 @@ export function UserAttendanceProvider({
 
   const updateAttendanceRecord = async (attendance: TAttendance | null) => {
     setAttendanceRecord(attendance);
-    await updateSession({ attended_event_id: attendance?.event_instance_id || null });
+    updateSession({ attended_event_id: attendance?.event_instance_id || null });
   };
 
   const showInterest = async (eventId: string) => {
@@ -64,8 +64,6 @@ export function UserAttendanceProvider({
       if (res.success) {
         await updateAttendanceRecord(null);
       }
-
-      //setAttendanceRecords(prev => prev.filter(r => r.event_instance_id !== eventId));
     } catch (err) {
       toast.error('Something went wrong!');
     }
@@ -78,10 +76,7 @@ export function UserAttendanceProvider({
     try {
       const res = await updateAttendanceAction(eventId, 'joined');
       if (res.success) {
-        await updateAttendanceRecord({
-          ...attendanceRecord,
-          status: 'joined',
-        });
+        await updateAttendanceRecord(res.data);
       }
     } catch (err) {
       toast.error('Something went wrong!');

@@ -2,7 +2,7 @@
 
 import { Pill } from '@/components/Pill';
 import { Armchair } from 'lucide-react';
-import { useEventContext } from '../providers/EventProvider';
+import { useEventContext } from '../../providers/EventProvider';
 
 export function SpotsAvailableBadge() {
   const { event } = useEventContext();

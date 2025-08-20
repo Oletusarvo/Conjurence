@@ -42,7 +42,7 @@ export function EventActionButton(props: React.ComponentProps<'button'>) {
 const Button = withLoader(({ children, ...props }) => (
   <button
     {...props}
-    className='--outlined --accent mt-auto w-full'
+    className='--contained --accent mt-auto w-full'
     type='button'>
     {children}
   </button>
@@ -141,7 +141,7 @@ const useEventActionButton = () => {
                 cancelContent={'Cancel'}
                 confirmContent={'Yes, leave'}
                 action={async () => await attendance.leave(event.id)}>
-                Are you sure you want to leave the event? This cannot be undone.
+                Are you sure you want to leave the event?
               </ConfirmDialog>
             );
           },

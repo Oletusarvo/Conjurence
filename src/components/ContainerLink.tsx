@@ -8,17 +8,18 @@ export const ContainerLink = ({
   icon: Icon,
   ...props
 }: React.ComponentProps<typeof Link> & { icon: typeof AtSign }) => {
+  const Component = withIcon(Link);
   return (
-    <Link
+    <Component
       {...props}
-      className='container-link w-full'>
-      <div className='flex items-center'>
+      icon={
         <Icon
           size='36px'
           color='var(--color-accent)'
         />
-      </div>
+      }
+      className='container-link w-full flex items-center'>
       <div className='flex flex-col flex-1 gap-2'>{children}</div>
-    </Link>
+    </Component>
   );
 };

@@ -14,12 +14,12 @@ export function useEventStatus(createdAt: any, poll?: boolean) {
     const roundValue = (val: number) => Math.ceil(val);
     const absTimeLeft = Math.abs(duration);
     if (absTimeLeft >= day) {
-      return roundValue(duration / day) + ' days ago';
+      return roundValue(duration / day) + 'd ago';
     } else if (absTimeLeft >= hour) {
       //One hour
-      return roundValue(duration / hour) + ' hours ago';
+      return roundValue(duration / hour) + 'h ago';
     } else if (absTimeLeft >= minute) {
-      return roundValue(duration / minute) + ' minutes ago';
+      return roundValue(duration / minute) + 'min ago';
     } else {
       return 'Right now';
     }

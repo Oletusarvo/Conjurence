@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { useEventActionContext } from '../providers/EventActionProvider';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { Spinner } from '@/components/Spinner';
+import { useRouter } from 'next/navigation';
 
 const ButtonWithIcon = withLoader(
   withIcon(({ children, variant = '--contained', ...props }) => {
@@ -34,11 +35,19 @@ const ButtonContainer = ({ children }) => (
   <div className='flex flex-col items-center mt-4 gap-2'>{children}</div>
 );
 
-const BackToFeedButton = () => (
-  <Link href='/app/feed'>
-    <ButtonWithIcon icon={<ArrowLeft />}>Back To Feed</ButtonWithIcon>
-  </Link>
-);
+const BackToFeedButton = () => {
+  const { sessionUpdating } = useUserContext();
+  const router = useRouter();
+
+  return (
+    <ButtonWithIcon
+      onClick={() => router.replace('/app/feed')}
+      disabled={sessionUpdating}
+      icon={sessionUpdating ? <Spinner /> : <ArrowLeft />}>
+      Back To Feed
+    </ButtonWithIcon>
+  );
+};
 
 const Icon = ({ Component, color }) => (
   <Component

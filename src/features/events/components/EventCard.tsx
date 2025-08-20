@@ -1,16 +1,16 @@
 'use client';
 
 import { useClassName } from '@/hooks/useClassName';
-import { EventStatusBadge } from './EventStatusBadge';
+import { EventStatusBadge } from './ui/EventStatusBadge';
 import { useRouter } from 'next/navigation';
 import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { useEventContext } from '../providers/EventProvider';
 import { DistanceBadge } from '../../distance/components/DistanceBadge';
 import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
-import { SpotsAvailableBadge } from './SpotsAvailableBadge';
-import { CategoryBadge } from './CategoryBadge';
+import { SpotsAvailableBadge } from './ui/SpotsAvailableBadge';
+import { CategoryBadge } from './ui/CategoryBadge';
 import { HostBadge } from './HostBadge';
-import { InterestedCountBadge } from './InterestedCountBadge';
+import { InterestedCountBadge } from './ui/InterestedCountBadge';
 
 export type EventCardProps = {
   onClick?: () => void;

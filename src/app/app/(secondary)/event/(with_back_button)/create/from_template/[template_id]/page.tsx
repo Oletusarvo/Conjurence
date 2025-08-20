@@ -1,6 +1,6 @@
 import { FormContainer } from '@/components/Form';
 import db from '@/dbconfig';
-import { CreateEventForm } from '@/features/events/components/CreateEventForm';
+import { CreateEventForm } from '@/features/events/components/CreateEventForm/CreateEventForm';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
 

@@ -21,7 +21,6 @@ export function AttendedEventFeed() {
   });
 
   const AttendedEventsList = withAlternate(List, true);
-  console.log(events);
 
   return (
     <AttendedEventsList

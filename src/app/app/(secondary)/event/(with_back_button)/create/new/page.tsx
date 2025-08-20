@@ -1,4 +1,4 @@
-import { CreateEventForm } from '@/features/events/components/CreateEventForm';
+import { CreateEventForm } from '@/features/events/components/CreateEventForm/CreateEventForm';
 import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { FormContainer } from '@/components/Form';

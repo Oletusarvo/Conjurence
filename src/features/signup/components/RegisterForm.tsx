@@ -2,17 +2,16 @@
 
 import { useRegisterUser } from '@/features/signup/hooks/useRegisterUser';
 import { Input } from '../../../components/Input';
-import { AtSign, Ellipsis, Mail } from 'lucide-react';
+import { AtSign, Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Sublabel } from '../../../components/Sublabel';
 import { withLoader } from '@/hoc/withLoader';
 import { AuthError } from '@/errors/auth';
-import { ReactNode, useRef } from 'react';
+import { useRef } from 'react';
 import { PasswordInput } from '@/components/PasswordInput';
 import { Notice } from '@/components/Notice';
 import { Form } from '@/components/Form';
 import Link from 'next/link';
-import { CheckboxContainer } from '@/components/CheckboxContainer';
+import { CheckboxInput } from '@/components/CheckboxInput';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -71,7 +70,7 @@ export function RegisterForm() {
       </div>
 
       <div className='flex w-full items-center justify-between'>
-        <CheckboxContainer
+        <CheckboxInput
           label={
             <span className='w-full text-sm'>
               I accept the{' '}

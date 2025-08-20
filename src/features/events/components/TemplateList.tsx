@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ContainerLink } from '../../../components/ContainerLink';
 import { Dice5, NotepadTextDashed } from 'lucide-react';
 import { withAlternate } from '@/hoc/withAlternate';
-import { SearchProvider, useSearchProvider } from '@/providers/SearchProvider';
+import { useSearchProvider } from '@/providers/SearchProvider';
 
 type TemplateListProps = {
   templates: Omit<

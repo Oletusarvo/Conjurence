@@ -1,5 +1,5 @@
 import { BaseEventModalBody } from '@/features/events/components/BaseEventModalBody';
-import { EventStatusBadge } from '@/features/events/components/EventStatusBadge';
+import { EventStatusBadge } from '@/features/events/components/ui/EventStatusBadge';
 import { getEvent } from '@/features/events/dal/getEvent';
 import db from '@/dbconfig';
 import { UserAttendanceStatusManager } from '@/features/attendance/managers/UserAttendanceStatusManager';
@@ -13,13 +13,14 @@ import { DistanceProvider } from '@/features/distance/providers/DistanceProvider
 import { UserAttendanceManager } from '@/features/attendance/managers/UserAttendanceManager';
 import { EventActionButton } from '@/features/events/components/EventActionButton';
 import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
-import { CategoryBadge } from '@/features/events/components/CategoryBadge';
-import { SpotsAvailableBadge } from '@/features/events/components/SpotsAvailableBadge';
+import { CategoryBadge } from '@/features/events/components/ui/CategoryBadge';
+import { SpotsAvailableBadge } from '@/features/events/components/ui/SpotsAvailableBadge';
 import { HostBadge } from '@/features/events/components/HostBadge';
-import { InterestedCountBadge } from '@/features/events/components/InterestedCountBadge';
+import { InterestedCountBadge } from '@/features/events/components/ui/InterestedCountBadge';
 import { DistanceThresholdDisplay } from '@/features/distance/components/DistanceThresholdDisplay';
-import { LocationTitleBadge } from '@/features/events/components/LocationTitleBadge';
-import { MobileEventBadge } from '@/features/events/components/MobileEventBadge';
+import { LocationTitleBadge } from '@/features/events/components/ui/LocationTitleBadge';
+import { MobileEventBadge } from '@/features/events/components/ui/MobileEventBadge';
+import { EventActionButtons } from '@/features/events/components/EventActionButtons';
 
 export const revalidate = 0;
 
@@ -43,7 +44,7 @@ export default async function EventPage({ params, attendance }) {
             <BaseEventModalBody>
               <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-background-light-border'>
                 <div className='flex items-start w-full'>
-                  <div className='flex flex-col items-start gap-2 w-full'>
+                  <div className='flex flex-col items-start gap-4 w-full'>
                     <div
                       id='event-header'
                       className='flex gap-2 items-start justify-between w-full'>
@@ -53,18 +54,16 @@ export default async function EventPage({ params, attendance }) {
                           {event.is_mobile && <MobileEventBadge />}
                         </div>
 
-                        <div className='flex gap-2'>
+                        <div className='flex flex-col gap-2'>
                           <HostBadge />
+                          <LocationTitleBadge />
+                          <div className='flex gap-2'>
+                            <CategoryBadge />
+                            <SpotsAvailableBadge />
+                          </div>
                         </div>
                       </div>{' '}
                       <EventStatusBadge createdAt={event?.created_at} />
-                    </div>
-                    <LocationTitleBadge />
-                    <div className='flex gap-2 justify-between w-full'>
-                      <div className='flex gap-2'>
-                        <CategoryBadge />
-                        <SpotsAvailableBadge />
-                      </div>
                     </div>
 
                     <p className='tracking-tight leading-[18px]'>{event?.description}</p>
@@ -86,9 +85,7 @@ export default async function EventPage({ params, attendance }) {
                 <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
               </div>
             </BaseEventModalBody>
-            <div className='w-full px-default mb-2'>
-              <EventActionButton />
-            </div>
+            <EventActionButtons />
           </ModalStackProvider>
         </EventActionProvider>
       </DistanceProvider>
