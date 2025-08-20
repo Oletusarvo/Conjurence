@@ -3,6 +3,7 @@
 ### Fixed
 
 - Incorrect version number.
+- Wrong imports for TabButton.
 
 ## [0.6.0-alpha.1] - 20-08-2025
 

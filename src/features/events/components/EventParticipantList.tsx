@@ -1,7 +1,7 @@
 'use client';
 
 import { TabsProvider } from '@/providers/TabsProvider';
-import { Tab } from '../../../components/Tab';
+import { TabButton } from '../../../components/TabButton';
 import { useEffect, useState } from 'react';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { acceptJoinRequestAction } from '@/features/attendance/actions/experimental/acceptJoinRequestAction';
@@ -43,11 +43,11 @@ export function AttendantList({ initialAttendants }) {
       <TabsProvider onChange={state => setCurrentTab(state)}>
         <div className='flex w-full'>
           <TabsProvider.Trigger tabIndex={0}>
-            <Tab>Osallistujat</Tab>
+            <TabButton>Osallistujat</TabButton>
           </TabsProvider.Trigger>
           {user?.username === host ? (
             <TabsProvider.Trigger tabIndex={1}>
-              <Tab>
+              <TabButton>
                 <div
                   className='flex items-center gap-2'
                   onClick={() => {
@@ -56,7 +56,7 @@ export function AttendantList({ initialAttendants }) {
                   <span>Odottavat</span>
                   {hasNewRequests ? <StatusBadge variant='critical' /> : null}
                 </div>
-              </Tab>
+              </TabButton>
             </TabsProvider.Trigger>
           ) : null}
         </div>

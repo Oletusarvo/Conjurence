@@ -1,6 +1,6 @@
 'use client';
 
-import { Tab } from '@/components/Tab';
+import { TabButton } from '@/components/TabButton';
 import { TabsProvider } from '@/providers/TabsProvider';
 import { EventFeed } from './EventFeed';
 import { AttendedEventFeed } from './AttendedEventFeed';
@@ -10,11 +10,11 @@ export function EventFeedTabs() {
     <TabsProvider>
       <div className='flex w-full'>
         <TabsProvider.Trigger tabIndex={0}>
-          <Tab>Nearby</Tab>
+          <TabButton>Nearby</TabButton>
         </TabsProvider.Trigger>
 
         <TabsProvider.Trigger tabIndex={1}>
-          <Tab>Attended</Tab>
+          <TabButton>Attended</TabButton>
         </TabsProvider.Trigger>
       </div>
 
