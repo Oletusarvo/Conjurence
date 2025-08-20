@@ -1,3 +1,9 @@
+## [0.6.0-alpha.2] - 20-08-2025
+
+### Fixed
+
+- Incorrect version number.
+
 ## [0.6.0-alpha.1] - 20-08-2025
 
 ### Added
