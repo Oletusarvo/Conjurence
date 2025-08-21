@@ -53,7 +53,6 @@ export default async function EventPage({ params, attendance }) {
 
                         <div className='flex flex-col gap-2'>
                           <HostBadge />
-                          <LocationTitleBadge />
                           <div className='flex gap-2'>
                             <CategoryBadge />
                             <SpotsAvailableBadge />

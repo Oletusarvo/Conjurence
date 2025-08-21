@@ -1,3 +1,16 @@
+## [0.7.0-alpha.2] - 21-08-2025
+
+### Changed
+
+- Split CreateEventForm inputs into separate components.
+- Moved the description-input on the first step of CreateEventForm and moved the is mobile- and is-template checkboxes onto the second step.
+
+### Removed
+
+- The third step of CreateEventForm.
+- The location title-input from CreateEventForm.
+- The location title-badge from the event-screen.
+
 ## [0.7.0-alpha.1] - 21-08-2025
 
 ### Added

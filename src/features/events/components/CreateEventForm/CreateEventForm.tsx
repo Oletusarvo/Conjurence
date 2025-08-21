@@ -30,12 +30,11 @@ type CreateEventFormProps = {
 export function CreateEventForm({ categories, thresholds, template }: CreateEventFormProps) {
   const form = useCreateEventForm(template);
   const router = useRouter();
+
   const isForwardButtonDisabled = () => {
     const { inputStatus, steps } = form;
     if (steps.current == 0) {
-      return inputStatus.title !== 'success' || inputStatus.location_title !== 'success';
-    } else if (steps.current == 2) {
-      return inputStatus.description !== 'success';
+      return inputStatus.title !== 'success' || inputStatus.description !== 'success';
     }
   };
   const SubmitButton = withLoader(({ children, ...props }: React.ComponentProps<'button'>) => {
@@ -79,7 +78,7 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
       onSubmit={form.submitEvent}>
       <StepTrack
         currentStep={form.steps.current}
-        max={3}
+        max={2}
       />
       <CreateEventFormContext.Provider value={{ template, ...form }}>
         {form.steps.current === 0 ? (
@@ -89,14 +88,12 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
             categories={categories}
             thresholds={thresholds}
           />
-        ) : (
-          <DescriptionStep />
-        )}
+        ) : null}
         <StatusNotice status={form.status} />
 
         <div className='flex gap-2 w-full mt-auto'>
           <BackwardButton />
-          {form.steps.current < 2 ? (
+          {form.steps.current < 1 ? (
             <ForwardButton />
           ) : (
             <SubmitButton

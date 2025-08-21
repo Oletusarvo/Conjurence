@@ -23,7 +23,8 @@ export default async function middleware(req: NextRequestWithAuth) {
 
     if (token.attended_event_id) {
       const anchoredUrl = `/app/event/${token.attended_event_id}`;
-      if (url.pathname !== anchoredUrl) {
+      //Only allow users to view the bios of other users, or the event they are attending.
+      if (!url.pathname.startsWith('/app/user/') && url.pathname !== anchoredUrl) {
         const newUrl = url.clone();
         newUrl.pathname = anchoredUrl;
         return NextResponse.redirect(newUrl);
@@ -40,6 +41,7 @@ export default async function middleware(req: NextRequestWithAuth) {
       return NextResponse.redirect(newUrl);
     }
   } else {
+    //Redirect to login if not authenticated.
     if (url.pathname.startsWith('/app')) {
       const newUrl = url.clone();
       newUrl.pathname = '/login';

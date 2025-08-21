@@ -5,6 +5,7 @@ import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/loadSession';
 import { getAttendance } from '../dal/getAttendance';
 import { TAttendance } from '../schemas/attendanceSchema';
+import { updateAttendanceAction } from './updateAttendanceAction';
 
 export async function createAttendanceAction(
   event_id: string,
@@ -22,7 +23,7 @@ export async function createAttendanceAction(
     .first();
 
   if (currentAttendanceRecord) {
-    return { success: false, error: 'An attendance record already exists for event ' + event_id };
+    return await updateAttendanceAction(event_id, status);
   }
 
   const interestCountRecord = await db(tablenames.event_attendance)
@@ -42,7 +43,7 @@ export async function createAttendanceAction(
       user_id: session.user.id,
       event_instance_id: event_id,
       attendance_status_id: db(tablenames.event_attendance_status)
-        .where({ label: 'interested' })
+        .where({ label: status })
         .select('id')
         .limit(1),
     })
