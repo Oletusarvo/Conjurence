@@ -1,4 +1,3 @@
-import { BaseEventModalBody } from '@/features/events/components/BaseEventModalBody';
 import { EventStatusBadge } from '@/features/events/components/ui/EventStatusBadge';
 import { getEvent } from '@/features/events/dal/getEvent';
 import db from '@/dbconfig';
@@ -11,16 +10,15 @@ import { EventActionProvider } from '@/features/events/providers/EventActionProv
 import { DistanceBadge } from '@/features/distance/components/DistanceBadge';
 import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
 import { UserAttendanceManager } from '@/features/attendance/managers/UserAttendanceManager';
-import { EventActionButton } from '@/features/events/components/EventActionButton';
-import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBadge';
 import { CategoryBadge } from '@/features/events/components/ui/CategoryBadge';
 import { SpotsAvailableBadge } from '@/features/events/components/ui/SpotsAvailableBadge';
 import { HostBadge } from '@/features/events/components/HostBadge';
-import { InterestedCountBadge } from '@/features/events/components/ui/InterestedCountBadge';
 import { DistanceThresholdDisplay } from '@/features/distance/components/DistanceThresholdDisplay';
 import { LocationTitleBadge } from '@/features/events/components/ui/LocationTitleBadge';
 import { MobileEventBadge } from '@/features/events/components/ui/MobileEventBadge';
 import { EventActionButtons } from '@/features/events/components/EventActionButtons';
+import { GeolocationMap } from '@/features/geolocation/components/GeolocationMap';
+import { AttendanceFeedTrigger } from '@/features/attendance/components/AttendanceFeedTrigger';
 
 export const revalidate = 0;
 
@@ -41,8 +39,8 @@ export default async function EventPage({ params, attendance }) {
         <UserAttendanceStatusManager />
         <EventActionProvider>
           <ModalStackProvider>
-            <BaseEventModalBody>
-              <div className='flex flex-col gap-4 bg-background-light w-full px-default py-4 border-b border-background-light-border'>
+            <div className='flex flex-col h-full'>
+              <div className='flex flex-col bg-background-light w-full px-default py-4 border-b border-background-light-border'>
                 <div className='flex items-start w-full'>
                   <div className='flex flex-col items-start gap-4 w-full'>
                     <div
@@ -51,7 +49,6 @@ export default async function EventPage({ params, attendance }) {
                       <div className='flex flex-col gap-1'>
                         <div className='flex gap-2'>
                           <h2>{event?.title}</h2>
-                          {event.is_mobile && <MobileEventBadge />}
                         </div>
 
                         <div className='flex flex-col gap-2'>
@@ -60,6 +57,7 @@ export default async function EventPage({ params, attendance }) {
                           <div className='flex gap-2'>
                             <CategoryBadge />
                             <SpotsAvailableBadge />
+                            {event.is_mobile && <MobileEventBadge />}
                           </div>
                         </div>
                       </div>{' '}
@@ -68,10 +66,11 @@ export default async function EventPage({ params, attendance }) {
 
                     <p className='tracking-tight leading-[18px]'>{event?.description}</p>
                     <div className='flex w-full justify-between'>
-                      <div className='flex gap-4'>
-                        <InterestedCountBadge />
-                        <JoinedCountBadge />
-                      </div>
+                      <AttendanceFeedTrigger>
+                        <div className='flex flex-col w-full flex-1 gap-2 max-h-full overflow-y-scroll'>
+                          <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
+                        </div>
+                      </AttendanceFeedTrigger>
 
                       <div className='flex gap-2'>
                         <DistanceBadge />
@@ -81,11 +80,17 @@ export default async function EventPage({ params, attendance }) {
                   </div>
                 </div>
               </div>
-              <div className='flex flex-col w-full flex-1 px-default gap-2 max-h-full overflow-y-scroll'>
-                <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
+              <div
+                className='overflow-hidden flex flex-1 flex-col relative'
+                style={{
+                  width: '100%',
+                }}>
+                <GeolocationMap />
+                <EventActionButtons />
               </div>
-            </BaseEventModalBody>
-            <EventActionButtons />
+
+              {/** */}
+            </div>
           </ModalStackProvider>
         </EventActionProvider>
       </DistanceProvider>

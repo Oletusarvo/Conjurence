@@ -37,6 +37,15 @@ button.--contained.--accent {
   color: black;
 }
 
+button.--contained.--secondary {
+  background-color: var(--color-secondary);
+  color: black;
+}
+
+button.--contained.--secondary:hover {
+  background-color: hsl(from var(--color-secondary) h s 50);
+}
+
 button.--contained.--accent:hover {
   background-color: hsl(from var(--color-accent) h s 45);
 }

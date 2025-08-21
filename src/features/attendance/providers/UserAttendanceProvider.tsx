@@ -87,7 +87,7 @@ export function UserAttendanceProvider({
     try {
       const res = await updateAttendanceAction(eventId, 'left');
       if (res.success) {
-        await updateAttendanceRecord(res.data);
+        await updateAttendanceRecord(null);
       }
     } catch (err) {
       toast.error('Something went wrong!');

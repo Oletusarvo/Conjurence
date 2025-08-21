@@ -42,7 +42,7 @@ export function EventActionButton(props: React.ComponentProps<'button'>) {
 const Button = withLoader(({ children, ...props }) => (
   <button
     {...props}
-    className='--contained --accent mt-auto w-full'
+    className='--contained --accent mt-auto w-full shadow-md'
     type='button'>
     {children}
   </button>

@@ -8,12 +8,12 @@ export function EventActionButtons() {
   const { attendanceRecord } = useUserAttendanceContext();
 
   return (
-    <div className='flex gap-2 w-full px-default mb-2 items-center'>
+    <div className='flex gap-2 w-full px-default items-center absolute bottom-0 z-20 py-2'>
       {!attendanceRecord || !['joined', 'interested', 'host'].includes(attendanceRecord.status) ? (
         <Link
           href='/app/feed'
-          className='w-full'>
-          <button className='--outlined --secondary --full-width'>Back To Feed</button>
+          className='w-full shadow-md'>
+          <button className='--contained --secondary --full-width'>Back To Feed</button>
         </Link>
       ) : null}
       <EventActionButton />

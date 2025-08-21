@@ -48,17 +48,28 @@ ToggleProvider.Trigger = function ({ children }: React.PropsWithChildren) {
   return <PassProps onClick={() => toggleState()}>{children}</PassProps>;
 };
 
-ToggleProvider.Target = function ({ children }: React.PropsWithChildren) {
+type ToggleProviderTargetProps = React.PropsWithChildren & {
+  useProps?: boolean;
+};
+
+ToggleProvider.Target = function ({ children, useProps = false }: ToggleProviderTargetProps) {
   const { state, toggleState, hideOnClickOutside } = useToggleContext();
   const targetRef = useRef<HTMLElement>(null);
 
-  if (hideOnClickOutside) {
-    useActionOnClickOutside(targetRef, () => toggleState(false));
-  }
+  useActionOnClickOutside(targetRef, () => {
+    if (hideOnClickOutside) {
+      toggleState(false);
+    }
+  });
 
   if (React.Children.count(children) !== 1) {
     throw new Error('A ToggleProvider.Target must have exactly one child!');
   }
 
-  return state ? <PassProps ref={targetRef}>{children}</PassProps> : null;
+  const propsToPass = {
+    ref: targetRef,
+    isToggled: useProps ? state : undefined,
+  };
+
+  return useProps || state ? <PassProps {...propsToPass}>{children}</PassProps> : null;
 };

@@ -1,3 +1,13 @@
+## [0.7.0-alpha.1] - 21-08-2025
+
+### Added
+
+- A map displaying the event and user locations, when viewing an event.
+
+### Fixed
+
+- The bug preventing return to the feed after leaving an event.
+
 ## [0.6.0-alpha.2] - 20-08-2025
 
 ### Fixed

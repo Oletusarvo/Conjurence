@@ -10,11 +10,11 @@ export function EventFeedTabs() {
     <TabsProvider>
       <div className='flex w-full'>
         <TabsProvider.Trigger tabIndex={0}>
-          <TabButton>Nearby</TabButton>
+          <TabButton>List</TabButton>
         </TabsProvider.Trigger>
 
         <TabsProvider.Trigger tabIndex={1}>
-          <TabButton>Attended</TabButton>
+          <TabButton>Map</TabButton>
         </TabsProvider.Trigger>
       </div>
 
@@ -22,9 +22,7 @@ export function EventFeedTabs() {
         <EventFeed />
       </TabsProvider.Tab>
 
-      <TabsProvider.Tab tabIndex={1}>
-        <AttendedEventFeed />
-      </TabsProvider.Tab>
+      <TabsProvider.Tab tabIndex={1}></TabsProvider.Tab>
     </TabsProvider>
   );
 }
