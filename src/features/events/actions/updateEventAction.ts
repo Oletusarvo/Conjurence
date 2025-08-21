@@ -28,7 +28,7 @@ export async function updateEventAction(payload: FormData) {
     await trx(tablenames.event_instance).update({
       ...parsedInstanceResult.data,
       position: createGeographyRow(position),
-      position_accuracy: parsedInstanceResult.data.position_accuracy,
+      position_metadata: parsedInstanceResult.data.position_metadata,
     });
     await trx.commit();
     return { success: true };
