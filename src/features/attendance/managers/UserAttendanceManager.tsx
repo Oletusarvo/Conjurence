@@ -72,7 +72,12 @@ export function UserAttendanceManager() {
       handleAction(
         () =>
           !hasEnded &&
-          shouldJoin(distance, position.coords.accuracy, event.position_accuracy, joinThreshold),
+          shouldJoin(
+            distance,
+            position.coords.accuracy,
+            event.position_metadata.accuracy,
+            joinThreshold
+          ),
         'joining',
         'join-timeout',
         async () => {
@@ -88,7 +93,7 @@ export function UserAttendanceManager() {
           shouldLeave(
             distance,
             position.coords.accuracy,
-            event.position_accuracy,
+            event.position_metadata.accuracy,
             event.auto_leave_threshold
           ),
         'leaving',
@@ -103,7 +108,12 @@ export function UserAttendanceManager() {
         () =>
           !hasEnded &&
           !event.is_mobile &&
-          shouldLeave(distance, position.coords.accuracy, event.position_accuracy, leaveThreshold),
+          shouldLeave(
+            distance,
+            position.coords.accuracy,
+            event.position_metadata.accuracy,
+            leaveThreshold
+          ),
         'ending',
         'end-timeout',
         async () => {
@@ -116,7 +126,7 @@ export function UserAttendanceManager() {
     distancePending,
     distance,
     event?.id,
-    event?.position_accuracy,
+    event?.position_metadata.accuracy,
     event?.is_mobile,
     position?.coords.accuracy,
 

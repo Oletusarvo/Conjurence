@@ -79,6 +79,14 @@ export function useCreateEventForm(template?: TEventData) {
       }
 
       payload.set('location', JSON.stringify(position));
+      payload.set(
+        'position_metadata',
+        JSON.stringify({
+          accuracy: position.coords.accuracy,
+          timestamp: position.timestamp,
+        })
+      );
+
       return await createEventAction(payload, template?.id);
     },
     onSuccess: async res => {

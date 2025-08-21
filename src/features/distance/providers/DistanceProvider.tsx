@@ -17,16 +17,19 @@ export function DistanceProvider({ children }: React.PropsWithChildren) {
   const { position } = useGeolocationContext();
   const { distance, isPending } = useDistance();
   const { event } = useEventContext();
+
+  const eventPositionAccuracy = event?.position_metadata?.accuracy || 0;
+
   const joinThreshold = getThresholdAdjusted(
     event?.auto_join_threshold,
     position?.coords.accuracy || 0,
-    event?.position_accuracy
+    eventPositionAccuracy
   );
 
   const leaveThreshold = getThresholdAdjusted(
     event?.auto_leave_threshold,
     position?.coords.accuracy || 0,
-    event?.position_accuracy
+    eventPositionAccuracy
   );
 
   return (

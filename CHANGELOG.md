@@ -1,3 +1,9 @@
+## [0.7.0-alpha.3] - 21-08-2025
+
+### Changed
+
+- Instead of waiting for an event position to be updated on the db, the new position is emitted immediately to all peers, from the socketServer event:position_update-event.
+
 ## [0.7.0-alpha.2] - 21-08-2025
 
 ### Changed

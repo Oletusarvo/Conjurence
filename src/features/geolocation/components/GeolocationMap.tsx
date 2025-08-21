@@ -55,7 +55,7 @@ export function GeolocationMap() {
           <Circle
             center={eventCoordinates as any}
             pathOptions={{ fillColor: 'blue' }}
-            radius={event.position_accuracy}
+            radius={event.position_metadata.accuracy}
           />
         </>
       ) : null}

@@ -15,7 +15,11 @@ export const socketServer = io => {
     //Ran when the location of user changes while hosting a mobile event.
     socket.on('event:position_update', async payload => {
       const { eventId, position } = payload;
-      //This may cause a race condition where an older position finishes later, making the event's position invalid.
+      const positionMetadata = await db('events.event_instance')
+        .where({ id: eventId })
+        .select('position_metadata')
+        .first();
+
       db('events.event_instance')
         .where({ id: eventId })
         .update({
@@ -29,11 +33,14 @@ export const socketServer = io => {
               )::geography`,
             [position.coords.longitude, position.coords.latitude]
           ),
-          position_accuracy: position.coords.accuracy,
-        })
-        .then(() => {
-          io.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });
+          position_metadata: {
+            ...positionMetadata,
+            accuracy: position.coords.accuracy,
+            timestamp: position.timestamp,
+          },
         });
+
+      io.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });
     });
   });
 };

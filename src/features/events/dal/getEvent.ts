@@ -85,7 +85,7 @@ const applyEventSelectColumns = (query: Knex.QueryBuilder) => {
     'e.spots_available',
     'u.host',
     'ei.position',
-    'ei.position_accuracy',
+    'ei.position_metadata',
     'event_threshold.auto_join_threshold',
     'event_threshold.auto_leave_threshold',
     'ei.location_title',
@@ -129,7 +129,6 @@ export function getEvent(
     'e.title',
     'e.description',
     'ei.position',
-    'ei.position_accuracy',
     'ei.id',
     'ec.label',
     'e.spots_available',
@@ -141,7 +140,8 @@ export function getEvent(
     'ei.is_mobile',
     'event_threshold.auto_join_threshold',
     'event_threshold.auto_leave_threshold',
-    'ei.location_title'
+    'ei.location_title',
+    'ei.position_metadata'
   );
   q.orderBy('ei.created_at', 'asc');
   return q;

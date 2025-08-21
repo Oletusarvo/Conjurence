@@ -36,7 +36,16 @@ export const eventInstanceSchema = z.object({
   ended_at: z.date().optional(),
   position: z.string().optional(),
   location_title: eventLocationTitleSchema,
-  position_accuracy: z.number().optional(),
+  position_metadata: z
+    .string()
+    .transform(val => {
+      return JSON.parse(val) as {
+        accuracy: number;
+        timestamp: number;
+      };
+    })
+    .optional(),
+
   event_threshold_id: z.string().transform(val => parseInt(val)),
   is_mobile: z
     .string()

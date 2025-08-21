@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { Modal } from '@/components/Modal';
 import { BaseEventModalBody } from '@/features/events/components/BaseEventModalBody';
 import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
@@ -9,7 +8,6 @@ import {
   EventEndedNotice,
   EventLeftNotice,
 } from '../../events/components/EventNotice';
-import { useUserContext } from '@/features/users/providers/UserProvider';
 import { useEventContext } from '../../events/providers/EventProvider';
 
 export function UserAttendanceStatusManager() {

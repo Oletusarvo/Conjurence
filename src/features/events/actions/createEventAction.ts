@@ -107,7 +107,6 @@ export async function createEventAction(
         ...parsedInstance,
         event_data_id: templateId || newEventRecord.id,
         position: createGeographyRow(location.coords),
-        position_accuracy: location.coords.accuracy,
         event_threshold_id: parsedInstance.event_threshold_id,
       },
       ['id']
