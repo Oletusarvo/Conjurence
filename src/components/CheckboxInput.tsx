@@ -14,6 +14,7 @@ export function CheckboxInput({
   hidden,
   ...props
 }: CheckboxInputProps) {
+  const [isChecked, setIsChecked] = useState(checked);
   const componentRef = useRef<HTMLInputElement>(null);
   return (
     <div
@@ -27,16 +28,22 @@ export function CheckboxInput({
       }
       style={{
         borderWidth: '1px',
-        borderColor: checked ? 'var(--color-accent)' : 'var(--color-background-light-border)',
-        backgroundColor: checked
+        borderColor: isChecked ? 'var(--color-accent)' : 'var(--color-background-light-border)',
+        backgroundColor: isChecked
           ? 'hsl(from var(--color-accent) h s l / 0.2)'
           : 'var(--color-background-light)',
       }}>
       {label}
       <Component
         {...props}
+        onChange={e => {
+          if (props.onChange) {
+            props.onChange(e);
+          }
+          setIsChecked(e.target.checked);
+        }}
         ref={componentRef}
-        checked={checked}
+        checked={isChecked}
       />
     </div>
   );

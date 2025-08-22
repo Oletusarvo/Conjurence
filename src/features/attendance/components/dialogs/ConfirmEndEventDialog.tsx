@@ -1,7 +1,7 @@
 'use client';
 
 import { ConfirmDialog } from '@/components/feature/ConfirmDialog';
-import { useEventActionContext } from '../../providers/EventActionProvider';
+import { useEventActionContext } from '../../../events/providers/EventActionProvider';
 
 export function ConfirmEndEventDialog() {
   const { endEvent } = useEventActionContext();

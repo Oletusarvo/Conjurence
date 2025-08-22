@@ -2,7 +2,7 @@
 
 import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
 import { useMemo } from 'react';
-import { ConfirmEndEventDialog } from './dialogs/ConfirmEndEventDialog';
+import { ConfirmEndEventDialog } from '../../attendance/components/dialogs/ConfirmEndEventDialog';
 import { CancelInterestDialog } from '@/features/attendance/components/dialogs/CancelInterestDialog';
 import { LeaveEventDialog } from '@/features/attendance/components/dialogs/LeaveEventDialog';
 import { ConfirmInterestDialog } from '@/features/attendance/components/dialogs/ConfirmInterestDialog';
@@ -14,15 +14,14 @@ export function EventActionDialog() {
   const currentAttendance = attendance.attendanceRecord;
 
   const dialog = useMemo(() => {
-    if (!currentAttendance) return null;
+    if (!currentAttendance) return <ConfirmInterestDialog />;
+
     if (currentAttendance.status === 'host') {
       return <ConfirmEndEventDialog />;
     } else if (currentAttendance.status === 'interested') {
       return <CancelInterestDialog />;
     } else if (currentAttendance.status === 'joined') {
       return <LeaveEventDialog />;
-    } else {
-      return <ConfirmInterestDialog />;
     }
   }, [currentAttendance?.status]);
 

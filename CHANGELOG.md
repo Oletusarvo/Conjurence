@@ -3,10 +3,14 @@
 ### Added
 
 - JSDOC-comments on various components.
+- The EventActionDialog-component, responsible for viewing the dialogs when the EventActionButton is pressed.
 
 ### Changed
 
 - The registration flow to first send a verification link to the users email, encoding the email, before continuing with the username and password inputs once the link is clicked.
+- EventActionButton is now only concerned with its content.
+- The dialogs while viewing an event are now triggered by a ToggleProvider.
+- The CheckboxInput to have its own state, so that the highlighting of it works even when a checked-value is not provided from the outside.
 
 ### Removed
 

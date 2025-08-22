@@ -12,7 +12,7 @@ export function ConfirmInterestDialog() {
     <ConfirmDialog
       title='Confirm Interest'
       cancelContent='Cancel'
-      confirmContent="Yes, I'm Interested!"
+      confirmContent="I'm Interested!"
       action={async () => await attendance.showInterest(event.id)}>
       No pressure — marking interest just means you’re genuinely considering showing up. It helps
       hosts get a feel for the crowd and keeps things flowing naturally. Sound good?
