@@ -1,5 +1,4 @@
 import { useUserContext } from '@/features/users/providers/UserProvider';
-import { useEventContext } from '../providers/EventProvider';
 import { useGeolocationContext } from '@/features/geolocation/providers/GeolocationProvider';
 import { socket } from '@/socket';
 import { useEffect } from 'react';
