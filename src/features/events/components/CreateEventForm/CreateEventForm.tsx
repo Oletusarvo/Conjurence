@@ -11,7 +11,7 @@ import { TypesStep } from './TypesStep';
 import { DescriptionStep } from './DescriptionStep';
 import { StatusNotice } from './StatusNotice';
 
-export type TemplateType = TEventData & TEventInstance & Pick<TEvent, 'location_title'>;
+export type TemplateType = TEventData & TEventInstance;
 export type CategoriesType = { id: number; label: string; description?: string }[];
 export type ThresholdsType = { id: number; label: string; description: string }[];
 

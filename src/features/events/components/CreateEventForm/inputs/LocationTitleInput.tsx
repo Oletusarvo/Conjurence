@@ -21,7 +21,7 @@ export function LocationTitleInput() {
         name='location_title'
         placeholder='Location title...'
         required
-        defaultValue={template?.location_title || payload.get('location_title')?.toString()}
+        defaultValue={payload.get('location_title')?.toString()}
       />
       {inputStatus.location_title === EventError.locationTooShort ? (
         <Sublabel variant='error'>The location is too short!</Sublabel>

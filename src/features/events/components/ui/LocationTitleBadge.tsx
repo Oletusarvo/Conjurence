@@ -10,7 +10,7 @@ export function LocationTitleBadge() {
     <Badge
       textSize='small'
       icon={Pin}>
-      {event.location_title || 'No location.'}
+      {'No location.'}
     </Badge>
   );
 }

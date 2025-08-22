@@ -1,12 +1,16 @@
 import { FormContainer } from '@/components/Form';
+import { Spinner } from '@/components/ui/Spinner';
 import { RegisterForm } from '@/features/signup/components/RegisterForm';
+import { Suspense } from 'react';
 
 export default function RegisterPage() {
   return (
     <div className='flex gap-2 flex-col flex-1 justify-center px-default items-center'>
       <FormContainer centered>
         <h2>Register</h2>
-        <RegisterForm />
+        <Suspense fallback={<Spinner />}>
+          <RegisterForm />
+        </Suspense>
       </FormContainer>
     </div>
   );

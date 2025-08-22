@@ -4,12 +4,9 @@ import { TabsProvider } from '@/providers/TabsProvider';
 import { TabButton } from '../../../components/ui/TabButton';
 import { useEffect, useState } from 'react';
 import { useUserContext } from '@/features/users/providers/UserProvider';
-import { acceptJoinRequestAction } from '@/features/attendance/actions/experimental/acceptJoinRequestAction';
-import { Spinner } from '../../../components/ui/Spinner';
-import { AtSign, Check, Star, X } from 'lucide-react';
+import { AtSign, Star } from 'lucide-react';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { useEventContext } from '@/features/events/providers/EventProvider';
-import { rejectJoinRequestAction } from '@/features/attendance/actions/experimental/rejectJoinRequestAction';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 import { useSocketRoom } from '@/hooks/useSocketRoom';
 import { List } from '@/components/feature/List';
@@ -110,24 +107,6 @@ const ParticipantListing = ({ participant, hostUsername }) => {
           <span>{participant.username}</span>
         </div>
       </div>
-      {participant.status === 'pending' && canAcceptPending ? (
-        <div className='flex gap-2 items-center'>
-          <button
-            className='--no-default text-xs'
-            onClick={async () =>
-              await rejectJoinRequestAction(participant.event_id, participant.user_id)
-            }>
-            <X color='var(--color-red-600)' />
-          </button>
-          <button
-            className='--no-default text-xs'
-            onClick={async () => {
-              await acceptJoinRequestAction(participant.event_id, participant.user_id);
-            }}>
-            <Check color='var(--color-green-600)' />
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 };
