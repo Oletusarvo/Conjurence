@@ -9,6 +9,8 @@ import { useGeolocationContext } from '@/features/geolocation/providers/Geolocat
 import { updateEventAction } from '../actions/updateEventAction';
 import { socket } from '@/socket';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
+import { useUserContext } from '@/features/users/providers/UserProvider';
+import { useUpdateMobileEventPosition } from '../hooks/useUpdateMobileEventPosition';
 
 type EventProviderProps = React.PropsWithChildren & {
   initialEvent: TEvent;
@@ -21,7 +23,6 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
 }>('useEventContext can only be used within the scope of an EventContext!');
 
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
-  const { position } = useGeolocationContext();
   const [event, setEvent] = useState(initialEvent);
   const hasEnded = event?.ended_at !== null;
   const interestCount = event?.interested_count;
@@ -34,6 +35,8 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
     300
   );
 
+  useUpdateMobileEventPosition(event);
+
   useEventSocket({
     eventId: event?.id,
     onEnd: () => reloadEvent(),
@@ -43,16 +46,13 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
       setEvent(prev => ({
         ...prev,
         position: { coordinates: [position.coords.longitude, position.coords.latitude] },
-        position_accuracy: position.coords.accuracy,
+        position_metadata: {
+          accuracy: position.coords.accuracy,
+          timestamp: position.timestamp,
+        },
       }));
     },
   });
-
-  useEffect(() => {
-    //Update the position of mobile events.
-    if (!event || !event.is_mobile) return;
-    socket.emit('event:position_update', { eventId: event.id, position });
-  }, [position]);
 
   return (
     <EventContext.Provider value={{ event, hasEnded, interestCount }}>

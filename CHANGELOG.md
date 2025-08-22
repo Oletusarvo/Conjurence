@@ -1,3 +1,9 @@
+## [0.7.1-alpha.4] - 22-08-2025
+
+### Fixed
+
+- Mobile event positions not updating correctly.
+
 ## [0.7.0-alpha.4] - 21-08-2025
 
 ### Added
