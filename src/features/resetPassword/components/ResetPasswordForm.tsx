@@ -8,7 +8,7 @@ import { PasswordInput } from '@/components/PasswordInput';
 import { withLoader } from '@/hoc/withLoader';
 import { Mail } from 'lucide-react';
 import Link from 'next/link';
-import { Notice } from '@/components/Notice';
+import { Notice } from '@/components/ui/Notice';
 
 const [ResetPasswordFormContext, useResetPasswordFormContext] = createContextWithUseHook<
   Omit<ReturnType<typeof useResetPasswordForm>, 'handleSubmit' | 'step'>

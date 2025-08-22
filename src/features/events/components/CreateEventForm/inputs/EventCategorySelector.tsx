@@ -1,9 +1,9 @@
 'use client';
 
-import { List } from '@/components/List';
-import { CategoriesType, useCreateEventFormContext } from './CreateEventForm';
+import { List } from '@/components/feature/List';
+import { CategoriesType, useCreateEventFormContext } from '../CreateEventForm';
 import { capitalize } from '@/util/capitalize';
-import { Sublabel } from '@/components/Sublabel';
+import { Sublabel } from '@/components/ui/Sublabel';
 import { useState } from 'react';
 
 export function EventCategorySelector({ categories }: { categories: CategoriesType }) {

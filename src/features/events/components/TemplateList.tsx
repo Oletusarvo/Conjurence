@@ -1,9 +1,9 @@
 'use client';
 
-import { List } from '@/components/List';
+import { List } from '@/components/feature/List';
 import { TEventData } from '../schemas/eventSchema';
 import Link from 'next/link';
-import { ContainerLink } from '../../../components/ContainerLink';
+import { ContainerLink } from '../../../components/ui/ContainerLink';
 import { Dice5, NotepadTextDashed } from 'lucide-react';
 import { withAlternate } from '@/hoc/withAlternate';
 import { useSearchProvider } from '@/providers/SearchProvider';

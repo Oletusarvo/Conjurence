@@ -87,6 +87,7 @@ export function useCreateEventForm(template?: TEventData) {
         })
       );
 
+      console.log(payload);
       return await createEventAction(payload, template?.id);
     },
     onSuccess: async res => {

@@ -1,33 +1,24 @@
 'use client';
 
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
-import { ReactNode, useState } from 'react';
+import { ReactNode, SetStateAction, useState } from 'react';
 
 const [ModalStackContext, useModalStackContext] = createContextWithUseHook<{
-  pushModal: (config: ReactNode) => void;
-  closeCurrentModal: () => void;
+  setModal: React.Dispatch<SetStateAction<ReactNode>>;
+  closeModal: () => void;
 }>('useModalStackContext can only be called within the scope of a ModalStackContext!');
 
 export function ModalStackProvider({ children }) {
-  const [modals, setModals] = useState<ReactNode[]>([]);
-  const pushModal = (config: ReactNode) => {
-    setModals([...modals, config]);
-  };
+  const [modal, setModal] = useState<ReactNode[]>([]);
 
-  const currentModal = modals.at(-1);
-
-  const closeCurrentModal = () => {
-    setModals(prev => {
-      const current = [...prev];
-      current.pop();
-      return current;
-    });
+  const closeModal = () => {
+    setModal(null);
   };
 
   return (
-    <ModalStackContext.Provider value={{ pushModal, closeCurrentModal }}>
+    <ModalStackContext.Provider value={{ setModal, closeModal }}>
       {children}
-      {currentModal}
+      {modal}
     </ModalStackContext.Provider>
   );
 }

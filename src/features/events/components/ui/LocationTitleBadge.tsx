@@ -2,7 +2,7 @@
 
 import { Pin } from 'lucide-react';
 import { useEventContext } from '../../providers/EventProvider';
-import { Badge } from '@/components/Badge';
+import { Badge } from '@/components/ui/Badge';
 
 export function LocationTitleBadge() {
   const { event } = useEventContext();

@@ -1,6 +1,6 @@
 'use client';
 
-import { TabButton } from '@/components/TabButton';
+import { TabButton } from '@/components/ui/TabButton';
 import { TabsProvider } from '@/providers/TabsProvider';
 import { EventFeed } from './EventFeed';
 import { AttendedEventFeed } from './AttendedEventFeed';

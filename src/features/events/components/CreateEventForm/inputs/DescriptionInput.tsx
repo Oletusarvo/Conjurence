@@ -3,7 +3,7 @@
 import { useCreateEventFormContext } from '../CreateEventForm';
 import { eventDescriptionSchema } from '@/features/events/schemas/eventSchema';
 import { EventError } from '@/errors/events';
-import { Sublabel } from '@/components/Sublabel';
+import { Sublabel } from '@/components/ui/Sublabel';
 
 export function DescriptionInput() {
   const { handleChange, template, payload, inputStatus } = useCreateEventFormContext();

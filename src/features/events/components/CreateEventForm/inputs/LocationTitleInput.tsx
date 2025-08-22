@@ -4,7 +4,7 @@ import { Input } from '@/components/Input';
 import { useCreateEventFormContext } from '../CreateEventForm';
 import { eventLocationTitleSchema } from '@/features/events/schemas/eventSchema';
 import { Pin } from 'lucide-react';
-import { Sublabel } from '@/components/Sublabel';
+import { Sublabel } from '@/components/ui/Sublabel';
 import { EventError } from '@/errors/events';
 
 export function LocationTitleInput() {

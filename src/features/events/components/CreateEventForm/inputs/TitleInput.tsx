@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from '@/components/Input';
-import { Sublabel } from '@/components/Sublabel';
+import { Sublabel } from '@/components/ui/Sublabel';
 import { EventError } from '@/errors/events';
 import { eventTitleSchema } from '@/features/events/schemas/eventSchema';
 import { Heading } from 'lucide-react';

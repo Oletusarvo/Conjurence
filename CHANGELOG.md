@@ -1,3 +1,17 @@
+## [0.7.0-alpha.4] - 21-08-2025
+
+### Added
+
+- JSDOC-comments on various components.
+
+### Changed
+
+- The registration flow to first send a verification link to the users email, encoding the email, before continuing with the username and password inputs once the link is clicked.
+
+### Removed
+
+- The unused attendance related actions inside the experimental-folder.
+
 ## [0.7.0-alpha.3] - 21-08-2025
 
 ### Changed

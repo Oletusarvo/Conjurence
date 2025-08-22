@@ -36,7 +36,7 @@ export class RateLimiter {
     this.m_logging = logging;
   }
 
-  async limit(req: NextRequest) {
+  limit(req: NextRequest) {
     const ip = req.headers.get('X-Forwarded-For') as string;
     const ipData = ip ? this.m_ipMap.get(ip) : null;
 

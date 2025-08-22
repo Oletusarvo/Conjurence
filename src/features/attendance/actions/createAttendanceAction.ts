@@ -7,6 +7,7 @@ import { getAttendance } from '../dal/getAttendance';
 import { TAttendance } from '../schemas/attendanceSchema';
 import { updateAttendanceAction } from './updateAttendanceAction';
 
+/**Creates a new attendance record on the database. If a record already exists for the logged in user on the event with the provided id, updateAttendanceAction is called instead. */
 export async function createAttendanceAction(
   event_id: string,
   status: TAttendance['status']

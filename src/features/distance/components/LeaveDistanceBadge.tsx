@@ -13,7 +13,7 @@ export function LeaveDistanceBadge() {
     <Distance
       IconComponent={ArrowUp}
       color='var(--color-red-500)'>
-      ~{distanceString}
+      {distanceString}
     </Distance>
   );
 }

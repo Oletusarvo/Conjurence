@@ -3,6 +3,7 @@ import { AtSign } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
+/**Renders the links for selecting whether to create a new event or one from a template. Is also used as the links for selecting the templates from the template-list.*/
 export const ContainerLink = ({
   children,
   icon: Icon,

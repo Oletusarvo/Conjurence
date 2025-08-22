@@ -10,7 +10,7 @@ import { JoinedCountBadge } from '@/features/attendance/components/JoinedCountBa
 import { SpotsAvailableBadge } from './ui/SpotsAvailableBadge';
 import { CategoryBadge } from './ui/CategoryBadge';
 import { HostBadge } from './HostBadge';
-import { InterestedCountBadge } from './ui/InterestedCountBadge';
+import { InterestedCountBadge } from '../../attendance/components/InterestedCountBadge';
 
 export type EventCardProps = {
   onClick?: () => void;

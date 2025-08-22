@@ -1,5 +1,6 @@
 import React, { ReactElement, useMemo } from 'react';
 
+/**Clones its children, passing the provided props to each. */
 export function PassProps<T>({ children, ...props }: React.PropsWithChildren & T) {
   const enhanced = useMemo(() => {
     return React.Children.map(children, child => {

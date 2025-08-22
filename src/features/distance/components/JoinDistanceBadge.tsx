@@ -13,7 +13,7 @@ export function JoinDistanceBadge() {
     <Distance
       IconComponent={ArrowDown}
       color='var(--color-green-500)'>
-      ~{distanceString}
+      {distanceString}
     </Distance>
   );
 }

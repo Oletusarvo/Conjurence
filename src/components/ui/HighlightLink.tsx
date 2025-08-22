@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 type HighlightLinkProps = React.ComponentProps<typeof Link> & {};
 
+/**Renders a link that gets highlighted when on the path that it links to. */
 export function HighlightLink({ children, ...props }: HighlightLinkProps) {
   const pathname = usePathname();
   const selected = props.href.toString().split('?').at(0) === pathname;

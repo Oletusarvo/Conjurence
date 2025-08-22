@@ -1,6 +1,6 @@
 import { AddEventButton } from '@/components/AddEventButton';
 import { AppFooter } from '@/components/AppFooter';
-import { HighlightLink } from '@/components/HighlightLink';
+import { HighlightLink } from '@/components/ui/HighlightLink';
 import { Search } from 'lucide-react';
 
 export default async function ApplicationLayout({ children }: React.PropsWithChildren) {

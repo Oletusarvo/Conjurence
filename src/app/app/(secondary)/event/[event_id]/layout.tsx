@@ -3,7 +3,7 @@ import { getEvent } from '@/features/events/dal/getEvent';
 import db from '@/dbconfig';
 import { UserAttendanceStatusManager } from '@/features/attendance/managers/UserAttendanceStatusManager';
 import { Suspense } from 'react';
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/ui/Spinner';
 import { EventProvider } from '@/features/events/providers/EventProvider';
 import { ModalStackProvider } from '@/providers/ModalStackProvider';
 import { EventActionProvider } from '@/features/events/providers/EventActionProvider';
@@ -16,7 +16,7 @@ import { HostBadge } from '@/features/events/components/HostBadge';
 import { DistanceThresholdDisplay } from '@/features/distance/components/DistanceThresholdDisplay';
 import { LocationTitleBadge } from '@/features/events/components/ui/LocationTitleBadge';
 import { MobileEventBadge } from '@/features/events/components/ui/MobileEventBadge';
-import { EventActionButtons } from '@/features/events/components/EventActionButtons';
+import { EventControlBar } from '@/features/events/components/EventControlBar';
 import { GeolocationMap } from '@/features/geolocation/components/GeolocationMap';
 import { AttendanceFeedTrigger } from '@/features/attendance/components/AttendanceFeedTrigger';
 
@@ -80,14 +80,13 @@ export default async function EventPage({ params, attendance }) {
                 </div>
               </div>
               <div
-                className='overflow-hidden flex flex-1 flex-col relative'
+                className='overflow-hidden flex flex-1 flex-col'
                 style={{
                   width: '100%',
                 }}>
                 <GeolocationMap />
-                <EventActionButtons />
               </div>
-
+              <EventControlBar />
               {/** */}
             </div>
           </ModalStackProvider>

@@ -1,18 +1,18 @@
 'use client';
 
 import { TabsProvider } from '@/providers/TabsProvider';
-import { TabButton } from '../../../components/TabButton';
+import { TabButton } from '../../../components/ui/TabButton';
 import { useEffect, useState } from 'react';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 import { acceptJoinRequestAction } from '@/features/attendance/actions/experimental/acceptJoinRequestAction';
-import { Spinner } from '../../../components/Spinner';
+import { Spinner } from '../../../components/ui/Spinner';
 import { AtSign, Check, Star, X } from 'lucide-react';
-import { StatusBadge } from '../../../components/StatusBadge';
+import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { useEventContext } from '@/features/events/providers/EventProvider';
 import { rejectJoinRequestAction } from '@/features/attendance/actions/experimental/rejectJoinRequestAction';
 import { useSocketHandlers } from '@/hooks/useSocketHandlers';
 import { useSocketRoom } from '@/hooks/useSocketRoom';
-import { List } from '@/components/List';
+import { List } from '@/components/feature/List';
 
 export function AttendantList({ initialAttendants }) {
   const { event } = useEventContext();

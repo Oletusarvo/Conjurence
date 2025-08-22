@@ -1,11 +1,12 @@
 'use client';
 
 import { Modal } from '@/components/Modal';
-import { InterestedCountBadge } from '@/features/events/components/ui/InterestedCountBadge';
+import { InterestedCountBadge } from '@/features/attendance/components/InterestedCountBadge';
 import { ToggleProvider } from '@/providers/ToggleProvider';
 import { JoinedCountBadge } from './JoinedCountBadge';
 import { X } from 'lucide-react';
 
+/**Renders the trigger containing the current interest- and attendance count on an event. Displays the AttendanceFeed once clicked/tapped. */
 export function AttendanceFeedTrigger({ children }) {
   return (
     <ToggleProvider>

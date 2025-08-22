@@ -1,5 +1,6 @@
 import { AtSign } from 'lucide-react';
 
+/**Renders the container displaying the username of an attendant in an event. */
 export function UsernameContainer({ children }: React.PropsWithChildren) {
   return (
     <div

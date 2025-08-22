@@ -6,6 +6,7 @@ import { loadSession } from '@/util/loadSession';
 import { getAttendance } from '../dal/getAttendance';
 import { TAttendance } from '../schemas/attendanceSchema';
 
+/**Updates the attendance record of the currently logged in user on the event with the provided id. */
 export async function updateAttendanceAction(
   eventId: string,
   status: string

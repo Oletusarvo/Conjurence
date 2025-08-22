@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { ThresholdsType, useCreateEventFormContext } from './CreateEventForm';
+import { ThresholdsType, useCreateEventFormContext } from '../CreateEventForm';
 import { capitalize } from '@/util/capitalize';
-import { Sublabel } from '@/components/Sublabel';
-import { List } from '@/components/List';
+import { Sublabel } from '@/components/ui/Sublabel';
+import { List } from '@/components/feature/List';
 
 export function EventTypeSelector({ thresholds }: { thresholds: ThresholdsType }) {
   const { payload, handleChange } = useCreateEventFormContext();

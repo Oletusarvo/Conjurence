@@ -2,9 +2,18 @@ import z from 'zod';
 import { passwordSchema } from '../../../schemas/passwordSchema';
 import { AuthError } from '@/errors/auth';
 
+export const emailSchema = z
+  .email()
+  .trim()
+  .refine(val => val.endsWith('@gmail.com'), AuthError.emailInvalidDomain);
+
+export const verifyEmailSchema = z.object({
+  email: emailSchema,
+});
+
 export const registerCredentialsSchema = z
   .object({
-    email: z.email().trim(),
+    token: z.jwt(),
     username: z
       .string()
       .min(3, AuthError.usernameTooShort)
@@ -17,8 +26,4 @@ export const registerCredentialsSchema = z
   .refine(creds => {
     const { password1, password2 } = creds;
     return password1 === password2;
-  }, AuthError.passwordMismatch)
-  .refine(creds => {
-    const { email } = creds;
-    return email.endsWith('@gmail.com');
-  }, AuthError.emailInvalidDomain);
+  }, AuthError.passwordMismatch);

@@ -1,5 +1,5 @@
 import { FormContainer } from '@/components/Form';
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/ui/Spinner';
 import { ResetPasswordForm } from '@/features/resetPassword/components/ResetPasswordForm';
 import { Suspense } from 'react';
 

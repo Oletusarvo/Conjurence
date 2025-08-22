@@ -1,6 +1,6 @@
 'use client';
 
-import { Pill } from '@/components/Pill';
+import { Pill } from '@/components/ui/Pill';
 import { Armchair } from 'lucide-react';
 import { useEventContext } from '../../providers/EventProvider';
 

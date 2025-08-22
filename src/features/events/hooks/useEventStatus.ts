@@ -1,4 +1,4 @@
-import { StatusBadgeProps } from '@/components/StatusBadge';
+import { StatusBadgeProps } from '@/components/ui/StatusBadge';
 import { useEffect, useMemo, useState } from 'react';
 
 export function useEventStatus(createdAt: any, poll?: boolean) {

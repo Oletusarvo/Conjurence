@@ -1,6 +1,6 @@
 'use client';
 
-import { PassProps } from '@/components/PassProps';
+import { PassProps } from '@/components/feature/PassProps';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
 import { useEffect, useState } from 'react';
 import { useStep } from './StepProvider';

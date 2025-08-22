@@ -5,7 +5,7 @@ import { PlusCircle } from 'lucide-react';
 import { useSearchProvider } from '../../../providers/SearchProvider';
 import Link from 'next/link';
 import { TEvent } from '@/features/events/schemas/eventSchema';
-import { List } from '../../../components/List';
+import { List } from '../../../components/feature/List';
 import { withAlternate } from '@/hoc/withAlternate';
 import { EventProvider } from '../providers/EventProvider';
 import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
@@ -15,7 +15,7 @@ import { useGeolocationContext } from '@/features/geolocation/providers/Geolocat
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/ui/Spinner';
 import { useRef } from 'react';
 
 type EventFeedProps = {

@@ -1,4 +1,4 @@
-import { Pill } from '@/components/Pill';
+import { Pill } from '@/components/ui/Pill';
 
 export function MobileEventBadge() {
   return (

@@ -7,6 +7,7 @@ import { tablenames } from '@/tablenames';
 import { hashPassword } from '@/util/auth/hashPassword';
 import { parseFormDataUsingSchema } from '@/util/parseUsingSchema';
 import { sendEmailVerification } from '../util/sendEmailVerification';
+import { verifyJWT } from '@/util/auth/JWT';
 
 export async function registerUserAction(
   payload: FormData
@@ -19,7 +20,9 @@ export async function registerUserAction(
     };
   }
 
-  const { email, password1: password, username } = parseResult.data;
+  const { token, password1: password, username } = parseResult.data;
+  const { email } = verifyJWT(token) as { email: string };
+
   const trx = await db.transaction();
   try {
     const [newUserRecord] = await trx(tablenames.user).insert(
@@ -40,7 +43,7 @@ export async function registerUserAction(
       },
       ['id']
     );
-    await sendEmailVerification(newUserRecord.id, email);
+
     await trx.commit();
     return {
       success: true,

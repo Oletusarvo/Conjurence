@@ -1,13 +1,13 @@
 'use client';
 
-import { List } from '@/components/List';
+import { List } from '@/components/feature/List';
 import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
 import { withAlternate } from '@/hoc/withAlternate';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { EventProvider } from '../providers/EventProvider';
 import { EventCard } from './EventCard';
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/ui/Spinner';
 import axios from 'axios';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 

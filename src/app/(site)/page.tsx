@@ -43,18 +43,18 @@ export default async function HomePage() {
         <h2>What Is {packageName}?</h2>
         <p className='text-gray-300'>
           {packageName} is a platform for creating and discovering unofficial, small, local social
-          events. Whether you're hosting a board game night, a casual meetup, or just hanging out,
-          you can list your event for others nearby to find and join. The app makes it easy to
-          connect with people in your area, join gatherings spontaneously, and meet new friends in
-          real life.
+          events. Whether you're hosting a board game, a casual meetup, or just hanging out, you can
+          list your event for others nearby to find and join. The app makes it easy to connect with
+          people in your area, join gatherings spontaneously, and meet new friends in real life.
         </p>
       </section>
       <section className='flex flex-col gap-8 py-24 items-center px-default'>
         <h2>Features</h2>
         <ul className='flex flex-col gap-4'>
           <FeatureListItem title='Create Local Events'>
-            Easily set up spontaneous gatherings with a title, description, category, and available
-            spots. Your location is automatically set so nearby users can discover your event.
+            Easily set up spontaneous gatherings with a title, description, category, size, and
+            available spots. Your location is automatically set so nearby users can discover your
+            event.
           </FeatureListItem>
           <FeatureListItem title='Automatic Joining & Leaving'>
             Show interest in any event and you'll be joined automatically when you're close by. Move

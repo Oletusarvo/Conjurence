@@ -1,4 +1,4 @@
-import { Notice } from '@/components/Notice';
+import { Notice } from '@/components/ui/Notice';
 import { EventError } from '@/errors/events';
 
 export function StatusNotice({ status }) {

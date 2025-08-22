@@ -32,19 +32,13 @@ export const eventLocationTitleSchema = z
   .optional();
 
 export const eventInstanceSchema = z.object({
-  created_at: z.date().optional(),
-  ended_at: z.date().optional(),
   position: z.string().optional(),
-  location_title: eventLocationTitleSchema,
-  position_metadata: z
-    .string()
-    .transform(val => {
-      return JSON.parse(val) as {
-        accuracy: number;
-        timestamp: number;
-      };
-    })
-    .optional(),
+  position_metadata: z.string().transform(val => {
+    return JSON.parse(val) as {
+      accuracy: number;
+      timestamp: number;
+    };
+  }),
 
   event_threshold_id: z.string().transform(val => parseInt(val)),
   is_mobile: z
@@ -53,23 +47,22 @@ export const eventInstanceSchema = z.object({
     .optional(),
 });
 
-export const eventSchema = z
-  .object({
-    id: z.uuid(),
-    category: z.string(),
-    host: z.string(),
-    interested_count: z.number(),
-    attendance_count: z.number(),
-    auto_join_threshold: z.number(),
-    auto_leave_threshold: z.number(),
-  })
-  .extend(eventDataSchema.shape)
-  .extend(eventInstanceSchema.shape)
-  .omit({
-    event_category_id: true,
-    position: true,
-  });
+export const eventSchema = eventDataSchema.extend(eventInstanceSchema.shape).omit({
+  event_category_id: true,
+  position: true,
+});
 
 export type TEventData = z.infer<typeof eventDataSchema>;
 export type TEventInstance = z.infer<typeof eventInstanceSchema>;
-export type TEvent = z.infer<typeof eventSchema> & { position: { coordinates: number[] } };
+export type TEvent = z.infer<typeof eventSchema> & {
+  id: string;
+  category: string;
+  host: string;
+  interested_count: number;
+  attendance_count: number;
+  auto_join_threshold: number;
+  auto_leave_threshold: number;
+  position: { coordinates: number[] };
+  created_at: Date;
+  ended_at: Date;
+};

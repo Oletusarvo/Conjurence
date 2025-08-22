@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/ui/Spinner';
 import { withAlternate } from './withAlternate';
 
 /**A wrapper around withAlternate. Renders a spinner when the loading-prop is set to true. */

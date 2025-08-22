@@ -1,5 +1,5 @@
 import { FormContainer } from '@/components/Form';
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/ui/Spinner';
 import { LoginForm } from '@/features/login/components/LoginForm';
 import { Suspense } from 'react';
 

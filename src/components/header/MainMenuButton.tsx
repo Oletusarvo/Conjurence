@@ -2,12 +2,12 @@
 
 import { useSession } from 'next-auth/react';
 import { DropDownMenu } from './DropDownMenu';
-import { MenuButton } from '../MenuButton';
+import { MenuButton } from '../ui/MenuButton';
 import { useHeaderContext } from './HeaderProvider';
-import { HighlightLink } from '../HighlightLink';
+import { HighlightLink } from '../ui/HighlightLink';
 import { withIcon } from '@/hoc/withIcon';
 import { LogIn, LogOut, Menu, Settings, User, X } from 'lucide-react';
-import { Spinner } from '../Spinner';
+import { Spinner } from '../ui/Spinner';
 import { ToggleProvider } from '@/providers/ToggleProvider';
 import { withAlternate } from '@/hoc/withAlternate';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
-import { HighlightLink } from './HighlightLink';
+import { HighlightLink } from './ui/HighlightLink';
 import { Calendar, Plus } from 'lucide-react';
 
 export function AddEventButton() {

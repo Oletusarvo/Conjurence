@@ -1,12 +1,12 @@
 'use client';
 
-import { List } from '@/components/List';
+import { List } from '@/components/feature/List';
 import { AttendantEntry } from './AttendantEntry';
 import { useEventContext } from '@/features/events/providers/EventProvider';
 import { useEventAttendanceContext } from '../providers/EventAttendanceProvider';
 
+/**Renders the feed showing the current attendants to an event. */
 export function AttendanceFeed() {
-  const { event } = useEventContext();
   const { eventAttendanceRecords } = useEventAttendanceContext();
 
   return (

@@ -4,7 +4,7 @@ import db from '@/dbconfig';
 import { EventFeed } from '@/features/events/components/EventFeed';
 import { SearchProvider } from '@/providers/SearchProvider';
 import { tablenames } from '@/tablenames';
-import { Pill } from '@/components/Pill';
+import { Pill } from '@/components/ui/Pill';
 import { capitalize } from '@/util/capitalize';
 import { EventFeedTabs } from '@/features/events/components/EventFeedTabs';
 

@@ -1,8 +1,8 @@
 import { CategoriesType, ThresholdsType } from './CreateEventForm';
-import { EventTypeSelector } from './EventTypeSelector';
-import { EventCategorySelector } from './EventCategorySelector';
+import { EventTypeSelector } from './inputs/EventTypeSelector';
+import { EventCategorySelector } from './inputs/EventCategorySelector';
 import { MobileEventCheckbox } from './inputs/MobileEventCheckbox';
-import { IsTemplateCheckbox } from './IsTemplateCheckbox';
+import { IsTemplateCheckbox } from './inputs/IsTemplateCheckbox';
 
 export function TypesStep({
   categories,

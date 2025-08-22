@@ -1,7 +1,7 @@
 'use client';
 
 import { useEventStatus } from '@/features/events/hooks/useEventStatus';
-import { StatusBadge } from '../../../../components/StatusBadge';
+import { StatusBadge } from '../../../../components/ui/StatusBadge';
 
 export function EventStatusBadge({ createdAt }: { createdAt?: string }) {
   const { variant, timeString } = useEventStatus(createdAt, true);

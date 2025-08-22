@@ -1,12 +1,12 @@
 'use client';
 
 import { CheckboxInput } from '@/components/CheckboxInput';
-import { useCreateEventFormContext } from './CreateEventForm';
+import { useCreateEventFormContext } from '../CreateEventForm';
 import { useUserContext } from '@/features/users/providers/UserProvider';
 
 export function IsTemplateCheckbox() {
   const { user } = useUserContext();
-  const { handleChange, template, payload, inputStatus } = useCreateEventFormContext();
+  const { handleChange, payload } = useCreateEventFormContext();
   return (
     <CheckboxInput
       onChange={handleChange}

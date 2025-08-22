@@ -1,11 +1,12 @@
 'use client';
 
 import { useUserAttendanceContext } from '@/features/attendance/providers/UserAttendanceProvider';
-import { useEventContext } from '../../providers/EventProvider';
+import { useEventContext } from '../../events/providers/EventProvider';
 import { useToggle } from '@/hooks/useToggle';
 import { Star } from 'lucide-react';
-import { Badge } from '@/components/Badge';
+import { Badge } from '@/components/ui/Badge';
 
+/**Renders a star-icon with the current interest count on an event. */
 export function InterestedCountBadge({ ...props }) {
   const { interestCount } = useEventContext();
   const { attendanceRecord } = useUserAttendanceContext();

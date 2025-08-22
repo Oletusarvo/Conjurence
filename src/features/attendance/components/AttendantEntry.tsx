@@ -5,6 +5,7 @@ type AttendantEntryProps = React.PropsWithChildren & {
   timestamp: string;
 };
 
+/**Renders the entries for each participant displayed on the AttendanceFeed. */
 export function AttendantEntry({ children, username, timestamp }: AttendantEntryProps) {
   return (
     <div className='w-full flex justify-between items-center text-sm'>

@@ -1,8 +1,8 @@
-import { PassProps } from '@/components/PassProps';
+import { PassProps } from '@/components/feature/PassProps';
 import { useActionOnClickOutside } from '@/hooks/useActionOnClickOutside';
 import { useToggle } from '@/hooks/useToggle';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRef, useState } from 'react';
 
 const [ToggleContext, useToggleContext] = createContextWithUseHook<{
@@ -36,6 +36,11 @@ export function ToggleProvider({
     }
   };
 
+  useEffect(() => {
+    if (value === undefined) return;
+    toggle(value);
+  }, [value]);
+
   return (
     <ToggleContext.Provider value={{ state: stateToUse, hideOnClickOutside, toggleState }}>
       {children}
@@ -43,9 +48,26 @@ export function ToggleProvider({
   );
 }
 
-ToggleProvider.Trigger = function ({ children }: React.PropsWithChildren) {
+/**Triggers toggling of the internal state by passing an onClick-handler to its child via cloneElement.
+ * Make sure custom components define an onClick-prop, and pass it to what they render.
+ * Takes an optional action-prop that triggers the toggle after it finishes.
+ */
+ToggleProvider.Trigger = function ({
+  children,
+  action,
+}: React.PropsWithChildren & { action?: () => Promise<void> }) {
   const { toggleState } = useToggleContext();
-  return <PassProps onClick={() => toggleState()}>{children}</PassProps>;
+  return (
+    <PassProps
+      onClick={async () => {
+        if (action) {
+          await action();
+        }
+        toggleState();
+      }}>
+      {children}
+    </PassProps>
+  );
 };
 
 type ToggleProviderTargetProps = React.PropsWithChildren & {
@@ -66,10 +88,15 @@ ToggleProvider.Target = function ({ children, useProps = false }: ToggleProvider
     throw new Error('A ToggleProvider.Target must have exactly one child!');
   }
 
-  const propsToPass = {
+  const propsToPass: { ref: any; isToggled?: boolean } = {
     ref: targetRef,
-    isToggled: useProps ? state : undefined,
   };
+
+  if (useProps) {
+    propsToPass.isToggled = state;
+  }
 
   return useProps || state ? <PassProps {...propsToPass}>{children}</PassProps> : null;
 };
+
+export { useToggleContext };

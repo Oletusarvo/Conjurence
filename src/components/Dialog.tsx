@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode } from 'react';
 import { Modal, ModalProps } from './Modal';
 
@@ -6,9 +8,11 @@ export function Dialog({
   title,
   cancelButton,
   confirmButton,
+  ...props
 }: Omit<ModalProps, 'show'> & { confirmButton?: ReactNode; cancelButton?: ReactNode }) {
   return (
     <Modal
+      {...props}
       title={title}
       show={true}>
       <div className='flex flex-col w-full gap-4'>

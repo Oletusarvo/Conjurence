@@ -4,12 +4,12 @@ import { Ellipsis, Mail } from 'lucide-react';
 import { Input } from '../../../components/Input';
 import { hideIf } from '@/util/rendering/hideIf';
 import { AuthError } from '@/errors/auth';
-import { Sublabel } from '../../../components/Sublabel';
+import { Sublabel } from '../../../components/ui/Sublabel';
 import { withLoader } from '@/hoc/withLoader';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Notice } from '@/components/Notice';
+import { Notice } from '@/components/ui/Notice';
 
 export function LoginForm() {
   const { status, isPending, submitCredentials } = useLoginForm();

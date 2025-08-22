@@ -8,5 +8,5 @@ export function DistanceBadge() {
   const { distance } = useDistanceContext();
   const distanceString = getDistanceString(distance);
 
-  return <Distance>~{distanceString}</Distance>;
+  return <Distance>{distanceString}</Distance>;
 }

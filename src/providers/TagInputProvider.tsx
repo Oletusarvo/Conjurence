@@ -1,4 +1,4 @@
-import { PassProps } from '@/components/PassProps';
+import { PassProps } from '@/components/feature/PassProps';
 import { createContextWithUseHook } from '@/util/createContextWithUseHook';
 import React, { ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';

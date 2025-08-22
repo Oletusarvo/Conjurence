@@ -15,7 +15,7 @@ import {
 import Link from 'next/link';
 import { useEventActionContext } from '../providers/EventActionProvider';
 import { useUserContext } from '@/features/users/providers/UserProvider';
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components/ui/Spinner';
 import { useRouter } from 'next/navigation';
 
 const ButtonWithIcon = withLoader(
