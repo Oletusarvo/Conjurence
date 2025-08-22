@@ -52,7 +52,7 @@ export function EventFeed() {
   return (
     <>
       <EventList
-        showAlternate={events?.length === 0}
+        showAlternate={eventCache.current.length === 0}
         alternate={<NoEvents />}
         data={events || eventCache.current}
         sortFn={(a, b) => {
