@@ -1,3 +1,9 @@
+## [0.8.0-alpha.1] - 20-08-2025
+
+### Fixed
+
+- Incorrect socket server import in server.mjs
+
 ## [0.8.0-alpha.0] - 30-08-2025
 
 ### Changed
