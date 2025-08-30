@@ -1,4 +1,4 @@
-import { createAttendanceAction } from '@/features/attendance/actions/createAttendanceAction';
+import { createAttendanceAction } from '@/features/attendance/actions/create-attendance-action';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {

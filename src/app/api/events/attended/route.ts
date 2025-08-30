@@ -1,5 +1,5 @@
 import db from '@/dbconfig';
-import { getEvent } from '@/features/events/dal/getEvent';
+import { getEvent } from '@/features/events/dal/get-event';
 import { tablenames } from '@/tablenames';
 import { NextRequest, NextResponse } from 'next/server';
 

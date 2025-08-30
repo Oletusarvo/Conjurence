@@ -1,6 +1,6 @@
 import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
-import { loadSession } from '@/util/loadSession';
+import { loadSession } from '@/util/load-session';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {

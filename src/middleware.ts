@@ -1,7 +1,7 @@
 import { getToken } from 'next-auth/jwt';
 import { NextRequestWithAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
-import { RateLimiter } from './util/network/rateLimiter';
+import { RateLimiter } from './util/network/rate-limiter';
 
 const limiterMap: Map<string, RateLimiter> = new Map();
 limiterMap.set(

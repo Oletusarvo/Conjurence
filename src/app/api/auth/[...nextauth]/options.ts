@@ -1,9 +1,9 @@
 import db from '@/dbconfig';
 import { AuthError } from '@/errors/auth';
 import { tablenames } from '@/tablenames';
-import { verifyPassword } from '@/util/auth/verifyPassword';
+import { verifyPassword } from '@/util/auth/verify-password';
 import { NextAuthOptions } from 'next-auth';
-import { getAttendance } from '@/features/attendance/dal/getAttendance';
+import { getAttendance } from '@/features/attendance/dal/get-attendance';
 import z from 'zod';
 
 export const options: NextAuthOptions = {

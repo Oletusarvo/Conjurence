@@ -1,4 +1,4 @@
-import { createFeatureErrorFn } from '@/util/error/createFeature';
+import { createFeatureErrorFn } from '@/util/error/create-feature-error-builder';
 
 const getError = createFeatureErrorFn('auth');
 export const AuthError = {

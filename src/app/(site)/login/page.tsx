@@ -1,6 +1,6 @@
-import { FormContainer } from '@/components/Form';
-import { Spinner } from '@/components/ui/Spinner';
-import { LoginForm } from '@/features/login/components/LoginForm';
+import { FormContainer } from '@/components/form-temp';
+import { Spinner } from '@/components/ui/spinner-temp';
+import { LoginForm } from '@/features/login/components/login-form';
 import { Suspense } from 'react';
 
 export default async function LoginPage() {

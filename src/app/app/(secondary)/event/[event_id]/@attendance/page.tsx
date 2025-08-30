@@ -1,7 +1,7 @@
 import db from '@/dbconfig';
-import { getAttendance } from '@/features/attendance/dal/getAttendance';
-import { AttendanceFeed } from '@/features/attendance/components/AttendanceFeed';
-import { EventAttendanceProvider } from '@/features/attendance/providers/EventAttendanceProvider';
+import { getAttendance } from '@/features/attendance/dal/get-attendance';
+import { AttendanceFeed } from '@/features/attendance/components/attendance-feed';
+import { EventAttendanceProvider } from '@/features/attendance/providers/event-attendance-provider';
 
 export default async function AttendanceSlot({ params }) {
   const { event_id } = await params;

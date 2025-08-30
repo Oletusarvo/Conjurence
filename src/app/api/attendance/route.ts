@@ -1,6 +1,6 @@
 import db from '@/dbconfig';
-import { getAttendance } from '@/features/attendance/dal/getAttendance';
-import { loadSession } from '@/util/loadSession';
+import { getAttendance } from '@/features/attendance/dal/get-attendance';
+import { loadSession } from '@/util/load-session';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {

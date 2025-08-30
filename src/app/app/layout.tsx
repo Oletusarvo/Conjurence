@@ -1,20 +1,20 @@
-import { HeaderProvider } from '@/components/header/HeaderProvider';
-import { MainMenuButton } from '@/components/header/MainMenuButton';
+import { HeaderProvider } from '@/components/header/header-provider';
+import { MainMenuButton } from '@/components/header/main-menu-button';
 import db from '@/dbconfig';
-import { getAttendance } from '@/features/attendance/dal/getAttendance';
-import { UserAttendanceManager } from '@/features/attendance/managers/UserAttendanceManager';
-import { UserAttendanceProvider } from '@/features/attendance/providers/UserAttendanceProvider';
-import { DistanceProvider } from '@/features/distance/providers/DistanceProvider';
-import { getEvent } from '@/features/events/dal/getEvent';
-import { EventProvider } from '@/features/events/providers/EventProvider';
-import { GeolocationProvider } from '@/features/geolocation/providers/GeolocationProvider';
-import { UserProvider } from '@/features/users/providers/UserProvider';
-import { TUser } from '@/features/users/schemas/userSchema';
-import { ServiceWorkerManager } from '@/managers/ServiceWorkerManager';
-import { WindowResizeManager } from '@/managers/WindowResizeManager';
-import { QueryProvider } from '@/providers/QueryProvider';
+import { getAttendance } from '@/features/attendance/dal/get-attendance';
+import { UserAttendanceManager } from '@/features/attendance/managers/user-attendance-manager';
+import { UserAttendanceProvider } from '@/features/attendance/providers/user-attendance-provider';
+import { DistanceProvider } from '@/features/distance/providers/distance-provider';
+import { getEvent } from '@/features/events/dal/get-event';
+import { EventProvider } from '@/features/events/providers/event-provider';
+import { GeolocationProvider } from '@/features/geolocation/providers/geolocation-provider';
+import { UserProvider } from '@/features/users/providers/user-provider';
+import { TUser } from '@/features/users/schemas/user-schema';
+import { ServiceWorkerManager } from '@/managers/service-worker-manager';
+import { WindowResizeManager } from '@/managers/window-resize-manager';
+import { QueryProvider } from '@/providers/query-provider';
 import { tablenames } from '@/tablenames';
-import { loadSession } from '@/util/loadSession';
+import { loadSession } from '@/util/load-session';
 
 export const revalidate = 0;
 

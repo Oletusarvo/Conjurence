@@ -1,3 +1,9 @@
+## [0.8.0-alpha.0] - 30-08-2025
+
+### Changed
+
+- Renamed all files to kebab-case.
+
 ## [0.7.1-alpha.0] - 22-08-2025
 
 ### Fixed

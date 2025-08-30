@@ -1,6 +1,6 @@
-import { FormContainer } from '@/components/Form';
-import { Spinner } from '@/components/ui/Spinner';
-import { RegisterForm } from '@/features/signup/components/RegisterForm';
+import { FormContainer } from '@/components/form-temp';
+import { Spinner } from '@/components/ui/spinner-temp';
+import { RegisterForm } from '@/features/signup/components/register-form';
 import { Suspense } from 'react';
 
 export default function RegisterPage() {

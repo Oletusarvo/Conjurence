@@ -1,4 +1,4 @@
-import { Logo } from '@/components/header/Header';
+import { Logo } from '@/components/header/header-temp';
 import { name as packageName, version } from '@package';
 import { Ghost, Star } from 'lucide-react';
 import Link from 'next/link';

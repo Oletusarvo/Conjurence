@@ -1,5 +1,5 @@
-import { HeaderProvider } from '@/components/header/HeaderProvider';
-import { MainMenuButton } from '@/components/header/MainMenuButton';
+import { HeaderProvider } from '@/components/header/header-provider';
+import { MainMenuButton } from '@/components/header/main-menu-button';
 
 export default async function SiteLayout({ children }: React.PropsWithChildren) {
   return (

@@ -1,5 +1,5 @@
 import db from '@/dbconfig';
-import { getEvent } from '@/features/events/dal/getEvent';
+import { getEvent } from '@/features/events/dal/get-event';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest, { params }) {
