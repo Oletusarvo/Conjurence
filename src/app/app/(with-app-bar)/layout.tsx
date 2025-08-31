@@ -11,7 +11,9 @@ export default async function ApplicationLayout({ children }: React.PropsWithChi
       </main>
       <AppFooter>
         <HighlightLink href='/app/feed'>
-          <Search />
+          <button className='--ghost --round'>
+            <Search />
+          </button>
         </HighlightLink>
         <AddEventButton />
       </AppFooter>

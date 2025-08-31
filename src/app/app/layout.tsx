@@ -4,9 +4,11 @@ import db from '@/dbconfig';
 import { getAttendance } from '@/features/attendance/dal/get-attendance';
 import { UserAttendanceManager } from '@/features/attendance/managers/user-attendance-manager';
 import { UserAttendanceProvider } from '@/features/attendance/providers/user-attendance-provider';
+import { attendanceService } from '@/features/attendance/services/attendance-service';
 import { DistanceProvider } from '@/features/distance/providers/distance-provider';
 import { getEvent } from '@/features/events/dal/get-event';
 import { EventProvider } from '@/features/events/providers/event-provider';
+import { eventService } from '@/features/events/services/event-service';
 import { GeolocationProvider } from '@/features/geolocation/providers/geolocation-provider';
 import { UserProvider } from '@/features/users/providers/user-provider';
 import { TUser } from '@/features/users/schemas/user-schema';
@@ -20,29 +22,10 @@ export const revalidate = 0;
 
 export default async function AppLayout({ children }) {
   const session = (await loadSession()) as { user: TUser };
-
-  const [initialAttendanceRecord, attendedEvent] = await getAttendance(db)
-    .whereIn(
-      'attendance_status_id',
-      db
-        .select('id')
-        .from(tablenames.event_attendance_status)
-        .whereIn('label', ['joined', 'interested', 'host'])
-    )
-    .where({
-      user_id: session.user.id,
-      event_ended_at: null,
-    })
-    .orderBy('requested_at', 'desc')
-    .first()
-    .then(async attendanceRecord => {
-      const attendedEvent = attendanceRecord
-        ? await getEvent(db)
-            .where({ 'e.id': attendanceRecord.event_instance_id, ended_at: null })
-            .first()
-        : null;
-      return [attendanceRecord || null, attendedEvent];
-    });
+  const initialAttendanceRecord = await attendanceService.repo.findRecentActiveByUserId(
+    session.user.id,
+    db
+  );
 
   return (
     <>

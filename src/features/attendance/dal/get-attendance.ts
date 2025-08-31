@@ -27,6 +27,7 @@ const applyJoinRequestSelectColumns = (query: Knex.QueryBuilder) => {
   );
 };
 
+/**@deprecated */
 export function getAttendance(ctx: Knex | Knex.Transaction) {
   const query = getAttendanceQuery(ctx);
   applyJoinRequestSelectColumns(query);

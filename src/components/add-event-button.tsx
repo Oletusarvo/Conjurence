@@ -6,6 +6,7 @@ import { Calendar, Plus } from 'lucide-react';
 
 export function AddEventButton() {
   const { attendanceRecord } = useUserAttendanceContext();
+  console.log(attendanceRecord);
 
   return attendanceRecord ? (
     <HighlightLink href={`/app/event/${attendanceRecord.event_instance_id}`}>
@@ -13,7 +14,9 @@ export function AddEventButton() {
     </HighlightLink>
   ) : (
     <HighlightLink href='/app/event/create'>
-      <Plus />
+      <button className='--ghost --round'>
+        <Plus />
+      </button>
     </HighlightLink>
   );
 }

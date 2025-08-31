@@ -2,14 +2,9 @@
 
 import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { TEvent } from '../schemas/event-schema';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useEventSocket } from '../hooks/use-event-socket';
 import { useReloadData } from '@/hooks/use-reload-data';
-import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
-import { updateEventAction } from '../actions/update-event-action';
-import { socket } from '@/socket';
-import { useSocketHandlers } from '@/hooks/use-socket-handlers';
-import { useUserContext } from '@/features/users/providers/user-provider';
 import { useUpdateMobileEventPosition } from '../hooks/use-update-mobile-event-position';
 
 type EventProviderProps = React.PropsWithChildren & {

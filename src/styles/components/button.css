@@ -10,12 +10,8 @@ button {
   border-radius: 8px;
 }
 
-button.--ghost {
-  background-color: transparent;
-}
-
-button.--ghost.--accent:hover {
-  background-color: hsl(from var(--color-accent) h s l / 0.25);
+button.--ghost:hover {
+  background-color: hsl(from var(--color-secondary) h s l / 0.25);
 }
 
 button.--small {

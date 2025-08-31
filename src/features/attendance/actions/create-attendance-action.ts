@@ -3,64 +3,51 @@
 import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/load-session';
-import { getAttendance } from '../dal/get-attendance';
 import { TAttendance } from '../schemas/attendance-schema';
 import { updateAttendanceAction } from './update-attendance-action';
+import { attendanceService } from '../services/attendance-service';
+import { eventService } from '@/features/events/services/event-service';
+import { dispatcher } from '@/features/dispatcher/dispatcher';
 
-/**Creates a new attendance record on the database. If a record already exists for the logged in user on the event with the provided id, updateAttendanceAction is called instead. */
+/**Creates a new interested-attendance record on the database. If a record already exists for the logged in user on the event with the provided id, updateAttendanceAction is called instead. */
 export async function createAttendanceAction(
   event_id: string,
-  status: TAttendance['status']
+  status: 'interested'
 ): Promise<ActionResponse<TAttendance, string>> {
   const session = await loadSession();
-
-  const currentAttendanceRecord = await db(db.raw('?? AS p', [tablenames.event_attendance]))
-    .join(
-      db.raw('?? AS ps ON ps.id = p.attendance_status_id', [tablenames.event_attendance_status])
-    )
-    .where({ user_id: session.user.id, event_instance_id: event_id })
-    .select('user_id', 'event_instance_id', 'ps.label as status')
-    .orderBy('requested_at')
+  const currentAttendanceRecord = await attendanceService.repo
+    .findBy({ user_id: session.user.id, event_instance_id: event_id }, db)
     .first();
 
   if (currentAttendanceRecord) {
     return await updateAttendanceAction(event_id, status);
   }
 
-  const interestCountRecord = await db(tablenames.event_attendance)
-    .where({ event_instance_id: event_id })
-    .andWhereNot({
-      attendance_status_id: db(tablenames.event_attendance_status)
-        .where({ label: 'host' })
-        .select('id')
-        .limit(1),
-    })
-
-    .count('* AS count')
-    .first();
-
-  const newAttendanceRecord = await db(tablenames.event_attendance)
-    .insert({
+  const newAttendanceRecord = await attendanceService.repo.create(
+    {
       user_id: session.user.id,
       event_instance_id: event_id,
       attendance_status_id: db(tablenames.event_attendance_status)
         .where({ label: status })
         .select('id')
         .limit(1),
-    })
+    },
+    db
+  );
 
-    .then(async () => {
-      return await getAttendance(db)
-        .where({ user_id: session.user.id, event_instance_id: event_id })
-        .orderBy('requested_at', 'desc')
-        .first();
-    });
+  const interestCount = await eventService.repo.countInterestedByInstanceId(event_id, db);
 
-  const room = `event:${event_id}`;
-  global.io.to(room).emit('event:interest', {
-    eventId: event_id,
-    currentInterestCount: +interestCountRecord.count + 1,
-    newAttendanceRecord,
+  console.log(newAttendanceRecord);
+
+  dispatcher.dispatch({
+    to: `event:${event_id}`,
+    message: 'event:interest',
+    payload: {
+      username: session.user.id,
+      eventId: event_id,
+      currentInterestCount: interestCount,
+      newAttendanceRecord,
+    },
   });
 
   return {

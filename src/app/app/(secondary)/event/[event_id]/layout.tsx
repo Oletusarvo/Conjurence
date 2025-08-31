@@ -19,6 +19,7 @@ import { MobileEventBadge } from '@/features/events/components/ui/mobile-event-b
 import { EventControlBar } from '@/features/events/components/event-control-bar';
 import { GeolocationMap } from '@/features/geolocation/components/geolocation-map';
 import { AttendanceFeedTrigger } from '@/features/attendance/components/attendance-feed-trigger';
+import { eventService } from '@/features/events/services/event-service';
 
 export const revalidate = 0;
 
@@ -29,7 +30,7 @@ const getData = async (event_id: string) => {
 
 export default async function EventPage({ params, attendance }) {
   const { event_id } = await params;
-  const event = await getData(event_id);
+  const event = await eventService.repo.findById(event_id, db);
   if (!event) return <span>Event does not exist!</span>;
 
   return (

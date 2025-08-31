@@ -13,6 +13,7 @@ export const EventError = {
   locationDisabled: getError('location_disabled'),
   sizeNotAllowed: getError('size_not_allowed'),
   mobileNotAllowed: getError('mobile_not_allowed'),
+  ended: getError('ended'),
 };
 
 export type TEventError = (typeof EventError)[keyof typeof EventError];

@@ -60,7 +60,7 @@ export function MainMenuButton() {
     return (
       <button
         {...props}
-        className='--no-default'>
+        className='--ghost --round'>
         {children}
       </button>
     );

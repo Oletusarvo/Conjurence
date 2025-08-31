@@ -3,8 +3,9 @@
 import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/load-session';
-import { getAttendance } from '../dal/get-attendance';
 import { TAttendance } from '../schemas/attendance-schema';
+import { attendanceService } from '../services/attendance-service';
+import { dispatcher } from '@/features/dispatcher/dispatcher';
 
 /**Updates the attendance record of the currently logged in user on the event with the provided id. */
 export async function updateAttendanceAction(
@@ -12,26 +13,32 @@ export async function updateAttendanceAction(
   status: string
 ): Promise<ActionResponse<TAttendance, string>> {
   const session = await loadSession();
-  const updatedAttendanceRecord = await db(tablenames.event_attendance)
-    .where({ event_instance_id: eventId, user_id: session.user.id })
-    .update({
-      attendance_status_id: db
-        .select('id')
-        .from(tablenames.event_attendance_status)
-        .where({ label: status })
-        .limit(1),
-      updated_at: new Date(),
-    })
-    .then(async () => {
-      return (await getAttendance(db)
-        .where({ event_instance_id: eventId, user_id: session.user.id })
-        .orderBy('requested_at', 'desc')
-        .first()) as TAttendance;
-    });
+  const updatedAttendanceRecord = await attendanceService.repo.updateBy(
+    {
+      query: { event_instance_id: eventId, user_id: session.user.id },
+      payload: {
+        attendance_status_id: db
+          .select('id')
+          .from(tablenames.event_attendance_status)
+          .where({ label: status })
+          .limit(1),
+        updated_at: new Date(),
+      },
+    },
+    db
+  );
 
-  global.io.to(`event:${eventId}`).emit('event:attendance_update', {
-    eventId,
-    updatedAttendanceRecord,
+  console.log(updatedAttendanceRecord);
+
+  dispatcher.dispatch({
+    to: `event:${eventId}`,
+    message: 'event:attendance_update',
+    payload: {
+      username: updatedAttendanceRecord.username,
+      eventId,
+      updatedAttendanceRecord,
+    },
   });
+
   return { success: true, data: updatedAttendanceRecord };
 }

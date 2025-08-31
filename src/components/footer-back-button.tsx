@@ -8,7 +8,7 @@ export function FooterBackButton() {
   const router = useRouter();
   return (
     <button
-      className='--no-default'
+      className='--round --ghost'
       onClick={() => router.push('/app/feed')}>
       <ArrowLeft />
     </button>

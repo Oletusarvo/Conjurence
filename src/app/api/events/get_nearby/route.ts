@@ -1,5 +1,6 @@
 import db from '@/dbconfig';
 import { getEvent } from '@/features/events/dal/get-event';
+import { eventService } from '@/features/events/services/event-service';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -14,18 +15,13 @@ export async function GET(req: NextRequest) {
     const lat = req.nextUrl.searchParams.get('lat');
     const latitude = typeof lat === 'string' ? parseFloat(lat) : 0;
     const longitude = typeof lng === 'string' ? parseFloat(lng) : 0;
-
-    const events = await getEvent(db, { search: q })
-      .whereRaw(
-        `ST_DWithin(
-  ei.position,
-  ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography,
-  ?  -- distance in meters
-)
-`,
-        [longitude, latitude, 10000]
-      )
-      .where({ ended_at: null });
+    const events = await eventService.repo.findWithinDistanceByCoordinates(
+      longitude,
+      latitude,
+      10000,
+      db,
+      q
+    );
 
     return new NextResponse(JSON.stringify(events), { status: 200 });
   } catch (err: any) {

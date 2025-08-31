@@ -1,3 +1,9 @@
+## [0.8.0-alpha.2] - 31-08-2025
+
+### Added
+
+- Repositories and services for attendance- and event data.
+
 ## [0.8.0-alpha.1] - 20-08-2025
 
 ### Fixed
