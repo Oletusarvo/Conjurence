@@ -13,7 +13,6 @@ import { useUserContext } from '@/features/users/providers/user-provider';
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
 import { shouldJoin, shouldLeave } from '@/features/attendance/util/auto-join';
 import toast from 'react-hot-toast';
-import { handleGeofence } from '../util/handle-geofence';
 
 const joinThreshold = 5;
 const leaveThreshold = 15;
@@ -28,7 +27,7 @@ export function UserAttendanceManager() {
   const { updateSession } = useUserContext();
   const { event, hasEnded } = useEventContext();
   const { position } = useGeolocationContext();
-  const { distance, distancePending, distanceHistory } = useDistanceContext();
+  const { distance, distancePending, joinThreshold, leaveThreshold } = useDistanceContext();
   const attendance = useUserAttendanceContext();
 
   const currentAttendance = attendance.attendanceRecord;
@@ -73,13 +72,11 @@ export function UserAttendanceManager() {
       handleAction(
         () =>
           !hasEnded &&
-          handleGeofence(distanceHistory, r =>
-            shouldJoin(
-              r.distance,
-              r.position.coords.accuracy,
-              r.eventPosition.accuracy,
-              joinThreshold
-            )
+          shouldJoin(
+            distance,
+            position.coords.accuracy,
+            event.position_metadata.accuracy,
+            event?.auto_join_threshold
           ),
         'joining',
         'join-timeout',
@@ -93,13 +90,11 @@ export function UserAttendanceManager() {
       //Automatically leave an event if far enough from it.
       handleAction(
         () =>
-          handleGeofence(distanceHistory, r =>
-            shouldLeave(
-              r.distance,
-              r.position.coords.accuracy,
-              r.eventPosition.accuracy,
-              event.auto_leave_threshold
-            )
+          shouldLeave(
+            distance,
+            position.coords.accuracy,
+            event.position_metadata.accuracy,
+            event.auto_leave_threshold
           ),
         'leaving',
         'leave-timeout',
@@ -113,14 +108,12 @@ export function UserAttendanceManager() {
         () =>
           !hasEnded &&
           !event.is_mobile &&
-          handleGeofence(distanceHistory, r => {
-            return shouldLeave(
-              r.distance,
-              r.position.coords.accuracy,
-              r.eventPosition.accuracy,
-              leaveThreshold
-            );
-          }),
+          shouldLeave(
+            distance,
+            position.coords.accuracy,
+            event.position_metadata.accuracy,
+            event?.auto_leave_threshold
+          ),
         'ending',
         'end-timeout',
         async () => {
@@ -136,7 +129,6 @@ export function UserAttendanceManager() {
     event?.position_metadata.accuracy,
     event?.is_mobile,
     position?.coords.accuracy,
-
     hasEnded,
     attendance?.currentAction,
     addTimeout,
@@ -144,8 +136,6 @@ export function UserAttendanceManager() {
     shouldJoin,
     shouldLeave,
     endEventAction,
-    distanceHistory,
-    handleGeofence,
   ]);
 
   useEffect(() => {

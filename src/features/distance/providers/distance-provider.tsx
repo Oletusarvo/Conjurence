@@ -5,9 +5,6 @@ import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { getThresholdAdjusted } from '../util/get-threshold-adjusted';
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
 import { useEventContext } from '@/features/events/providers/event-provider';
-import { useEffect, useRef } from 'react';
-
-export const maxHistorySize = 3;
 
 export type TDistanceHistory = {
   position: GeolocationPosition;
@@ -20,13 +17,12 @@ const [DistanceContext, useDistanceContext] = createContextWithUseHook<{
   joinThreshold: number;
   leaveThreshold: number;
   distancePending: boolean;
-  distanceHistory: TDistanceHistory[];
 }>('useDistanceContext can only be called within the context of a DistanceContext!');
 
+/**Provides distance-data between an event and the user. */
 export function DistanceProvider({ children }: React.PropsWithChildren) {
   const { position } = useGeolocationContext();
   const { distance, isPending } = useDistance();
-  const distanceHistory = useRef<TDistanceHistory[]>([]);
   const { event } = useEventContext();
 
   const eventPositionAccuracy = event?.position_metadata?.accuracy || 0;
@@ -43,17 +39,6 @@ export function DistanceProvider({ children }: React.PropsWithChildren) {
     eventPositionAccuracy
   );
 
-  useEffect(() => {
-    distanceHistory.current.push({
-      position,
-      eventPosition: event.position_metadata,
-      distance,
-    });
-    if (distanceHistory.current.length >= maxHistorySize) {
-      distanceHistory.current.shift();
-    }
-  }, [distance, position, event?.position_metadata]);
-
   return (
     <DistanceContext.Provider
       value={{
@@ -61,7 +46,6 @@ export function DistanceProvider({ children }: React.PropsWithChildren) {
         joinThreshold,
         leaveThreshold,
         distancePending: isPending,
-        distanceHistory: distanceHistory.current,
       }}>
       {children}
     </DistanceContext.Provider>

@@ -1,3 +1,9 @@
+## [0.8.0-alpha.4] - 02-09-2025
+
+### Removed
+
+- Previous geofencing-logic.
+
 ## [0.8.0-alpha.3] - 02-09-2025
 
 ### Changed
