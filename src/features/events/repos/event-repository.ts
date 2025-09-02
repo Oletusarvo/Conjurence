@@ -5,7 +5,7 @@ import { Knex } from 'knex';
 import { Repository } from '@/util/repository';
 
 export class EventRepository extends Repository {
-  private getBaseQuery(ctx: DBContext) {
+  public getBaseQuery(ctx: DBContext) {
     //Get the event instance.
     const eventInstanceSubquery = ctx
       .select('*', 'id as ei_id')
@@ -226,5 +226,11 @@ export class EventRepository extends Repository {
           .limit(1),
       })
       .update(payload);
+  }
+}
+
+export class TestEventRepository extends EventRepository {
+  public getBaseQuery(ctx: DBContext) {
+    return super.getBaseQuery(ctx);
   }
 }

@@ -27,17 +27,12 @@ export async function createAttendanceAction(
     {
       user_id: session.user.id,
       event_instance_id: event_id,
-      attendance_status_id: db(tablenames.event_attendance_status)
-        .where({ label: status })
-        .select('id')
-        .limit(1),
+      status,
     },
     db
   );
 
   const interestCount = await eventService.repo.countInterestedByInstanceId(event_id, db);
-
-  console.log(newAttendanceRecord);
 
   dispatcher.dispatch({
     to: `event:${event_id}`,

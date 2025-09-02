@@ -5,6 +5,7 @@ import { verifyPassword } from '@/util/auth/verify-password';
 import { NextAuthOptions } from 'next-auth';
 import { getAttendance } from '@/features/attendance/dal/get-attendance';
 import z from 'zod';
+import { attendanceService } from '@/features/attendance/services/attendance-service';
 
 export const options: NextAuthOptions = {
   session: {
@@ -39,6 +40,8 @@ export const options: NextAuthOptions = {
             throw new Error(AuthError.invalidCredentials);
           }
 
+          const pr = await attendanceService.repo.findRecentActiveByUserId(user.id, db);
+          /*
           const pr = await getAttendance(db)
             .where({
               user_id: user.id,
@@ -50,7 +53,7 @@ export const options: NextAuthOptions = {
               event_ended: false,
             })
             .orderBy('requested_at', 'desc')
-            .first();
+            .first();*/
 
           const subscriptionRecord = await db(tablenames.user_subscription)
             .where({

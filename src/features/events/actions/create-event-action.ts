@@ -1,7 +1,7 @@
 'use server';
 
 import db from '@/dbconfig';
-import { EventError, TEventError } from '@/errors/events';
+import { EventError, TEventError } from '@/features/events/errors/events';
 import {
   eventDataSchema,
   eventInstanceSchema,

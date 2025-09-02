@@ -1,6 +1,6 @@
 /**Delays the running of a function. */
 export function debounce<RetT, ArgsT extends any[]>(fn: (...args: ArgsT) => RetT, delay: number) {
-  let timeout;
+  let timeout: ReturnType<typeof setTimeout>;
   return (...args: ArgsT) => {
     clearTimeout(timeout);
     timeout = setTimeout(async () => {

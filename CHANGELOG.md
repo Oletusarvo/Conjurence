@@ -1,3 +1,18 @@
+## [0.8.0-alpha.3] - 02-09-2025
+
+### Changed
+
+- The implementations of registerUserAction and sendVerificationEmailAction.
+- The implementation of join- and leave-logic. The user has to now have been outside an event geofence for three consequtive measurements before they are triggered.
+
+### Added
+
+- The user- repository and service.
+
+### Fixed
+
+- Dysfunctional --ghost button css-selector.
+
 ## [0.8.0-alpha.2] - 31-08-2025
 
 ### Added

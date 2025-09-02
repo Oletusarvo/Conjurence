@@ -1,5 +1,5 @@
 import { transport } from '@/nodemailer.config';
-
+require('dotenv').config();
 /**Sends an email using the configured transport-object in the nodemailer.config file.*/
 export async function sendEmail({
   to,
@@ -11,7 +11,7 @@ export async function sendEmail({
   html: string;
 }) {
   const result = await transport.sendMail({
-    from: 'nistikemisti@gmail.com',
+    from: process.env.SERVICE_EMAIL,
     to,
     subject,
     html,

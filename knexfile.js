@@ -20,6 +20,15 @@ module.exports = {
     },
   },
 
+  test: {
+    client: 'pg',
+    connection: process.env.DB_TEST_URL,
+    pool: {
+      min: 0,
+      max: 2,
+    },
+  },
+
   production: {
     client: 'pg',
     connection: process.env.DB_URL,

@@ -2,7 +2,7 @@
 
 import { useCreateEventFormContext } from '../create-event-form';
 import { eventDescriptionSchema } from '@/features/events/schemas/event-schema';
-import { EventError } from '@/errors/events';
+import { EventError } from '@/features/events/errors/events';
 import { Sublabel } from '@/components/ui/sub-label';
 
 export function DescriptionInput() {

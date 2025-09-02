@@ -6,6 +6,7 @@ exports.up = function (knex) {
   return knex.schema
     .createSchema('events')
     .withSchema('events')
+    .hasTable('event_data')
     .createTable('event_data', tbl => {
       tbl.uuid('id').primary().defaultTo(knex.fn.uuid());
       tbl

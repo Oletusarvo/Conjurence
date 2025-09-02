@@ -1,4 +1,4 @@
-import { EventError } from '@/errors/events';
+import { EventError } from '@/features/events/errors/events';
 import z from 'zod';
 
 export const eventTitleSchema = z

@@ -2,14 +2,16 @@ import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { DBContext } from '@/util/db-context';
 import { Repository } from '@/util/repository';
+import { Knex } from 'knex';
+import { TAttendance } from '../schemas/attendance-schema';
 
 export class AttendanceRepository extends Repository {
   /**Adds a .whereIn-clause to the passed query, filtering results where the attendance status is host, joined or interested. */
-  private onlyActive(query: any) {
+  protected onlyActive(query: any) {
     return query.whereIn('attendance_status.label', ['host', 'joined', 'interested']);
   }
 
-  private withEndingTimestamp(query: any) {
+  protected withEndingTimestamp(query: any) {
     return query.join(
       db
         .select('ended_at', 'id as instance_id_actual')
@@ -20,7 +22,7 @@ export class AttendanceRepository extends Repository {
     );
   }
 
-  private getBaseQuery(ctx: DBContext) {
+  protected getBaseQuery(ctx: DBContext) {
     return ctx({ attendance: tablenames.event_attendance })
       .join(
         ctx.select('username', 'id as user_id_actual').from(tablenames.user).as('user'),
@@ -36,7 +38,13 @@ export class AttendanceRepository extends Repository {
         'attendance_status.status_id_actual',
         'attendance.attendance_status_id'
       )
-      .select('attendance.*', 'attendance_status.label as status', 'username')
+      .select(
+        'attendance.event_instance_id',
+        'attendance_status.label as status',
+        'username',
+        'requested_at',
+        'updated_at'
+      )
       .orderBy('attendance.requested_at', 'desc');
   }
 
@@ -77,8 +85,37 @@ export class AttendanceRepository extends Repository {
     return await this.getBaseQuery(ctx).where({ user_id }).first();
   }
 
-  async create(payload: any, ctx: DBContext) {
-    await ctx(tablenames.event_attendance).insert(payload);
+  async create(
+    payload: {
+      user_id: string;
+      event_instance_id: string;
+      status: TAttendance['status'];
+    },
+    ctx: DBContext
+  ) {
+    await ctx(tablenames.event_attendance).insert({
+      user_id: payload.user_id,
+      event_instance_id: payload.event_instance_id,
+      attendance_status_id: db(tablenames.event_attendance_status)
+        .where({ label: payload.status })
+        .select('id')
+        .limit(1),
+    });
     return await this.findRecentActiveByUserId(payload.user_id, ctx);
+  }
+}
+
+/**A variant of the AttendanceRepository for use in tests. Exposes protected members as public. */
+export class TestAttendanceRepository extends AttendanceRepository {
+  public getBaseQuery(ctx: DBContext): Knex.QueryBuilder {
+    return super.getBaseQuery(ctx);
+  }
+
+  public withEndingTimestamp(query: any) {
+    return super.withEndingTimestamp(query);
+  }
+
+  public onlyActive(query: any) {
+    return super.onlyActive(query);
   }
 }

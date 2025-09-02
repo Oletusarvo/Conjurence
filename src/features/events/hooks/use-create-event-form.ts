@@ -5,7 +5,7 @@ import { useUserContext } from '@/features/users/providers/user-provider';
 import { useUserAttendanceContext } from '@/features/attendance/providers/user-attendance-provider';
 import { useOnSubmit } from '@/hooks/use-on-submit';
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
-import { EventError } from '@/errors/events';
+import { EventError } from '@/features/events/errors/events';
 import { useRef, useState } from 'react';
 import { ZodType } from 'zod';
 import { useStep } from '@/providers/step-provider';

@@ -1,7 +1,7 @@
 import { Service } from '@/util/service';
 import { DBContext } from '@/util/db-context';
 import { EventRepository } from '../repos/event-repository';
-import { EventError } from '@/errors/events';
+import { EventError } from '@/features/events/errors/events';
 import { AuthError } from '@/errors/auth';
 
 class EventService extends Service<EventRepository> {

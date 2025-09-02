@@ -1,4 +1,5 @@
-const createLookupTable = require('../migration_utils/createLookupTable');
+const createLookupTable = require('../migration-utils/create-lookup-table');
+
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }

@@ -1,5 +1,5 @@
 import { Notice } from '@/components/ui/notice-temp';
-import { EventError } from '@/errors/events';
+import { EventError } from '@/features/events/errors/events';
 
 export function StatusNotice({ status }) {
   return status === EventError.descriptionTooLong ? (

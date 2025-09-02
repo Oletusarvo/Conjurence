@@ -2,34 +2,37 @@
 
 import db from '@/dbconfig';
 import { sendEmailVerification } from '../util/send-email-verification';
-import { tablenames } from '@/tablenames';
 import { TAuthError } from '@/errors/auth';
-import { emailSchema, verifyEmailSchema } from '../schemas/register-credentials-schema';
-import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
+import { verifyEmailSchema } from '../schemas/register-credentials-schema';
 import { parseFormDataUsingSchema } from '@/util/parse-form-data-using-schema';
+import { userService } from '@/features/users/services/user-service';
+import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
 
 export async function sendEmailVerificationAction(
   payload: FormData
-): Promise<ActionResponse<void, TAuthError>> {
-  const emailParseResult = parseFormDataUsingSchema(payload, verifyEmailSchema);
+): Promise<ActionResponse<void, TAuthError | string>> {
+  try {
+    const emailParseResult = parseFormDataUsingSchema(payload, verifyEmailSchema);
+    if (!emailParseResult.success)
+      return { success: false, error: getParseResultErrorMessage(emailParseResult) };
 
-  if (!emailParseResult.success) {
-    const msg = getParseResultErrorMessage<TAuthError>(emailParseResult);
+    const { email } = emailParseResult.data;
+
+    const user = await userService.repo.findByEmail(email, db);
+    if (user) {
+      return {
+        success: false,
+        error: 'auth:duplicate_email',
+      };
+    }
+
+    await sendEmailVerification(email);
+    return { success: true };
+  } catch (err) {
+    console.log('send-email-verification-action: ', err.message);
     return {
       success: false,
-      error: msg,
+      error: 'An unexpected error occured!',
     };
   }
-
-  const { email } = emailParseResult.data;
-  const user = await db(tablenames.user).where({ email }).first();
-  if (user) {
-    return {
-      success: false,
-      error: 'auth:duplicate_email',
-    };
-  }
-
-  await sendEmailVerification(email);
-  return { success: true };
 }

@@ -5,7 +5,7 @@ import { useCreateEventFormContext } from '../create-event-form';
 import { eventLocationTitleSchema } from '@/features/events/schemas/event-schema';
 import { Pin } from 'lucide-react';
 import { Sublabel } from '@/components/ui/sub-label';
-import { EventError } from '@/errors/events';
+import { EventError } from '@/features/events/errors/events';
 
 export function LocationTitleInput() {
   const { payload, template, handleChange, inputStatus } = useCreateEventFormContext();

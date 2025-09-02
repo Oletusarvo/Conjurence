@@ -4,7 +4,7 @@ import db from '@/dbconfig';
 import { eventDataSchema, eventInstanceSchema } from '../schemas/event-schema';
 import { parseFormDataUsingSchema } from '@/util/parse-form-data-using-schema';
 import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
-import { TEventError } from '@/errors/events';
+import { TEventError } from '@/features/events/errors/events';
 import { createGeographyRow } from '@/features/geolocation/util/create-geography-row';
 import { eventService } from '../services/event-service';
 
