@@ -16,7 +16,7 @@ module.exports = {
       port: 5432,
     }*/ pool: {
       min: 0,
-      max: 2,
+      max: 1,
     },
   },
 

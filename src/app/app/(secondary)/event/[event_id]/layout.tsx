@@ -20,6 +20,10 @@ import { EventControlBar } from '@/features/events/components/event-control-bar'
 import { GeolocationMap } from '@/features/geolocation/components/geolocation-map';
 import { AttendanceFeedTrigger } from '@/features/attendance/components/attendance-feed-trigger';
 import { eventService } from '@/features/events/services/event-service';
+import { EventMapSpecific } from '@/features/geolocation/components/event-map-specific';
+import { EventHeader } from '@/features/events/components/ui/event-header';
+import { EventDescription } from '@/features/events/components/ui/event-description';
+import { EventOverviewContainer } from '@/features/events/components/ui/event-overview-container';
 
 export const revalidate = 0;
 
@@ -41,51 +45,28 @@ export default async function EventPage({ params, attendance }) {
         <EventActionProvider>
           <ModalStackProvider>
             <div className='flex flex-col h-full'>
-              <div className='flex flex-col bg-background-light w-full px-default py-4 border-b border-background-light-border'>
-                <div className='flex items-start w-full'>
-                  <div className='flex flex-col items-start gap-4 w-full'>
-                    <div
-                      id='event-header'
-                      className='flex gap-2 items-start justify-between w-full'>
-                      <div className='flex flex-col gap-1'>
-                        <div className='flex gap-2'>
-                          <h2>{event?.title}</h2>
-                        </div>
-
-                        <div className='flex flex-col gap-2'>
-                          <HostBadge />
-                          <div className='flex gap-2'>
-                            <CategoryBadge />
-                            <SpotsAvailableBadge />
-                            {event.is_mobile && <MobileEventBadge />}
-                          </div>
-                        </div>
-                      </div>{' '}
-                      <EventStatusBadge createdAt={event?.created_at} />
+              <EventOverviewContainer>
+                <EventHeader />
+                <EventDescription />
+                <div className='flex w-full justify-between'>
+                  <AttendanceFeedTrigger>
+                    <div className='flex flex-col w-full flex-1 gap-2 max-h-full overflow-y-scroll'>
+                      <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
                     </div>
+                  </AttendanceFeedTrigger>
 
-                    <p className='tracking-tight leading-[18px]'>{event?.description}</p>
-                    <div className='flex w-full justify-between'>
-                      <AttendanceFeedTrigger>
-                        <div className='flex flex-col w-full flex-1 gap-2 max-h-full overflow-y-scroll'>
-                          <Suspense fallback={<AttendanceLoading />}>{attendance}</Suspense>
-                        </div>
-                      </AttendanceFeedTrigger>
-
-                      <div className='flex gap-2'>
-                        <DistanceBadge />
-                        <DistanceThresholdDisplay />
-                      </div>
-                    </div>
+                  <div className='flex gap-2'>
+                    <DistanceBadge />
+                    <DistanceThresholdDisplay />
                   </div>
                 </div>
-              </div>
+              </EventOverviewContainer>
               <div
                 className='overflow-hidden flex flex-1 flex-col'
                 style={{
                   width: '100%',
                 }}>
-                <GeolocationMap />
+                <EventMapSpecific />
               </div>
               <EventControlBar />
               {/** */}

@@ -32,7 +32,7 @@ export function Modal({ children, title, onClose, show, fullHeight, ...props }: 
   }, []);
 
   return show ? (
-    <div className='flex w-full h-screen absolute top-0 left-0 items-center justify-center backdrop-blur-md z-40'>
+    <div className='flex w-full h-screen absolute top-0 left-0 items-center justify-center backdrop-blur-md z-90'>
       <div
         {...props}
         //ref={ref}

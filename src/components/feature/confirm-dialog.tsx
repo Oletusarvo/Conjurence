@@ -5,6 +5,7 @@ import { Dialog } from '../dialog-temp';
 import { useState } from 'react';
 import { LoaderButton } from '../ui/loader-button';
 
+/**Displays a conformation dialog. Must be used within the scope of a ToggleProvider. */
 export function ConfirmDialog({
   children,
   title,

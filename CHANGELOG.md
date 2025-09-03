@@ -4,6 +4,10 @@
 
 - Previous geofencing-logic.
 
+### Changed
+
+- Event feed to be a map showing the events as markers on it.
+
 ## [0.8.0-alpha.3] - 02-09-2025
 
 ### Changed

@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Spinner } from '@/components/ui/spinner-temp';
 import { useRef } from 'react';
+import { useNearbyEvents } from '../hooks/use-nearby-events';
 
 type EventFeedProps = {
   events: TEvent[];
@@ -27,34 +28,15 @@ type EventFeedProps = {
  */
 export function EventFeed() {
   const { order } = useSearchProvider();
-  const { position } = useGeolocationContext();
-  const search = useSearchParams().get('q');
-
-  const eventCache = useRef([]);
-  const { data: events, isPending } = useQuery({
-    queryKey: [`events`, position, search],
-    queryFn: async () =>
-      axios
-        .get(
-          `/api/events/get_nearby?lat=${position?.coords.latitude}&lng=${
-            position?.coords.longitude
-          }&q=${search || ''}`
-        )
-        .then(res => {
-          eventCache.current = res.data;
-          return res.data;
-        }),
-
-    enabled: !!position,
-  });
+  const { events, cache, isPending } = useNearbyEvents();
 
   const EventList = withAlternate(List, true);
   return (
     <>
       <EventList
-        showAlternate={eventCache.current.length === 0}
+        showAlternate={cache.length === 0}
         alternate={<NoEvents />}
-        data={events || eventCache.current}
+        data={events || cache}
         sortFn={(a, b) => {
           const adate = new Date(a.created_at).getTime();
           const bdate = new Date(b.created_at).getTime();
