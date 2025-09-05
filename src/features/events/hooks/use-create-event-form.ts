@@ -1,5 +1,4 @@
 import { createEventAction } from '../actions/create-event-action';
-import { eventDataSchema, eventSchema, TEventData } from '../schemas/event-schema';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/features/users/providers/user-provider';
 import { useUserAttendanceContext } from '@/features/attendance/providers/user-attendance-provider';
@@ -10,15 +9,19 @@ import { useRef, useState } from 'react';
 import { ZodType } from 'zod';
 import { useStep } from '@/providers/step-provider';
 import { TAttendance } from '@/features/attendance/schemas/attendance-schema';
+import { useEventContext } from '../providers/event-provider';
+import { cloneFormData } from '@/util/clone-form-data';
+import { createEventSchema } from '../schemas/event-schema';
 
-export function useCreateEventForm(template?: TEventData) {
+export function useCreateEventForm() {
+  const { event: template } = useEventContext();
   const { user, updateSession } = useUserContext();
 
   const [payload, setPayload] = useState(() => {
     const fd = new FormData();
     if (template) {
       for (const [key, val] of Object.entries(template)) {
-        fd.set(key, val.toString());
+        fd.set(key, typeof val === 'string' ? val : JSON.stringify(val));
       }
     }
     return fd;
@@ -32,32 +35,32 @@ export function useCreateEventForm(template?: TEventData) {
     description: template?.description ? 'success' : null,
   });
 
-  console.log(Object.values(inputStatus));
+  const handleParse = (e: TODO, schema: ZodType) => {
+    const key = e.target.name;
+    const parseResult = schema.safeParse(e.target.value);
+    if (!parseResult.success) {
+      setStatus(prev => ({
+        ...prev,
+        [key]: parseResult.error.issues.at(0)?.message,
+      }));
+    } else {
+      setStatus(prev => ({ ...prev, [key]: 'success' }));
+    }
+  };
 
   const handleChange = (e: TODO, schema?: ZodType) => {
     if (schema) {
-      const key = e.target.name;
-      const parseResult = schema.safeParse(e.target.value);
-      if (!parseResult.success) {
-        setStatus(prev => ({
-          ...prev,
-          [key]: parseResult.error.issues.at(0)?.message,
-        }));
-      } else {
-        setStatus(prev => ({ ...prev, [key]: 'success' }));
-      }
+      handleParse(e, schema);
     }
 
     setPayload(prev => {
-      const newPayload = new FormData();
-      for (const [key, val] of prev) {
-        newPayload.set(key, val);
-      }
+      const newPayload = cloneFormData(prev);
 
       newPayload.set(
         e.target.name,
         e.target.type === 'checkbox' ? e.target.checked : e.target.value
       );
+
       return newPayload;
     });
   };
@@ -66,6 +69,17 @@ export function useCreateEventForm(template?: TEventData) {
 
   const router = useRouter();
   const { position } = useGeolocationContext();
+
+  if (position) {
+    payload.set(
+      'position',
+      JSON.stringify({
+        coordinates: [position.coords.longitude, position.coords.latitude],
+        accuracy: position.coords.accuracy,
+        timestamp: position.timestamp,
+      })
+    );
+  }
 
   const {
     onSubmit: submitEvent,
@@ -78,16 +92,6 @@ export function useCreateEventForm(template?: TEventData) {
         return { success: false, error: EventError.locationDisabled };
       }
 
-      payload.set('location', JSON.stringify(position));
-      payload.set(
-        'position_metadata',
-        JSON.stringify({
-          accuracy: position.coords.accuracy,
-          timestamp: position.timestamp,
-        })
-      );
-
-      console.log(payload);
       return await createEventAction(payload, template?.id);
     },
     onSuccess: async res => {
@@ -104,8 +108,8 @@ export function useCreateEventForm(template?: TEventData) {
     },
     onError: (err: any) => console.log(err.message),
     onFailure: res => console.log(res.error),
-    validationSchema: eventDataSchema,
+    validationSchema: createEventSchema,
   });
 
-  return { payload, submitEvent, status, isPending, handleChange, steps, inputStatus };
+  return { payload, submitEvent, status, isPending, handleChange, setPayload, steps, inputStatus };
 }

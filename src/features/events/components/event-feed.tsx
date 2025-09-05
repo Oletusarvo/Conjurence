@@ -18,6 +18,8 @@ import axios from 'axios';
 import { Spinner } from '@/components/ui/spinner-temp';
 import { useRef } from 'react';
 import { useNearbyEvents } from '../hooks/use-nearby-events';
+import { HostBadge } from './host-badge';
+import { EventStatusBadge } from './ui/event-status-badge';
 
 type EventFeedProps = {
   events: TEvent[];
@@ -32,27 +34,28 @@ export function EventFeed() {
 
   const EventList = withAlternate(List, true);
   return (
-    <>
-      <EventList
-        showAlternate={cache.length === 0}
-        alternate={<NoEvents />}
-        data={events || cache}
-        sortFn={(a, b) => {
-          const adate = new Date(a.created_at).getTime();
-          const bdate = new Date(b.created_at).getTime();
-          return order === 'asc' ? adate - bdate : bdate - adate;
-        }}
-        component={({ item }) => {
-          return (
-            <EventProvider initialEvent={item}>
-              <DistanceProvider>
-                <EventCard />
-              </DistanceProvider>
-            </EventProvider>
-          );
-        }}
-      />
-    </>
+    <EventList
+      showAlternate={cache.length === 0}
+      alternate={<NoEvents />}
+      data={events || cache}
+      sortFn={(a, b) => {
+        const adate = new Date(a.created_at).getTime();
+        const bdate = new Date(b.created_at).getTime();
+        return order === 'asc' ? adate - bdate : bdate - adate;
+      }}
+      component={({ item }) => {
+        return (
+          <EventProvider initialEvent={item}>
+            <DistanceProvider>
+              <EventCard>
+                <HostBadge />
+                <EventStatusBadge />
+              </EventCard>
+            </DistanceProvider>
+          </EventProvider>
+        );
+      }}
+    />
   );
 }
 

@@ -21,6 +21,7 @@ const timeout = 3000;
 /**
  * Handles automatic joining and leaving from an event when within or outside a set distance from it.
  * Will only join the event if the user has expressed interest in it.
+ * Depends on the User-, Event-, Geolocation-, Distance-, and Attendance contexts.
  * @returns
  */
 export function UserAttendanceManager() {
@@ -75,7 +76,7 @@ export function UserAttendanceManager() {
           shouldJoin(
             distance,
             position.coords.accuracy,
-            event.position_metadata.accuracy,
+            event.position.accuracy,
             event?.auto_join_threshold
           ),
         'joining',
@@ -93,7 +94,7 @@ export function UserAttendanceManager() {
           shouldLeave(
             distance,
             position.coords.accuracy,
-            event.position_metadata.accuracy,
+            event.position.accuracy,
             event.auto_leave_threshold
           ),
         'leaving',
@@ -111,7 +112,7 @@ export function UserAttendanceManager() {
           shouldLeave(
             distance,
             position.coords.accuracy,
-            event.position_metadata.accuracy,
+            event.position.accuracy,
             event?.auto_leave_threshold
           ),
         'ending',
@@ -126,7 +127,7 @@ export function UserAttendanceManager() {
     distancePending,
     distance,
     event?.id,
-    event?.position_metadata.accuracy,
+    event?.position.accuracy,
     event?.is_mobile,
     position?.coords.accuracy,
     hasEnded,

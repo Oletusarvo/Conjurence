@@ -1,68 +1,58 @@
-import { EventError } from '@/features/events/errors/events';
 import z from 'zod';
+import { eventSizeSchema } from './event-size-schema';
+import { EventError } from '../errors/events';
+import { eventCategorySchema } from './event-category-schema';
 
-export const eventTitleSchema = z
-  .string()
-  .min(3, EventError.titleTooShort)
-  .max(24, EventError.titleTooLong)
-  .trim();
+export const createEventSchema = z.object({
+  title: z.string().min(3, EventError.titleTooShort).max(24, EventError.titleTooLong).trim(),
+  description: z.string().trim(),
 
-export const eventDescriptionSchema = z.string().max(256, EventError.descriptionTooLong).trim();
-
-export const eventDataSchema = z.object({
-  id: z.uuid().optional(),
-  title: eventTitleSchema,
-  description: eventDescriptionSchema,
   spots_available: z
     .string()
     .optional()
-    .transform(val => parseInt(val)),
-  event_category_id: z.string().transform(val => parseInt(val)),
-  is_template: z
+    .transform(val => Number(val))
+    .pipe(z.number().min(1)),
+
+  category: eventCategorySchema,
+  position: z
     .string()
-    .transform(val => val === 'true')
-    .optional(),
-});
+    .transform(val => JSON.parse(val))
+    .pipe(
+      z.object({
+        coordinates: z.array(z.number()).length(2, 'position:invalid_length'),
+        accuracy: z.number(),
+        timestamp: z.number(),
+      })
+    ),
 
-export const eventLocationTitleSchema = z
-  .string()
-  .min(3, EventError.locationTooShort)
-  .max(64, EventError.locationTooLong)
-  .trim()
-  .optional();
-
-export const eventInstanceSchema = z.object({
-  position: z.string().optional(),
-  position_metadata: z.string().transform(val => {
-    return JSON.parse(val) as {
-      accuracy: number;
-      timestamp: number;
-    };
-  }),
-
-  event_threshold_id: z.string().transform(val => parseInt(val)),
+  size: eventSizeSchema,
   is_mobile: z
     .string()
     .transform(val => val === 'true')
     .optional(),
 });
 
-export const eventSchema = eventDataSchema.extend(eventInstanceSchema.shape).omit({
-  event_category_id: true,
-  position: true,
-});
+export const updateEventSchema = createEventSchema
+  .omit({
+    position: true,
+    size: true,
+    category: true,
+    is_mobile: true,
+  })
+  .partial()
+  .extend({
+    ended_at: z.date(),
+    id: z.uuid(),
+  });
 
-export type TEventData = z.infer<typeof eventDataSchema>;
-export type TEventInstance = z.infer<typeof eventInstanceSchema>;
-export type TEvent = z.infer<typeof eventSchema> & {
+export type TEvent = z.infer<typeof createEventSchema> & {
   id: string;
-  category: string;
   host: string;
   interested_count: number;
   attendance_count: number;
   auto_join_threshold: number;
   auto_leave_threshold: number;
   position: { coordinates: number[] };
-  created_at: Date;
-  ended_at: Date;
+  created_at: string;
+  ended_at: string;
 };

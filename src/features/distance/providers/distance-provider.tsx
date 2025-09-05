@@ -25,7 +25,7 @@ export function DistanceProvider({ children }: React.PropsWithChildren) {
   const { distance, isPending } = useDistance();
   const { event } = useEventContext();
 
-  const eventPositionAccuracy = event?.position_metadata?.accuracy || 0;
+  const eventPositionAccuracy = event?.position?.accuracy || 0;
 
   const joinThreshold = getThresholdAdjusted(
     event?.auto_join_threshold,

@@ -33,16 +33,13 @@ export const socketServer = io => {
         return;
       }*/
 
-      const positionMetadata = await db('events.event_instance')
-        .where({ id: eventId })
-        .select('position_metadata')
-        .first();
-
       //Fired and forgotten on purpose.
-      db('events.event_instance')
-        .where({ id: eventId })
+      db('positions.event_position')
+        .where({ event_id: eventId })
+        //Skip saving if the arriving position is older than what is already stored.
+        .andWhere('timestamp', '<', position.timestamp)
         .update({
-          position: db.raw(
+          coordinates: db.raw(
             `ST_SetSRID(
                 ST_MakePoint(
                   ?,
@@ -52,11 +49,6 @@ export const socketServer = io => {
               )::geography`,
             [position.coords.longitude, position.coords.latitude]
           ),
-          position_metadata: {
-            ...positionMetadata,
-            accuracy: position.coords.accuracy,
-            timestamp: position.timestamp,
-          },
         });
 
       io.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });

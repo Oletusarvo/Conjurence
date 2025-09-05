@@ -1,5 +1,5 @@
 import db from '@/dbconfig';
-import { getEvent } from '@/features/events/dal/get-event';
+import { eventService } from '@/features/events/services/event-service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest, { params }) {
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest, { params }) {
     if (!event_id) {
       return new NextResponse('Event id missing!', { status: 400 });
     }
-    const event = await getEvent(db).where({ 'ei.id': event_id }).first();
+    const event = await eventService.repo.findById(event_id, db);
     return new NextResponse(JSON.stringify(event), { status: 200 });
   } catch (err) {
     console.log(err.message);

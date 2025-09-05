@@ -8,8 +8,9 @@ import { useEffect } from 'react';
 import { ToggleProvider } from '@/providers/toggle-provider';
 import { withAlternate } from '@/hoc/with-alternate';
 import { useNotificationsContext } from '../providers/notifications-provider';
+import { Modal } from '@/components/modal-temp';
 
-export function NotificationsButton() {
+export function NotificationsTrigger() {
   const { menuState, setMenuState, ref } = useHeaderContext();
   const { notifications } = useNotificationsContext();
 
@@ -17,7 +18,7 @@ export function NotificationsButton() {
     withAlternate(({ children, ...props }) => (
       <button
         {...props}
-        className='--no-default'>
+        className='--round --ghost'>
         {children}
       </button>
     ))
@@ -43,18 +44,14 @@ export function NotificationsButton() {
       </ToggleProvider.Trigger>
 
       <ToggleProvider.Target>
-        <Notifications anchor={ref.current?.offsetHeight} />
+        <NotificationsModal />
       </ToggleProvider.Target>
     </ToggleProvider>
   );
 }
 
-function Notifications({ anchor, ...props }) {
+function NotificationsModal() {
   const { notifications, markNotificationsAsSeen } = useNotificationsContext();
-
-  const className = useClassName(
-    'flex w-full h-full flex-col gap-4 py-2 px-4 absolute left-0 -z-10 bg-background-light'
-  );
 
   useEffect(() => {
     //Mark the notes as seen after the first render.
@@ -62,34 +59,14 @@ function Notifications({ anchor, ...props }) {
   }, []);
 
   return (
-    <div
-      {...props}
-      className={className}
-      style={{ top: anchor }}>
-      <h2>Notifications</h2>
-      {notifications.length > 0 ? (
-        notifications.map((n, i) => {
-          const { type } = n.data;
-          if (type === 'join_request') {
-            return (
-              <div
-                className='flex justify-between items-center p-2 border border-gray-600'
-                key={`notification-${i}`}>
-                <span>
-                  <Badge>@{n.data.username}</Badge> wants to join{' '}
-                  <Badge>{n.data.event_title}</Badge>
-                </span>
-                <div className='flex'>
-                  <button className=' --no-default p-2 text-xs'>Accept</button>
-                </div>
-              </div>
-            );
-          }
-        })
-      ) : (
-        <span>No notifications</span>
-      )}
-    </div>
+    <Modal
+      show={true}
+      title='Notifications'
+      fullHeight>
+      <div className='flex w-full h-full justify-center items-center'>
+        <span>Notifications coming soon.</span>
+      </div>
+    </Modal>
   );
 }
 

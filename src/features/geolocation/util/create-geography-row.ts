@@ -1,13 +1,7 @@
 import db from '@/dbconfig';
 
 /**Returns a raw knex-query for creating a geography row. */
-export const createGeographyRow = ({
-  latitude,
-  longitude,
-}: {
-  latitude: number;
-  longitude: number;
-}) =>
+export const createGeographyRow = ([longitude, latitude]: number[]) =>
   db.raw(
     `ST_SetSRID(
       ST_MakePoint(

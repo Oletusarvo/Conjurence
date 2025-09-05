@@ -4,6 +4,18 @@ import { DBContext } from '@/util/db-context';
 import { Repository } from '@/util/repository';
 
 export class UserRepository extends Repository {
+  async getSubscription(user_id: string, ctx: DBContext) {
+    return await ctx(tablenames.user_subscription)
+      .where({
+        id: ctx
+          .select('user_subscription_id')
+          .from(tablenames.user)
+          .where({ id: user_id })
+          .limit(1),
+      })
+      .first();
+  }
+
   async getContactByUserId(user_id: string, ctx: DBContext) {
     return await ctx(tablenames.user_contact).where({ user_id }).first();
   }

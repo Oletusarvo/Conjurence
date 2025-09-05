@@ -39,7 +39,10 @@ export function EventAttendanceProvider({
     setAttendanceRecords(prev => {
       const newAttendees = [...prev];
       const a = newAttendees.find(a => a.username === username);
-      a.status = status;
+      if (a) {
+        a.status = status;
+      }
+
       return newAttendees;
     });
   };

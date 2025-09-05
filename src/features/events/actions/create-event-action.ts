@@ -1,19 +1,19 @@
 'use server';
 
 import db from '@/dbconfig';
-import { EventError, TEventError } from '@/features/events/errors/events';
-import {
-  eventDataSchema,
-  eventInstanceSchema,
-  TEvent,
-} from '@/features/events/schemas/event-schema';
+import { TEventError } from '@/features/events/errors/events';
+
 import { tablenames } from '@/tablenames';
-import { createGeographyRow } from '@/features/geolocation/util/create-geography-row';
 import { loadSession } from '@/util/load-session';
 import { parseFormDataUsingSchema } from '@/util/parse-form-data-using-schema';
 import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
 import { TAttendance } from '@/features/attendance/schemas/attendance-schema';
 import { getAttendance } from '@/features/attendance/dal/get-attendance';
+
+import { createEventSchema } from '../schemas/event-schema';
+import { userService } from '@/features/users/services/user-service';
+import { eventService } from '../services/event-service';
+import { attendanceService } from '@/features/attendance/services/attendance-service';
 
 /**Creates a new event.
  * @param payload The data for the event.
@@ -25,53 +25,30 @@ export async function createEventAction(
 ): Promise<ActionResponse<TAttendance, TEventError | string>> {
   const session = await loadSession();
 
-  const parsedDataResult = parseFormDataUsingSchema(payload, eventDataSchema);
-  if (!parsedDataResult.success) {
-    const msg = getParseResultErrorMessage<TEventError>(parsedDataResult);
-    return { success: false, error: msg };
-  }
-  const parsedInstanceResult = parseFormDataUsingSchema(payload, eventInstanceSchema);
-  if (!parsedInstanceResult.success) {
-    return {
-      success: false,
-      error: getParseResultErrorMessage<TEventError>(parsedInstanceResult),
-    };
+  const parseResult = parseFormDataUsingSchema(payload, createEventSchema);
+  if (!parseResult.success) {
+    return { success: false, error: getParseResultErrorMessage<TEventError>(parseResult) };
   }
 
-  const parsedData = parsedDataResult.data;
-  const parsedInstance = parsedInstanceResult.data;
-
-  const subscriptionRecord = await db(tablenames.user_subscription)
-    .where({
-      id: db
-        .select('user_subscription_id')
-        .from(tablenames.user)
-        .where({ id: session.user.id })
-        .limit(1),
-    })
-    .first();
-
+  const subscriptionRecord = await userService.repo.getSubscription(session.user.id, db);
   if (!subscriptionRecord) {
     return { success: false, error: 'Failed to load subscription record!' };
   }
 
-  //Prevent adding templates if the subscription disallows it.
-  if (parsedData.is_template && !subscriptionRecord.allow_templates) {
-    return { success: false, error: 'event:templates_not_allowed' };
-  }
+  const parsedData = parseResult.data;
 
   //Prevent mobile events if the subscription disallows it.
-  if (parsedInstance.is_mobile && !subscriptionRecord.allow_mobile_events) {
+  if (parsedData.is_mobile && !subscriptionRecord.allow_mobile_events) {
     return { success: false, error: 'event:mobile_not_allowed' };
   }
 
-  //Prevent adding events of bigger size than allowed by the subscription.
+  /*Prevent adding events of bigger size than allowed by the subscription.
   if (
     parsedInstance.event_threshold_id &&
     parsedInstance.event_threshold_id > subscriptionRecord.maximum_event_size_id
   ) {
     return { success: false, error: 'event:size_not_allowed' };
-  }
+  }*/
 
   //Prevent creation of events if already hosting or joined to another.
   if (await isAttending(session)) {
@@ -79,52 +56,23 @@ export async function createEventAction(
   }
 
   const trx = await db.transaction();
-
   try {
-    let newEventRecord = null;
-    if (!templateId) {
-      //Not using a template; save new data.
-      [newEventRecord] = await trx(tablenames.event_data)
-        .insert({
-          ...parsedData,
-          author_id: session.user.id,
-          is_template: parsedData.is_template,
-        })
-        .returning('id');
-    } else {
-      //Update the current template.
-      await trx(tablenames.event_data)
-        .where({ id: templateId })
-        .update({
-          ...parsedData,
-          is_template: parsedData.is_template,
-        });
-    }
-
-    const location = JSON.parse(payload.get('location').toString());
-    const [eventInstanceRecord] = await trx(tablenames.event_instance).insert(
+    const eventInstanceRecord = await eventService.repo.create(
       {
-        ...parsedInstance,
-        event_data_id: templateId || newEventRecord.id,
-        position: createGeographyRow(location.coords),
-        event_threshold_id: parsedInstance.event_threshold_id,
+        ...parsedData,
+        author_id: session.user.id,
       },
-      ['id']
+      trx
     );
 
-    await trx(tablenames.event_attendance).insert({
-      user_id: session.user.id,
-      event_instance_id: eventInstanceRecord.id,
-      attendance_status_id: db(tablenames.event_attendance_status)
-        .where({ label: 'host' })
-        .select('id')
-        .limit(1),
-    });
-
-    const attendance = await getAttendance(trx)
-      .where({ event_instance_id: eventInstanceRecord.id, user_id: session.user.id })
-      .orderBy('requested_at', 'desc')
-      .first();
+    const attendance = await attendanceService.repo.create(
+      {
+        user_id: session.user.id,
+        event_instance_id: eventInstanceRecord.id,
+        status: 'host',
+      },
+      trx
+    );
 
     await trx.commit();
     return {

@@ -3,7 +3,9 @@
 import { useUserAttendanceContext } from '@/features/attendance/providers/user-attendance-provider';
 import { HighlightLink } from './ui/highlight-link';
 import { Calendar, Plus } from 'lucide-react';
+import { RoundButton } from './ui/round-button';
 
+/**@deprecated */
 export function AddEventButton() {
   const { attendanceRecord } = useUserAttendanceContext();
   console.log(attendanceRecord);
@@ -14,9 +16,9 @@ export function AddEventButton() {
     </HighlightLink>
   ) : (
     <HighlightLink href='/app/event/create'>
-      <button className='--ghost --round'>
+      <RoundButton>
         <Plus />
-      </button>
+      </RoundButton>
     </HighlightLink>
   );
 }

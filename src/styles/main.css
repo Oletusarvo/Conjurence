@@ -66,6 +66,10 @@ a.--on-path {
   background-color: hsl(from var(--color-red-400) h s l / 0.2);
 }
 
+.--contained.--theme {
+  background-color: var(--color-background-light);
+}
+
 .--outlined {
   background-color: transparent;
   border: 1px solid white;

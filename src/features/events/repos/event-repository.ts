@@ -1,17 +1,13 @@
 import { tablenames } from '@/tablenames';
 import { DBContext } from '@/util/db-context';
-import { TEventData } from '../schemas/event-schema';
 import { Knex } from 'knex';
 import { Repository } from '@/util/repository';
+import z from 'zod';
+import { createEventSchema, updateEventSchema } from '../schemas/event-schema';
+import { createGeographyRow } from '@/features/geolocation/util/create-geography-row';
 
 export class EventRepository extends Repository {
   public getBaseQuery(ctx: DBContext) {
-    //Get the event instance.
-    const eventInstanceSubquery = ctx
-      .select('*', 'id as ei_id')
-      .from(tablenames.event_instance)
-      .as('ei');
-
     //Get the host participant.
     const hostParticipantSubquery = ctx
       .select('user_id as host_user_id', 'event_instance_id')
@@ -20,6 +16,7 @@ export class EventRepository extends Repository {
         'attendance_status_id',
         ctx(tablenames.event_attendance_status).whereIn('label', ['host']).select('id as status_id')
       )
+      .groupBy('event_instance_id', 'user_id')
       .as('hp');
 
     //Get the host username.
@@ -27,9 +24,10 @@ export class EventRepository extends Repository {
       .select('id as host_user_id', 'username as host')
       .as('u');
 
-    //Get the thresholds.
+    //Get the event size settings.
     const thresholdsQuery = ctx(tablenames.event_threshold)
-      .select('auto_join_threshold', 'auto_leave_threshold', 'id as threshold_id')
+      .select('auto_join_threshold', 'auto_leave_threshold', 'id as threshold_id', 'label as size')
+      .groupBy('id')
       .as('event_threshold');
 
     //Get interested users count.
@@ -68,54 +66,42 @@ export class EventRepository extends Repository {
       .from(tablenames.event_category)
       .as('ec');
 
-    const q = ctx(ctx.select('*', 'id AS e_id').from(tablenames.event_data).as('e'))
-      .join(eventInstanceSubquery, 'ei.event_data_id', 'e.e_id')
-      .join(hostParticipantSubquery, 'hp.event_instance_id', 'ei.id')
+    const positionSubquery = ctx
+      .select('event_id', 'accuracy', 'coordinates', 'timestamp')
+      .from(tablenames.event_position)
+      .groupBy('event_id')
+      .as('position');
+
+    const q = ctx({ event: tablenames.event_instance })
+      .join(positionSubquery, 'position.event_id', 'event.id')
+      .join(hostParticipantSubquery, 'hp.event_instance_id', 'event.id')
       .join(hostUsernameSubquery, 'u.host_user_id', 'hp.host_user_id')
-      .leftJoin(participantCountSubquery, 'ap.ap_instance_id', 'ei.id')
-      .leftJoin(attendantCountSubquery, 'ac.ac_instance_id', 'ei.id')
-      .leftJoin(thresholdsQuery, 'event_threshold.threshold_id', 'ei.event_threshold_id')
-      .join(eventCategorySubquery, 'ec.category_id', 'e.event_category_id')
+      .leftJoin(participantCountSubquery, 'ap.ap_instance_id', 'event.id')
+      .leftJoin(attendantCountSubquery, 'ac.ac_instance_id', 'event.id')
+      .leftJoin(thresholdsQuery, 'event_threshold.threshold_id', 'event.event_threshold_id')
+      .join(eventCategorySubquery, 'ec.category_id', 'event.event_category_id')
       .select(
-        'e.title',
-        'e.description',
-        'ei.id as id',
+        'event.author_id',
+        'event.title',
+        'event.description',
+        'event.id as id',
         'ec.label as category',
-        'ei.created_at',
-        'ei.ended_at',
-        'e.spots_available',
+        'event.created_at',
+        'event.ended_at',
+        'event.spots_available',
         'u.host',
-        'ei.position',
-        'ei.position_metadata',
         'event_threshold.auto_join_threshold',
         'event_threshold.auto_leave_threshold',
-        'ei.location_title',
-        'ei.is_mobile',
+        'event_threshold.size',
+        'event.is_mobile',
+        ctx.raw(
+          "JSON_BUILD_OBJECT('coordinates', ST_AsGeoJSON(position.coordinates)::json -> 'coordinates', 'accuracy', position.accuracy, 'timestamp', position.timestamp) AS position"
+        ),
         ctx.raw('COALESCE(CAST(ap.interested_count AS INTEGER), 0) AS interested_count'),
-        ctx.raw('COALESCE(CAST(ac.attendance_count AS INTEGER), 0) AS attendance_count'),
-        ctx.raw('ST_AsGeoJSON(position)::json AS position')
+        ctx.raw('COALESCE(CAST(ac.attendance_count AS INTEGER), 0) AS attendance_count')
       );
 
     return q;
-  }
-
-  /**Returns the data of an event instance. */
-  async getDataByInstanceId(instance_id: string, ctx: DBContext): Promise<TEventData> {
-    return await ctx(tablenames.event_data)
-      .join(
-        ctx
-          .select('event_data_id', 'id as instance_id_actual')
-          .from(tablenames.event_instance)
-          .groupBy('instance_id_actual')
-          .as('instance'),
-        'instance.event_data_id',
-        'event_data.id'
-      )
-      .where({
-        'instance.instance_id_actual': instance_id,
-      })
-      .select('event_data.*')
-      .first();
   }
 
   /**Returns the username and id of the user hosting an event. */
@@ -123,28 +109,27 @@ export class EventRepository extends Repository {
     event_id: string,
     ctx: DBContext
   ): Promise<{ username: string; id: string }> {
-    return await ctx({ instance: tablenames.event_instance })
+    return await ctx({ event: tablenames.event_instance })
       .join(
-        ctx
-          .select('author_id', 'id as data_id_actual')
-          .from(tablenames.event_data)
-          .as('event_data'),
-        'event_data.data_id_actual',
-        'instance.event_data_id'
+        ctx.select('id', 'username').from(tablenames.user).groupBy('id').as('user'),
+        'user.id',
+        'event.author_id'
       )
-      .join(
-        ctx.select('id as user_id_actual', 'username').from(tablenames.user).as('user'),
-        'user.user_id_actual',
-        'event_data.author_id'
-      )
-      .where({ 'instance.id': event_id })
-      .select('user.username', 'user.user_id_actual as id')
+      .where({ 'event.id': event_id })
+      .select('user.id', 'user.username as username')
       .first();
+  }
+
+  /**Returns previously created events of a user with distinct titles and descriptions. */
+  async findTemplatesByAuthorId(author_id: string, search: string | null, ctx: DBContext) {
+    return await Repository.withSearch(this.getBaseQuery(ctx), search, ['title', 'description'])
+      .where({ author_id })
+      .distinctOn('event.title', 'event.description');
   }
 
   /**Finds an event by id. */
   async findById(id: string, ctx: DBContext) {
-    return await this.getBaseQuery(ctx).where({ 'ei.id': id }).first();
+    return await this.getBaseQuery(ctx).where({ 'event.id': id }).first();
   }
 
   /**Finds all events hosted by a user. */
@@ -175,12 +160,11 @@ export class EventRepository extends Repository {
     ctx: DBContext,
     search: string = null
   ) {
-    const base = this.getBaseQuery(ctx);
-    Repository.withSearch(base, search, ['title', 'description']);
+    const base = Repository.withSearch(this.getBaseQuery(ctx), search, ['title', 'description']);
     base
       .whereRaw(
         `ST_DWithin(
-  ei.position,
+  position.coordinates,
   ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography,
   ?  -- distance in meters
 )
@@ -193,9 +177,9 @@ export class EventRepository extends Repository {
   }
 
   /**Returns the number of users who are interested in an event. Excludes the host. */
-  async countInterestedByInstanceId(event_instance_id: string, ctx: DBContext) {
+  async countInterestedById(event_id: string, ctx: DBContext) {
     const result = await ctx(tablenames.event_attendance)
-      .where({ event_instance_id })
+      .where({ event_instance_id: event_id })
       .andWhereNot(
         'attendance_status_id',
         ctx.select('id').from(tablenames.event_attendance_status).where({ label: 'host' }).limit(1)
@@ -206,26 +190,49 @@ export class EventRepository extends Repository {
   }
 
   /**Updates an event instance. */
-  async updateInstanceById(instance_id: string, payload: any, ctx: DBContext) {
-    await ctx(tablenames.event_instance).where({ id: instance_id }).update(payload);
+  async updateById(
+    event_id: string,
+    payload: Omit<z.infer<typeof updateEventSchema>, 'id'>,
+    ctx: DBContext
+  ) {
+    await ctx(tablenames.event_instance).where({ id: event_id }).update(payload);
+    return await this.getBaseQuery(ctx).where({ id: event_id }).first();
   }
 
-  /**Updates an event's data. */
-  async updateDataById(data_id: string, payload: any, ctx: DBContext) {
-    await ctx(tablenames.event_data).where({ id: data_id }).update(payload);
-  }
-
-  /**Updates the data of an event instance. */
-  async updateDataByInstanceId(instance_id: string, payload: any, ctx: DBContext) {
-    await ctx(tablenames.event_data)
-      .where({
-        id: ctx
-          .select('event_data_id')
-          .from(tablenames.event_instance)
-          .where({ id: instance_id })
+  async create(
+    payload: z.infer<typeof createEventSchema> & { author_id: string },
+    ctx: Knex.Transaction
+  ) {
+    const { position, ...data } = payload;
+    const [newEventRecord] = await ctx(tablenames.event_instance).insert(
+      {
+        title: data.title,
+        description: data.description,
+        spots_available: data.spots_available,
+        is_mobile: data.is_mobile,
+        event_threshold_id: ctx
+          .select('id')
+          .from(tablenames.event_threshold)
+          .where({ label: data.size })
           .limit(1),
-      })
-      .update(payload);
+        event_category_id: ctx
+          .select('id')
+          .from(tablenames.event_category)
+          .where({ label: data.category })
+          .limit(1),
+        author_id: data.author_id,
+      },
+      ['id']
+    );
+
+    await ctx(tablenames.event_position).insert({
+      event_id: newEventRecord.id,
+      coordinates: createGeographyRow(position.coordinates),
+      timestamp: position.timestamp,
+      accuracy: position.accuracy,
+    });
+
+    return newEventRecord;
   }
 }
 

@@ -1,25 +1,19 @@
 'use client';
 
-import { Modal } from '@/components/modal-temp';
+import { EventModal } from '@/features/events/components/ui/event-modal';
 import { useEventContext } from '@/features/events/providers/event-provider';
 import { useModalStackContext } from '@/providers/modal-stack-provider';
-import { ToggleProvider } from '@/providers/toggle-provider';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import { useEffect, useState } from 'react';
 import { Circle } from 'react-leaflet/Circle';
 import { Marker } from 'react-leaflet/Marker';
-import { Popup } from 'react-leaflet/Popup';
 import { Tooltip } from 'react-leaflet/Tooltip';
 
 /**Renders the leaflet marker used to display events on the map. Must be placed within the scope of an EventContext. */
-export function EventMarker() {
-  const { setModal } = useModalStackContext();
+export function EventMarker({ onClick = null }) {
   const [icon, setIcon] = useState(null);
   const { event } = useEventContext();
   const eventCoordinates = [event.position.coordinates.at(1), event.position.coordinates.at(0)];
-  const router = useRouter();
 
   useEffect(() => {
     import('leaflet').then(L => {
@@ -36,7 +30,7 @@ export function EventMarker() {
     <>
       <Marker
         eventHandlers={{
-          click: () => router.push(`/app/event/${event.id}`),
+          click: onClick,
         }}
         position={eventCoordinates as any}
         icon={icon}>
@@ -52,7 +46,7 @@ export function EventMarker() {
       <Circle
         center={eventCoordinates as any}
         pathOptions={{ fillColor: 'blue' }}
-        radius={event.position_metadata.accuracy}
+        radius={event.position.accuracy}
       />
     </>
   ) : null;

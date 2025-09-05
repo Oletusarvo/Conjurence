@@ -3,32 +3,26 @@
 import { withLoader } from '@/hoc/with-loader';
 import { useCreateEventForm } from '../../hooks/use-create-event-form';
 import { useRouter } from 'next/navigation';
-import { TEvent, TEventData, TEventInstance } from '../../schemas/event-schema';
 import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { StepTrack } from '@/components/step-track';
 import { OverviewStep } from './overview-step';
 import { TypesStep } from './types-step';
-import { DescriptionStep } from './description-step';
 import { StatusNotice } from './status-notice';
+import { useEventContext } from '../../providers/event-provider';
+import { TEvent } from '../../schemas/event-schema';
 
-export type TemplateType = TEventData & TEventInstance;
 export type CategoriesType = { id: number; label: string; description?: string }[];
 export type ThresholdsType = { id: number; label: string; description: string }[];
 
 const [CreateEventFormContext, useCreateEventFormContext] = createContextWithUseHook<
-  ReturnType<typeof useCreateEventForm> & { template: TemplateType }
+  ReturnType<typeof useCreateEventForm> & { template: TEvent }
 >('useCreateEventForm can only be called from within the scope of a CreateEventFormContext!');
 
 export { useCreateEventFormContext };
 
-type CreateEventFormProps = {
-  categories: CategoriesType;
-  thresholds: ThresholdsType;
-  template?: TemplateType;
-};
-
-export function CreateEventForm({ categories, thresholds, template }: CreateEventFormProps) {
-  const form = useCreateEventForm(template);
+export function CreateEventForm({ onCancel = null }) {
+  const { event: template } = useEventContext();
+  const form = useCreateEventForm();
   const router = useRouter();
 
   const isForwardButtonDisabled = () => {
@@ -63,7 +57,11 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
       className='--outlined --secondary --full-width'
       onClick={() => {
         if (form.steps.current === 0) {
-          router.push('/app/feed');
+          if (onCancel) {
+            onCancel();
+          } else {
+            router.push('/app/feed');
+          }
         } else {
           form.steps.backward();
         }
@@ -84,14 +82,11 @@ export function CreateEventForm({ categories, thresholds, template }: CreateEven
         {form.steps.current === 0 ? (
           <OverviewStep />
         ) : form.steps.current === 1 ? (
-          <TypesStep
-            categories={categories}
-            thresholds={thresholds}
-          />
+          <TypesStep />
         ) : null}
         <StatusNotice status={form.status} />
 
-        <div className='flex gap-2 w-full mt-auto'>
+        <div className='flex gap-2 w-full mt-auto px-default'>
           <BackwardButton />
           {form.steps.current < 1 ? (
             <ForwardButton />

@@ -36,6 +36,7 @@ export function UserAttendanceStatusManager() {
   return (
     <Modal
       title='Status'
+      closeable={false}
       show={hasEnded || attendance.currentAction !== null}
       fullHeight>
       <BaseEventModalBody>

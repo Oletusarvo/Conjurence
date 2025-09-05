@@ -3,6 +3,8 @@ import db from '@/dbconfig';
 import { tablenames } from '@/tablenames';
 import { FormContainer } from '@/components/form-temp';
 import { loadSession } from '@/util/load-session';
+import { EventProvider } from '@/features/events/providers/event-provider';
+import { eventService } from '@/features/events/services/event-service';
 
 export default async function CreateEventPage({ searchParams }) {
   const session = await loadSession();
@@ -10,46 +12,23 @@ export default async function CreateEventPage({ searchParams }) {
 
   let templateRecord = null;
   if (template_id) {
-    templateRecord = await db(tablenames.event_data).where({ id: template_id }).first();
-
+    templateRecord = await eventService.repo.findById(template_id, db);
     //Check that the template is by the logged in user.
     if (templateRecord.author_id !== session.user.id) {
       return <span>Only the author of a template can use it!</span>;
     }
   }
 
-  const categories = await db({ ec: tablenames.event_category })
-    .leftJoin(
-      db
-        .select('event_category_id', 'description')
-        .from(tablenames.event_category_description)
-        .as('ecd'),
-      'ec.id',
-      'ecd.event_category_id'
-    )
-    .select('description', 'label', 'ec.id as id');
-
-  const thresholds = await db({ et: tablenames.event_threshold })
-    .leftJoin(
-      db
-        .select('event_threshold_id', 'description')
-        .from(tablenames.event_threshold_description)
-        .as('etd'),
-      'etd.event_threshold_id',
-      'et.id'
-    )
-    .where('et.id', '<=', session.user.subscription.maximum_event_size_id)
-    .select('et.id', 'et.label', 'etd.description');
-
   return (
-    <div className='flex flex-col px-default w-full flex-1 items-center'>
+    <div className='flex flex-col w-full flex-1 items-center'>
       <FormContainer>
-        <h2>Create event</h2>
-        <CreateEventForm
-          categories={categories}
-          thresholds={thresholds}
-          template={templateRecord}
-        />
+        <div className='px-default'>
+          <h2>Create event</h2>
+        </div>
+
+        <EventProvider initialEvent={templateRecord}>
+          <CreateEventForm />
+        </EventProvider>
       </FormContainer>
     </div>
   );

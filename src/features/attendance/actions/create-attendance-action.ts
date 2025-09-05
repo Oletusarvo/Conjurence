@@ -32,13 +32,13 @@ export async function createAttendanceAction(
     db
   );
 
-  const interestCount = await eventService.repo.countInterestedByInstanceId(event_id, db);
+  const interestCount = await eventService.repo.countInterestedById(event_id, db);
 
   dispatcher.dispatch({
     to: `event:${event_id}`,
     message: 'event:interest',
     payload: {
-      username: session.user.id,
+      username: session.user.username,
       eventId: event_id,
       currentInterestCount: interestCount,
       newAttendanceRecord,

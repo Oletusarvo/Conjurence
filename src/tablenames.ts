@@ -1,4 +1,4 @@
-type Schemas = 'users' | 'events';
+type Schemas = 'users' | 'events' | 'positions';
 
 type Tables =
   | 'user'
@@ -7,7 +7,7 @@ type Tables =
   | 'user_contact_type'
   | 'user_subscription'
   | 'event_data'
-  | 'event_instance'
+  | 'event'
   | 'event_category'
   | 'event_category_description'
   | 'event_attendance'
@@ -15,7 +15,8 @@ type Tables =
   | 'event_size'
   | 'event_size_description'
   | 'notification'
-  | 'notification_type';
+  | 'notification_type'
+  | 'event_position';
 
 const getFullTableName = <ST extends Schemas, TT extends Tables>(schema: ST, table: TT) =>
   `${schema}.${table}` as `${ST}.${TT}`;
@@ -26,8 +27,7 @@ export const tablenames = {
   user_contact: getFullTableName('users', 'user_contact'),
   user_contact_type: getFullTableName('users', 'user_contact_type'),
   user_subscription: getFullTableName('users', 'user_subscription'),
-  event_data: getFullTableName('events', 'event_data'),
-  event_instance: getFullTableName('events', 'event_instance'),
+  event_instance: getFullTableName('events', 'event'),
   event_category: getFullTableName('events', 'event_category'),
   event_category_description: getFullTableName('events', 'event_category_description'),
   event_attendance: getFullTableName('events', 'event_attendance'),
@@ -36,4 +36,5 @@ export const tablenames = {
   event_threshold_description: getFullTableName('events', 'event_size_description'),
   notification: getFullTableName('users', 'notification'),
   notification_type: getFullTableName('users', 'notification_type'),
+  event_position: getFullTableName('positions', 'event_position'),
 };

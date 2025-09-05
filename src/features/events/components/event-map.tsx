@@ -4,29 +4,41 @@ import { GeolocationMap } from '@/features/geolocation/components/geolocation-ma
 import { useNearbyEvents } from '../hooks/use-nearby-events';
 import { EventMarker } from '@/features/geolocation/components/event-marker';
 import { EventProvider } from '../providers/event-provider';
-import { Modal } from '@/components/modal-temp';
 import { List } from '@/components/feature/list-temp';
 import { TEvent } from '../schemas/event-schema';
-import { ModalStackProvider } from '@/providers/modal-stack-provider';
+import { useModalStackContext } from '@/providers/modal-stack-provider';
+import { EventModal } from './ui/event-modal';
+import { EventPositionManager } from '../managers/event-position-manager';
+import { useRouter } from 'next/navigation';
+import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
 
+/**Renders nearby events as markers on a leaflet-map. Must be placed within the scope of a ModalStackProvider*/
 export function EventMap() {
+  const { position } = useGeolocationContext();
   const { events, cache, isPending } = useNearbyEvents();
+  const router = useRouter();
   const src = events || cache;
 
+  const center = position
+    ? { lng: position.coords.longitude, lat: position.coords.latitude }
+    : null;
   return (
-    <ModalStackProvider>
-      <GeolocationMap>
-        <List<TEvent>
-          data={src}
-          component={({ item }) => {
-            return (
-              <EventProvider initialEvent={item}>
-                <EventMarker />
-              </EventProvider>
-            );
-          }}
-        />
-      </GeolocationMap>
-    </ModalStackProvider>
+    <GeolocationMap
+      center={center}
+      onSelectLocation={coords => {
+        console.log(coords);
+      }}>
+      <List<TEvent>
+        data={src}
+        component={({ item }) => {
+          return (
+            <EventProvider initialEvent={item}>
+              <EventPositionManager />
+              <EventMarker onClick={() => router.push(`/app/event/${item.id}`)} />
+            </EventProvider>
+          );
+        }}
+      />
+    </GeolocationMap>
   );
 }

@@ -11,7 +11,6 @@ class EventService extends Service<EventRepository> {
 
   async verifyAuthorship(event_id: string, user_id: string, ctx: DBContext) {
     const host = await this.repo.getHostByEventId(event_id, ctx);
-    console.log(host);
     if (host.id !== user_id) {
       throw new Error(AuthError.unauthorized);
     }
@@ -25,7 +24,7 @@ class EventService extends Service<EventRepository> {
   }
 
   async endEvent(event_id: string, ctx: DBContext) {
-    await this.repo.updateInstanceById(
+    await this.repo.updateById(
       event_id,
       {
         ended_at: new Date(),

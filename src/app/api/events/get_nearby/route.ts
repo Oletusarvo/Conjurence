@@ -1,5 +1,4 @@
 import db from '@/dbconfig';
-import { getEvent } from '@/features/events/dal/get-event';
 import { eventService } from '@/features/events/services/event-service';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -18,7 +17,7 @@ export async function GET(req: NextRequest) {
     const events = await eventService.repo.findWithinDistanceByCoordinates(
       longitude,
       latitude,
-      10000,
+      20000,
       db,
       q
     );

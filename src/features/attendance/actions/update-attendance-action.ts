@@ -28,8 +28,6 @@ export async function updateAttendanceAction(
     db
   );
 
-  console.log(updatedAttendanceRecord);
-
   dispatcher.dispatch({
     to: `event:${eventId}`,
     message: 'event:attendance_update',

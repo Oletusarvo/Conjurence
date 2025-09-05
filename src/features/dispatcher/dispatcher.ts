@@ -16,6 +16,12 @@ type TMessage = { to?: string } & (
         updatedAttendanceRecord: TODO;
       };
     }
+  | {
+      message: 'event:update';
+      payload: {
+        eventId: string;
+      };
+    }
 );
 
 class Dispatcher {

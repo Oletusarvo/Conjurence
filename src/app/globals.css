@@ -2,11 +2,12 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #191919;
+  --background: #3a254b;
   --foreground: #ffffff;
-  --background-light: #222222;
-  --accent: var(--color-yellow-500);
-  --secondary: var(--color-gray-400);
+  --background-light: #48295f;
+  --modal-background: hsl(from var(--background) h s l / 0.9);
+  --accent: #e1e774;
+  --secondary: #725f80;
 }
 
 @theme inline {
@@ -16,6 +17,7 @@
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
   --color-secondary: var(--secondary);
+  --color-modal-background: var(--modal-background);
   --animate-slide-down: SlideDown 0.1s ease-out;
   --animate-fade-in: FadeIn 0.1s ease-out;
   --animate-rotate-slow: RotateSlow 10s linear infinite;

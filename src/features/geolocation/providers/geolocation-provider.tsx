@@ -4,7 +4,6 @@ import { useSessionStorage } from '@/hooks/use-session-storage';
 import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { calcAveragePosition } from '../util/calc-average-position';
 
 const [GeolocationContext, useGeolocationContext] = createContextWithUseHook<{
   position: GeolocationPosition | null;
@@ -22,8 +21,8 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
     let geoWatcher;
     if ('geolocation' in navigator) {
       const options: PositionOptions = {
-        enableHighAccuracy: false,
-        maximumAge: 30000,
+        enableHighAccuracy: true,
+        maximumAge: 0,
         timeout: Infinity,
       };
 

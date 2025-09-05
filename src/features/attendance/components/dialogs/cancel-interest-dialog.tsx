@@ -11,8 +11,8 @@ export function CancelInterestDialog() {
   return (
     <ConfirmDialog
       title='Confirm Interest Cancel'
-      cancelContent={'Cancel'}
-      confirmContent={'Yes, Cancel Interest'}
+      cancelContent={'No'}
+      confirmContent={'Yes'}
       action={async () => await attendance.cancelInterest(event.id)}>
       Are you sure you wish to cancel your interest in the event? This cannot be undone.
     </ConfirmDialog>

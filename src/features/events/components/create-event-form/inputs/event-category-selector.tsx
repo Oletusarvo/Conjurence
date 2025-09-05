@@ -1,30 +1,20 @@
 'use client';
 
 import { List } from '@/components/feature/list-temp';
-import { CategoriesType, useCreateEventFormContext } from '../create-event-form';
+import { useCreateEventFormContext } from '../create-event-form';
 import { capitalize } from '@/util/capitalize';
-import { Sublabel } from '@/components/ui/sub-label';
-import { useState } from 'react';
+import { eventCategories } from '@/features/events/schemas/event-category-schema';
 
-export function EventCategorySelector({ categories }: { categories: CategoriesType }) {
-  const { payload, template, handleChange } = useCreateEventFormContext();
-  const [selectedCategory, setSelectedCategory] = useState(
-    () =>
-      categories.find(
-        c =>
-          c.id == template?.event_category_id ||
-          c.id == parseInt(payload.get('event_category_id')?.toString())
-      )?.id || 0
-  );
+export function EventCategorySelector() {
+  const { payload, handleChange } = useCreateEventFormContext();
 
   return (
     <div className='form-input-group'>
       <select
-        name='event_category_id'
-        value={selectedCategory}
+        name='category'
+        value={payload.get('category')?.toString()}
         onChange={e => {
           handleChange(e);
-          setSelectedCategory(e.target.value as any);
         }}
         required>
         <option
@@ -33,17 +23,12 @@ export function EventCategorySelector({ categories }: { categories: CategoriesTy
           Select event type...
         </option>
         <List
-          data={categories}
+          data={eventCategories}
           component={({ item: cat }) => {
-            return <option value={cat.id}>{capitalize(cat.label)}</option>;
+            return <option value={cat}>{capitalize(cat)}</option>;
           }}
         />
       </select>
-      {selectedCategory !== 0 && (
-        <Sublabel>
-          {categories.find(c => c.id == selectedCategory)?.description || 'No description.'}
-        </Sublabel>
-      )}
     </div>
   );
 }

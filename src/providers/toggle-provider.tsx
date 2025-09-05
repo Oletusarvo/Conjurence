@@ -1,3 +1,5 @@
+'use client';
+
 import { PassProps } from '@/components/feature/pass-props';
 import { useActionOnClickOutside } from '@/hooks/use-action-on-click-outside';
 import { useToggle } from '@/hooks/use-toggle';

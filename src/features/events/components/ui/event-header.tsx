@@ -27,7 +27,7 @@ export function EventHeader() {
           </div>
         </div>
       </div>{' '}
-      <EventStatusBadge createdAt={event?.created_at.toString()} />
+      <EventStatusBadge />
     </div>
   );
 }

@@ -11,14 +11,15 @@ import { SpotsAvailableBadge } from './ui/spots-available-badge';
 import { CategoryBadge } from './ui/category-badge';
 import { HostBadge } from './host-badge';
 import { InterestedCountBadge } from '../../attendance/components/interested-count-badge';
+import React from 'react';
 
-export type EventCardProps = {
+export type EventCardProps = React.PropsWithChildren & {
   onClick?: () => void;
 };
 
-export function EventCard({ ...props }: EventCardProps) {
+export function EventCard({ children, ...props }: EventCardProps) {
   const { event, hasEnded } = useEventContext();
-  const cardClassName = useClassName('card cursor-pointer relative', hasEnded ? '--expired' : '');
+  const cardClassName = useClassName('card cursor-pointer relative');
   const router = useRouter();
 
   return (
@@ -27,7 +28,7 @@ export function EventCard({ ...props }: EventCardProps) {
         {...props}
         onClick={() => (event && !hasEnded ? router.push('/app/event/' + event.id) : null)}
         className={cardClassName}>
-        <CardHeader />
+        <CardHeader>{children}</CardHeader>
         <p className='tracking-tight leading-[18px]'>{event?.description || 'No description'}</p>
         <CardFooter />
       </div>
@@ -35,24 +36,28 @@ export function EventCard({ ...props }: EventCardProps) {
   );
 }
 
-function CardHeader() {
+function CardHeader({ children }: React.PropsWithChildren) {
   const {
-    event: { title, created_at },
+    event: { title },
   } = useEventContext();
+
+  const childArray = React.Children.toArray(children);
+  const hostBadge = childArray.find((c: any) => c.type === HostBadge);
+  const statusBadge = childArray.find((c: any) => c.type === EventStatusBadge);
 
   return (
     <div className='flex w-full items-start justify-between'>
       <div className='flex flex-col justify-start items-start gap-1'>
         <h3>{title || 'Otsikko'}</h3>
 
-        <HostBadge />
+        {hostBadge}
         <div className='flex gap-2'>
           <CategoryBadge />
           <SpotsAvailableBadge />
         </div>
       </div>
 
-      <EventStatusBadge createdAt={new Date(created_at).toString()} />
+      {statusBadge}
     </div>
   );
 }

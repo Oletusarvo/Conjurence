@@ -1,9 +1,9 @@
 'use client';
 
 import { useCreateEventFormContext } from '../create-event-form';
-import { eventDescriptionSchema } from '@/features/events/schemas/event-schema';
 import { EventError } from '@/features/events/errors/events';
 import { Sublabel } from '@/components/ui/sub-label';
+import { createEventSchema } from '@/features/events/schemas/event-schema';
 
 export function DescriptionInput() {
   const { handleChange, template, payload, inputStatus } = useCreateEventFormContext();
@@ -12,7 +12,7 @@ export function DescriptionInput() {
     <div className='form-input-group flex-1'>
       <textarea
         autoComplete='off'
-        onChange={e => handleChange(e, eventDescriptionSchema)}
+        onChange={e => handleChange(e, createEventSchema.shape.description)}
         name='description'
         placeholder='Description...'
         required

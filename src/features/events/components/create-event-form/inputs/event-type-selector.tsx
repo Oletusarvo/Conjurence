@@ -5,22 +5,23 @@ import { ThresholdsType, useCreateEventFormContext } from '../create-event-form'
 import { capitalize } from '@/util/capitalize';
 import { Sublabel } from '@/components/ui/sub-label';
 import { List } from '@/components/feature/list-temp';
+import { eventSizes } from '@/features/events/schemas/event-size-schema';
 
-export function EventTypeSelector({ thresholds }: { thresholds: ThresholdsType }) {
+export function EventTypeSelector() {
+  const thresholds = eventSizes;
   const { payload, handleChange } = useCreateEventFormContext();
   const [selectedThreshold, setSelectedThreshold] = useState(
-    () =>
-      thresholds.find(t => t.id == parseInt(payload.get('event_threshold_id')?.toString()))?.id || 0
+    () => thresholds.find(t => t == payload.get('size')?.toString()) || 'small'
   );
 
   return (
     <div className='form-input-group'>
       <select
-        name='event_threshold_id'
-        value={selectedThreshold}
+        name='size'
+        value={payload.get('size')?.toString()}
         onChange={e => {
           handleChange(e);
-          setSelectedThreshold(e.target.value as any);
+          //setSelectedThreshold(e.target.value as any);
         }}
         required>
         <option
@@ -31,15 +32,10 @@ export function EventTypeSelector({ thresholds }: { thresholds: ThresholdsType }
         <List
           data={thresholds}
           component={({ item }) => {
-            return <option value={item.id}>{capitalize(item.label)}</option>;
+            return <option value={item}>{capitalize(item)}</option>;
           }}
         />
       </select>
-      {selectedThreshold !== 0 && (
-        <Sublabel>
-          {thresholds.find(t => t.id == selectedThreshold)?.description || 'No description.'}
-        </Sublabel>
-      )}
     </div>
   );
 }

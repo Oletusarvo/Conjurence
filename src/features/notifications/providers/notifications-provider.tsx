@@ -1,3 +1,5 @@
+'use client';
+
 import { useUserContext } from '@/features/users/providers/user-provider';
 import { useSocketHandlers } from '@/hooks/use-socket-handlers';
 import { useSocketRoom } from '@/hooks/use-socket-room';

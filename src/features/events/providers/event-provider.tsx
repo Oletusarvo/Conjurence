@@ -2,10 +2,9 @@
 
 import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { TEvent } from '../schemas/event-schema';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { useEventSocket } from '../hooks/use-event-socket';
 import { useReloadData } from '@/hooks/use-reload-data';
-import { useUpdateMobileEventPosition } from '../hooks/use-update-mobile-event-position';
 
 type EventProviderProps = React.PropsWithChildren & {
   initialEvent: TEvent;
@@ -13,6 +12,7 @@ type EventProviderProps = React.PropsWithChildren & {
 
 const [EventContext, useEventContext] = createContextWithUseHook<{
   event: EventProviderProps['initialEvent'];
+  setEvent: React.Dispatch<SetStateAction<TEvent>>;
   hasEnded: boolean;
   interestCount: number;
 }>('useEventContext can only be used within the scope of an EventContext!');
@@ -30,27 +30,15 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
     300
   );
 
-  useUpdateMobileEventPosition(event);
-
   useEventSocket({
     eventId: event?.id,
     onEnd: () => reloadEvent(),
     onAttendanceUpdate: () => reloadEvent(),
-    onPositionUpdate: payload => {
-      const { position } = payload;
-      setEvent(prev => ({
-        ...prev,
-        position: { coordinates: [position.coords.longitude, position.coords.latitude] },
-        position_metadata: {
-          accuracy: position.coords.accuracy,
-          timestamp: position.timestamp,
-        },
-      }));
-    },
+    onUpdate: () => reloadEvent(),
   });
 
   return (
-    <EventContext.Provider value={{ event, hasEnded, interestCount }}>
+    <EventContext.Provider value={{ event, setEvent, hasEnded, interestCount }}>
       {children}
     </EventContext.Provider>
   );

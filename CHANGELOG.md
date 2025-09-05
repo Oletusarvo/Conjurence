@@ -1,4 +1,4 @@
-## [0.8.0-alpha.4] - 02-09-2025
+## [0.8.0-beta.1] - 02-09-2025
 
 ### Removed
 
@@ -6,7 +6,12 @@
 
 ### Changed
 
+- Mobile event position updates are now done by a dedicated component, instead of the EventProvider itself, allowing omission of
+  the functionality where needed.
+- Event position management is now done by a dedicated component, instead of the EventProvider itself.
+- Events can now be created with a manual position.
 - Event feed to be a map showing the events as markers on it.
+- EventCard now applies the HostBadge and EventStatusBadge as slots if they are passed as children, allowing omission of either one.
 
 ## [0.8.0-alpha.3] - 02-09-2025
 

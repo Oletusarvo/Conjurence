@@ -7,14 +7,16 @@ import { useUserContext } from '@/features/users/providers/user-provider';
 import { endEventAction } from '../actions/end-event-action';
 import toast from 'react-hot-toast';
 import { useUserAttendanceContext } from '@/features/attendance/providers/user-attendance-provider';
+import { updateEventSchema } from '../schemas/event-schema';
+import z from 'zod';
+import { updateEventAction } from '../actions/update-event-action';
+import { createFormDataFromRecord } from '@/util/create-form-data-from-record';
 
 const [EventActionContext, useEventActionContext] = createContextWithUseHook<
   ReturnType<typeof useEventActions>
 >('useEventActionContext can only be used within the scope of an EventActionContext!');
 
 /**Provides the methods for updating the state of an event, like ending it.
- * The reason these are not inside the EventProvider, is that they aren't needed
- * in every situation the event data is needed.
  */
 export function EventActionProvider({ children }) {
   const { event } = useEventContext();
@@ -37,8 +39,7 @@ function useEventActions(eventId: string) {
     action: () => Promise<void>;
     attended_event_id: string | null;
   }) => {
-    await updateSession({ attended_event_id });
-
+    updateSession({ attended_event_id });
     await action();
   };
 
@@ -52,6 +53,7 @@ function useEventActions(eventId: string) {
           const res = await endEventAction(eventId);
           if (res.success === false) {
             toast.error(res.error);
+            return;
           }
           await updateAttendanceRecord(null);
         },
@@ -62,6 +64,16 @@ function useEventActions(eventId: string) {
     } finally {
       setStatus(prev => (prev === 'loading' ? 'idle' : prev));
     }
+  };
+
+  const update = async (payload: z.infer<typeof updateEventSchema>) => {
+    updateEventAction(createFormDataFromRecord(payload))
+      .then(res => {
+        if (!res.success) {
+          toast.error('Event update failed!');
+        }
+      })
+      .catch(err => toast.error('An unexpected error occured while updating event!'));
   };
 
   return { endEvent, isPending };

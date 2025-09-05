@@ -9,7 +9,7 @@ export function Header({ children, ...props }: React.ComponentProps<'header'>) {
       {...props}
       className='py-4 px-default flex items-center w-full border-b border-background-light-border justify-between z-20 bg-background-light'>
       <Logo />
-      <div className='flex items-center gap-4'>{children}</div>
+      <div className='flex items-center gap-2'>{children}</div>
     </header>
   );
 }

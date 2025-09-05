@@ -6,8 +6,14 @@ import { EventMarker } from './event-marker';
 
 /**Renders a GeolocationMap containing a single, specific event. */
 export function EventMapSpecific() {
+  const { event } = useEventContext();
+  const eventPositionCoords = event?.position.coordinates;
   return (
-    <GeolocationMap>
+    <GeolocationMap
+      center={{ lat: eventPositionCoords.at(1), lng: eventPositionCoords.at(0) }}
+      dragging={false}
+      zoom={13}
+      minZoom={13}>
       <EventMarker />
     </GeolocationMap>
   );

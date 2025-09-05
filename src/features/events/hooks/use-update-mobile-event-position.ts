@@ -4,7 +4,9 @@ import { socket } from '@/socket';
 import { useEffect } from 'react';
 import { TEvent } from '../schemas/event-schema';
 
-/**Runs a useEffect emitting an event:position_update socket-event on mobile events, when the current user is the host. */
+/**Runs a useEffect emitting an event:position_update socket-event on mobile events, when the current user is the host.
+ * @deprecated
+ */
 export function useUpdateMobileEventPosition(event: TEvent) {
   const { user } = useUserContext();
   const { position } = useGeolocationContext();

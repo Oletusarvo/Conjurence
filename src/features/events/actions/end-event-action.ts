@@ -19,7 +19,7 @@ export async function endEventAction(event_id: string): Promise<ActionResponse<v
     await eventService.verifyAuthorship(event_id, session.user.id, trx);
     await eventService.verifyNotEnded(event_id, trx);
 
-    const eventDataRecord = await eventService.repo.getDataByInstanceId(event_id, trx);
+    const eventDataRecord = await eventService.repo.findById(event_id, trx);
 
     if (eventDataRecord.is_template) {
       //Delete the instance only.
@@ -35,6 +35,7 @@ export async function endEventAction(event_id: string): Promise<ActionResponse<v
     return { success: true };
   } catch (err) {
     await trx.rollback();
+    console.log(err.message);
     return {
       success: false,
       error: err.message,

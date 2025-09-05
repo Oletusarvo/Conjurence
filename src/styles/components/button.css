@@ -29,6 +29,10 @@ button.--no-default {
   min-height: auto;
 }
 
+button.--contained.--theme:hover {
+  background-color: hsl(from var(--color-background-light) h s 45);
+}
+
 button.--contained.--accent {
   color: black;
 }

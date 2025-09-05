@@ -3,9 +3,9 @@
 import { Input } from '@/components/input-temp';
 import { Sublabel } from '@/components/ui/sub-label';
 import { EventError } from '@/features/events/errors/events';
-import { eventTitleSchema } from '@/features/events/schemas/event-schema';
 import { Heading } from 'lucide-react';
 import { useCreateEventFormContext } from '../create-event-form';
+import { createEventSchema } from '@/features/events/schemas/event-schema';
 
 export function TitleInput() {
   const { payload, template, handleChange, inputStatus } = useCreateEventFormContext();
@@ -15,7 +15,7 @@ export function TitleInput() {
       <Input
         autoComplete='off'
         onChange={e => {
-          handleChange(e, eventTitleSchema);
+          handleChange(e, createEventSchema.shape.title);
         }}
         icon={<Heading />}
         name='title'

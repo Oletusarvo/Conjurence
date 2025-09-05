@@ -1,40 +1,33 @@
 'use server';
 
 import db from '@/dbconfig';
-import { eventDataSchema, eventInstanceSchema } from '../schemas/event-schema';
 import { parseFormDataUsingSchema } from '@/util/parse-form-data-using-schema';
 import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
 import { TEventError } from '@/features/events/errors/events';
 import { createGeographyRow } from '@/features/geolocation/util/create-geography-row';
 import { eventService } from '../services/event-service';
+import { TEvent, updateEventSchema } from '../schemas/event-schema';
+import { dispatcher } from '@/features/dispatcher/dispatcher';
 
-export async function updateEventAction(payload: FormData) {
-  const parsedDataResult = parseFormDataUsingSchema(payload, eventDataSchema);
-  if (!parsedDataResult.success) {
-    return getParseResultErrorMessage<TEventError>(parsedDataResult);
-  }
-  const parsedInstanceResult = parseFormDataUsingSchema(payload, eventInstanceSchema);
+export async function updateEventAction(
+  payload: FormData
+): Promise<ActionResponse<TEvent, TEventError>> {
+  const parsedInstanceResult = parseFormDataUsingSchema(payload, updateEventSchema);
   if (!parsedInstanceResult.success) {
-    return getParseResultErrorMessage<TEventError>(parsedInstanceResult);
+    return { success: false, error: getParseResultErrorMessage<TEventError>(parsedInstanceResult) };
   }
 
   const trx = await db.transaction();
   try {
-    const data = parsedDataResult.data;
-    await eventService.repo.updateDataByInstanceId(data.id, data, trx);
-
-    const position = JSON.parse(parsedInstanceResult.data.position);
-    await eventService.repo.updateInstanceById(
-      data.id,
-      {
-        ...parsedInstanceResult.data,
-        position: createGeographyRow(position),
-      },
-      trx
-    );
-
+    const data = parsedInstanceResult.data;
+    const newEventRecord = await eventService.repo.updateById(data.id, data, trx);
     await trx.commit();
-    return { success: true };
+    dispatcher.dispatch({
+      to: `event:${data.id}`,
+      message: 'event:update',
+      payload: { eventId: data.id },
+    });
+    return { success: true, data: newEventRecord };
   } catch (err) {
     await trx.rollback();
     console.log(err.message);
