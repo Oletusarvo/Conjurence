@@ -1,3 +1,13 @@
+## [0.8.0-beta.3] - 06-08-2025
+
+### Added
+
+- The onValidate-callback to useOnSubmit.
+
+### Changed
+
+- Deprecated the validationSchema-option of useOnSubmit.
+
 ## [0.8.0-beta.2] - 06-08-2025
 
 ### Fixed

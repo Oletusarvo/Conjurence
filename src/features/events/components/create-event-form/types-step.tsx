@@ -1,6 +1,7 @@
 import { EventTypeSelector } from './inputs/event-type-selector';
 import { EventCategorySelector } from './inputs/event-category-selector';
 import { MobileEventCheckbox } from './inputs/mobile-event-checkbox';
+import { PositionAutoInput } from './inputs/position-auto-input';
 
 export function TypesStep() {
   return (
@@ -9,6 +10,7 @@ export function TypesStep() {
         <EventCategorySelector />
         <EventTypeSelector />
         <MobileEventCheckbox />
+        <PositionAutoInput />
       </div>
     </>
   );

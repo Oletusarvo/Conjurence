@@ -1,6 +1,7 @@
 import z from 'zod';
 import { useStatus } from './use-status';
 import { parseFormDataUsingSchema } from '@/util/parse-form-data-using-schema';
+import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
 
 type UseOnSubmitProps<
   T,
@@ -10,7 +11,11 @@ type UseOnSubmitProps<
   /**Alternative FormData-source to use. Will ignore the form contents if defined. */
   payload?: FormData;
   action: TAction;
+  /**@deprecated Use onValidate instead.*/
   validationSchema?: z.ZodType;
+
+  onValidate?: (payload: FormData) => string | null;
+
   /**Called when the action returns a response with success set to true. */
   onSuccess?: (res: SuccessActionResponse<T>) => void | Promise<void>;
   /**Called when the action return a response with success set to false. */
@@ -18,7 +23,7 @@ type UseOnSubmitProps<
   /**Called when the action throws an error. */
   onError?: (err: unknown) => void;
   /**Called when the validationSchema returns an error. */
-  onParseError?: (err: z.ZodError) => void;
+  onParseError?: (err: E) => void;
   onFinished?: () => void;
 };
 
@@ -32,7 +37,9 @@ export function useOnSubmit<
 >({
   payload,
   action,
+
   validationSchema,
+  onValidate,
   onSuccess,
   onError,
   onParseError,
@@ -52,8 +59,15 @@ export function useOnSubmit<
           const msg = parseResult.error.issues.at(0)?.message || null;
           setStatus(msg);
           if (onParseError) {
-            onParseError(parseResult.error);
+            onParseError(msg as E);
           }
+          return;
+        }
+      } else if (onValidate) {
+        const error = onValidate(p);
+        if (error) {
+          onParseError(error as E);
+          setStatus(error as E);
           return;
         }
       }

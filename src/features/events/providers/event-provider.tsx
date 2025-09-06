@@ -21,7 +21,13 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
 
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
   const [event, setEvent] = useState(initialEvent);
-  const positionIsStale = useStaleTimestamp(event?.position.timestamp, 30000, !!event);
+
+  //Invalidate positions of mobile events after 30 seconds.
+  const positionIsStale = useStaleTimestamp(
+    event?.position.timestamp,
+    30000,
+    !!event && event.is_mobile
+  );
 
   const hasEnded = event?.ended_at !== null;
   const interestCount = event?.interested_count;

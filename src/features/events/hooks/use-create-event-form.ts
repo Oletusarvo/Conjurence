@@ -12,6 +12,8 @@ import { TAttendance } from '@/features/attendance/schemas/attendance-schema';
 import { useEventContext } from '../providers/event-provider';
 import { cloneFormData } from '@/util/clone-form-data';
 import { createEventSchema } from '../schemas/event-schema';
+import { formDataToObject } from '@/util/form-data-to-object';
+import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
 
 export function useCreateEventForm() {
   const { event: template } = useEventContext();
@@ -69,7 +71,6 @@ export function useCreateEventForm() {
 
   const router = useRouter();
   const { position } = useGeolocationContext();
-
   if (position) {
     payload.set(
       'position',
@@ -80,22 +81,20 @@ export function useCreateEventForm() {
       })
     );
   }
-
   const {
     onSubmit: submitEvent,
     isPending,
     status,
   } = useOnSubmit({
-    payload: payload,
-    action: async () => {
-      if (!position) {
+    payload,
+    action: async payload => {
+      if (!payload.get('position')) {
         return { success: false, error: EventError.locationDisabled };
       }
-
       return await createEventAction(payload, template?.id);
     },
     onSuccess: async res => {
-      await updateSession({
+      updateSession({
         attended_event_id: res.data,
       });
       const at = res.data as TAttendance;
@@ -103,12 +102,17 @@ export function useCreateEventForm() {
       router.push(`/app/event/` + at.event_instance_id);
     },
     onParseError: err => {
-      console.log(payload);
       console.log(err);
     },
     onError: (err: any) => console.log(err.message),
     onFailure: res => console.log(res.error),
-    validationSchema: createEventSchema,
+    onValidate: payload => {
+      const result = createEventSchema.safeParse(formDataToObject(payload));
+      if (!result.success) {
+        return getParseResultErrorMessage(result);
+      }
+      return null;
+    },
   });
 
   return { payload, submitEvent, status, isPending, handleChange, setPayload, steps, inputStatus };

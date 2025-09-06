@@ -31,6 +31,7 @@ export function CreateEventForm({ onCancel = null }) {
       return inputStatus.title !== 'success' || inputStatus.description !== 'success';
     }
   };
+
   const SubmitButton = withLoader(({ children, ...props }: React.ComponentProps<'button'>) => {
     return (
       <button
