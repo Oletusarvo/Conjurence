@@ -1,4 +1,22 @@
-## [0.8.0-beta.1] - 02-09-2025
+## [0.8.0-beta.2] - 06-08-2025
+
+### Fixed
+
+- Bug in CreateEventForm causing the size-option to be invalid when using a template.
+- Incorrect date in the 0.8.0-beta.1 log.
+
+### Changed
+
+- The theme-color defined in the manifest.json-file.
+- The Dialog-component now uses the slot-pattern for its buttons and content, rather than them being passed as props.
+
+### Added
+
+- Added back the geofencing-handler.
+- A gray marker to indicate mobile events with an outdated position.
+- useStaleTimestamp for determining if a timestamp has gone stale; useful for positions.
+
+## [0.8.0-beta.1] - 05-09-2025
 
 ### Removed
 

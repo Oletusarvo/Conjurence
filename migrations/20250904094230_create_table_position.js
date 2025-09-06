@@ -12,7 +12,7 @@ exports.up = function (knex) {
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
     tbl.geography('coordinates').notNullable();
-    tbl.integer('accuracy');
+    tbl.float('accuracy');
     tbl.bigint('timestamp');
   });
 };

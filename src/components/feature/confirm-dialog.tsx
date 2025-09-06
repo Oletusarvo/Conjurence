@@ -27,31 +27,29 @@ export function ConfirmDialog({
   return (
     <Dialog
       {...props}
-      title={title}
-      cancelButton={
-        <ToggleProvider.Trigger>
-          <button
-            className='--outlined --accent --full-width'
-            disabled={isPending}>
-            {cancelContent}
-          </button>
-        </ToggleProvider.Trigger>
-      }
-      confirmButton={
-        <ToggleProvider.Trigger
-          action={async () => {
-            setIsPending(true);
-            await action();
-            setIsPending(false);
-          }}>
-          <ConfirmButton
-            disabled={isPending}
-            loading={isPending}>
-            {confirmContent}
-          </ConfirmButton>
-        </ToggleProvider.Trigger>
-      }>
-      <p>{children}</p>
+      title={title}>
+      <Dialog.ConfirmButton
+        action={async () => {
+          setIsPending(true);
+          await action();
+          setIsPending(false);
+        }}>
+        <ConfirmButton
+          disabled={isPending}
+          loading={isPending}>
+          {confirmContent}
+        </ConfirmButton>
+      </Dialog.ConfirmButton>
+      <Dialog.CancelButton>
+        <button
+          className='--outlined --accent --full-width'
+          disabled={isPending}>
+          {cancelContent}
+        </button>
+      </Dialog.CancelButton>
+      <Dialog.Content>
+        <p>{children}</p>
+      </Dialog.Content>
     </Dialog>
   );
 }

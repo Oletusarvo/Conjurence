@@ -2,9 +2,10 @@
 
 import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { TEvent } from '../schemas/event-schema';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useEventSocket } from '../hooks/use-event-socket';
 import { useReloadData } from '@/hooks/use-reload-data';
+import { useStaleTimestamp } from '@/hooks/use-stale-timestamp';
 
 type EventProviderProps = React.PropsWithChildren & {
   initialEvent: TEvent;
@@ -15,10 +16,13 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
   setEvent: React.Dispatch<SetStateAction<TEvent>>;
   hasEnded: boolean;
   interestCount: number;
+  positionIsStale: boolean;
 }>('useEventContext can only be used within the scope of an EventContext!');
 
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
   const [event, setEvent] = useState(initialEvent);
+  const positionIsStale = useStaleTimestamp(event?.position.timestamp, 30000, !!event);
+
   const hasEnded = event?.ended_at !== null;
   const interestCount = event?.interested_count;
 
@@ -38,7 +42,7 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
   });
 
   return (
-    <EventContext.Provider value={{ event, setEvent, hasEnded, interestCount }}>
+    <EventContext.Provider value={{ event, setEvent, hasEnded, interestCount, positionIsStale }}>
       {children}
     </EventContext.Provider>
   );

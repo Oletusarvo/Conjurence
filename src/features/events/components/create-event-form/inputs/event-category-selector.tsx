@@ -12,7 +12,7 @@ export function EventCategorySelector() {
     <div className='form-input-group'>
       <select
         name='category'
-        value={payload.get('category')?.toString()}
+        value={payload.get('category') as unknown as string}
         onChange={e => {
           handleChange(e);
         }}

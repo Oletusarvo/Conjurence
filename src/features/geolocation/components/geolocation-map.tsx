@@ -17,7 +17,7 @@ export function GeolocationMap({ children, onSelectLocation, ...props }: Geoloca
   const { position } = useGeolocationContext();
   const positionCoordinates = [position?.coords.latitude, position?.coords.longitude];
 
-  return typeof window === 'undefined' ? null : (
+  return typeof window === 'undefined' || !position ? null : (
     <MapContainer
       {...props}
       style={{ height: '100%', zIndex: 10 }}

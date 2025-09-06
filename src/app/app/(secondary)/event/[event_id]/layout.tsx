@@ -37,6 +37,7 @@ export default async function EventPage({ params, attendance }) {
       <EventPositionManager />
       {event.is_mobile && <EventMobileManager />}
       <DistanceProvider>
+        <UserAttendanceManager />
         <ToggleProvider>
           <UserAttendanceStatusManager />
         </ToggleProvider>

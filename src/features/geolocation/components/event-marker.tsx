@@ -12,20 +12,21 @@ import { Tooltip } from 'react-leaflet/Tooltip';
 /**Renders the leaflet marker used to display events on the map. Must be placed within the scope of an EventContext. */
 export function EventMarker({ onClick = null }) {
   const [icon, setIcon] = useState(null);
-  const { event } = useEventContext();
+  const { event, positionIsStale } = useEventContext();
   const eventCoordinates = [event.position.coordinates.at(1), event.position.coordinates.at(0)];
 
   useEffect(() => {
     import('leaflet').then(L => {
       const blueIcon = new L.Icon({
-        iconUrl: '/icons/marker_blue.svg',
+        iconUrl: positionIsStale ? '/icons/marker_gray.svg' : '/icons/marker_blue.svg',
         iconSize: [32, 52],
         iconAnchor: [16, 52],
       });
       setIcon(blueIcon);
     });
-  }, []);
+  }, [positionIsStale]);
 
+  const circleColor = positionIsStale ? 'gray' : 'blue';
   return typeof window !== 'undefined' && icon ? (
     <>
       <Marker
@@ -45,7 +46,7 @@ export function EventMarker({ onClick = null }) {
 
       <Circle
         center={eventCoordinates as any}
-        pathOptions={{ fillColor: 'blue' }}
+        pathOptions={{ fillColor: circleColor, color: circleColor }}
         radius={event.position.accuracy}
       />
     </>

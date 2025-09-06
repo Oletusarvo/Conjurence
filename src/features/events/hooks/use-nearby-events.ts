@@ -6,10 +6,11 @@ import { useSearchParams } from 'next/navigation';
 import { useRef } from 'react';
 
 export function useNearbyEvents() {
-  const { position } = useGeolocationContext();
+  const { position, distanceToPreviousPosition } = useGeolocationContext();
   const search = useSearchParams().get('q');
   const eventCache = useRef([]);
 
+  console.log(distanceToPreviousPosition);
   const { data: events, isPending } = useQuery({
     queryKey: [`events`, position, search],
     queryFn: async () =>
@@ -24,7 +25,7 @@ export function useNearbyEvents() {
           return res.data;
         }),
 
-    enabled: !!position,
+    enabled: !!position && distanceToPreviousPosition >= 1000, //Trigger only when 1km away from the previous position.
   });
 
   return { events, isPending, cache: eventCache.current };

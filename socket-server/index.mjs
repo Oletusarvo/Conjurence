@@ -49,6 +49,8 @@ export const socketServer = io => {
               )::geography`,
             [position.coords.longitude, position.coords.latitude]
           ),
+          timestamp: position.timestamp,
+          accuracy: position.coords.accuracy,
         });
 
       io.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });

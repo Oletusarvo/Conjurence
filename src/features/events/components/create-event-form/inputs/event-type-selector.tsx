@@ -10,18 +10,14 @@ import { eventSizes } from '@/features/events/schemas/event-size-schema';
 export function EventTypeSelector() {
   const thresholds = eventSizes;
   const { payload, handleChange } = useCreateEventFormContext();
-  const [selectedThreshold, setSelectedThreshold] = useState(
-    () => thresholds.find(t => t == payload.get('size')?.toString()) || 'small'
-  );
 
   return (
     <div className='form-input-group'>
       <select
         name='size'
-        value={payload.get('size')?.toString()}
+        value={payload.get('size') as unknown as string}
         onChange={e => {
           handleChange(e);
-          //setSelectedThreshold(e.target.value as any);
         }}
         required>
         <option
