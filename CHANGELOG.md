@@ -1,3 +1,9 @@
+## [0.8.0-beta.4] - 07-09-2025
+
+### Changed
+
+- Moved event position under its own provider, to prevent the event from re-rendering every time the position of it changes.
+
 ## [0.8.0-beta.3] - 06-08-2025
 
 ### Added

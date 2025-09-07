@@ -7,10 +7,6 @@ import { useUserContext } from '@/features/users/providers/user-provider';
 import { endEventAction } from '../actions/end-event-action';
 import toast from 'react-hot-toast';
 import { useUserAttendanceContext } from '@/features/attendance/providers/user-attendance-provider';
-import { updateEventSchema } from '../schemas/event-schema';
-import z from 'zod';
-import { updateEventAction } from '../actions/update-event-action';
-import { createFormDataFromRecord } from '@/util/create-form-data-from-record';
 
 const [EventActionContext, useEventActionContext] = createContextWithUseHook<
   ReturnType<typeof useEventActions>
@@ -64,16 +60,6 @@ function useEventActions(eventId: string) {
     } finally {
       setStatus(prev => (prev === 'loading' ? 'idle' : prev));
     }
-  };
-
-  const update = async (payload: z.infer<typeof updateEventSchema>) => {
-    updateEventAction(createFormDataFromRecord(payload))
-      .then(res => {
-        if (!res.success) {
-          toast.error('Event update failed!');
-        }
-      })
-      .catch(err => toast.error('An unexpected error occured while updating event!'));
   };
 
   return { endEvent, isPending };

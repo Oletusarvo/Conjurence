@@ -22,8 +22,9 @@ import { EventOverviewContainer } from '@/features/events/components/ui/event-ov
 import { InterestedCountBadge } from '@/features/attendance/components/interested-count-badge';
 import { JoinedCountBadge } from '@/features/attendance/components/joined-count-badge';
 import { ToggleProvider } from '@/providers/toggle-provider';
-import { EventMobileManager } from '@/features/events/managers/event-mobile-manager';
-import { EventPositionManager } from '@/features/events/managers/event-position-manager';
+import { EventPositionUpdater } from '@/features/events/managers/event-position-updater';
+import { EventPositionListener } from '@/features/events/managers/event-position-listener';
+import { EventPositionProvider } from '@/features/events/providers/event-position-provider';
 
 export const revalidate = 0;
 
@@ -34,51 +35,53 @@ export default async function EventPage({ params, attendance }) {
 
   return (
     <EventProvider initialEvent={event}>
-      <EventPositionManager />
-      {event.is_mobile && <EventMobileManager />}
-      <DistanceProvider>
-        <UserAttendanceManager />
-        <ToggleProvider>
-          <UserAttendanceStatusManager />
-        </ToggleProvider>
+      <EventPositionProvider>
+        <EventPositionListener />
+        {event.is_mobile && <EventPositionUpdater />}
+        <DistanceProvider>
+          <UserAttendanceManager />
+          <ToggleProvider>
+            <UserAttendanceStatusManager />
+          </ToggleProvider>
 
-        <EventActionProvider>
-          <ModalStackProvider>
-            <div className='flex flex-col h-full'>
-              <EventOverviewContainer>
-                <EventHeader />
-                <EventDescription />
-                <div className='flex w-full justify-between'>
-                  <ToggleProvider>
-                    <AttendanceFeedTrigger>
-                      <InterestedCountBadge />
-                      <JoinedCountBadge />
-                    </AttendanceFeedTrigger>
+          <EventActionProvider>
+            <ModalStackProvider>
+              <div className='flex flex-col h-full'>
+                <EventOverviewContainer>
+                  <EventHeader />
+                  <EventDescription />
+                  <div className='flex w-full justify-between'>
+                    <ToggleProvider>
+                      <AttendanceFeedTrigger>
+                        <InterestedCountBadge />
+                        <JoinedCountBadge />
+                      </AttendanceFeedTrigger>
 
-                    <Suspense fallback={<AttendanceLoading />}>
-                      <AttendanceFeedTarget>{attendance}</AttendanceFeedTarget>
-                    </Suspense>
-                  </ToggleProvider>
+                      <Suspense fallback={<AttendanceLoading />}>
+                        <AttendanceFeedTarget>{attendance}</AttendanceFeedTarget>
+                      </Suspense>
+                    </ToggleProvider>
 
-                  <div className='flex gap-2'>
-                    <DistanceBadge />
-                    <DistanceThresholdDisplay />
+                    <div className='flex gap-2'>
+                      <DistanceBadge />
+                      <DistanceThresholdDisplay />
+                    </div>
                   </div>
+                </EventOverviewContainer>
+                <div
+                  className='overflow-hidden flex flex-1 flex-col'
+                  style={{
+                    width: '100%',
+                  }}>
+                  <EventMapSpecific />
                 </div>
-              </EventOverviewContainer>
-              <div
-                className='overflow-hidden flex flex-1 flex-col'
-                style={{
-                  width: '100%',
-                }}>
-                <EventMapSpecific />
+                <EventControlBar />
+                {/** */}
               </div>
-              <EventControlBar />
-              {/** */}
-            </div>
-          </ModalStackProvider>
-        </EventActionProvider>
-      </DistanceProvider>
+            </ModalStackProvider>
+          </EventActionProvider>
+        </DistanceProvider>
+      </EventPositionProvider>
     </EventProvider>
   );
 }

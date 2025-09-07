@@ -10,7 +10,7 @@ function getValue<T>(key: string, initialValue?: T): T {
 }
 
 export function useSessionStorage<T>(key: string, initialValue?: T) {
-  const [value, setValue] = useState(getValue(key, initialValue));
+  const [value, setValue] = useState(() => getValue(key, initialValue));
 
   useEffect(() => {
     if (typeof sessionStorage === 'undefined') return;

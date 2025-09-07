@@ -16,22 +16,12 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
   setEvent: React.Dispatch<SetStateAction<TEvent>>;
   hasEnded: boolean;
   interestCount: number;
-  positionIsStale: boolean;
 }>('useEventContext can only be used within the scope of an EventContext!');
 
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
   const [event, setEvent] = useState(initialEvent);
-
-  //Invalidate positions of mobile events after 30 seconds.
-  const positionIsStale = useStaleTimestamp(
-    event?.position.timestamp,
-    30000,
-    !!event && event.is_mobile
-  );
-
   const hasEnded = event?.ended_at !== null;
   const interestCount = event?.interested_count;
-
   const reloadEvent = useReloadData<TEvent>(
     `/api/events/${event?.id}`,
     data => {
@@ -48,7 +38,7 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
   });
 
   return (
-    <EventContext.Provider value={{ event, setEvent, hasEnded, interestCount, positionIsStale }}>
+    <EventContext.Provider value={{ event, setEvent, hasEnded, interestCount }}>
       {children}
     </EventContext.Provider>
   );

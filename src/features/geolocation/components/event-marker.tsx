@@ -1,30 +1,20 @@
 'use client';
 
-import { EventModal } from '@/features/events/components/ui/event-modal';
+import { useEventPositionContext } from '@/features/events/providers/event-position-provider';
 import { useEventContext } from '@/features/events/providers/event-provider';
-import { useModalStackContext } from '@/providers/modal-stack-provider';
 
 import { useEffect, useState } from 'react';
 import { Circle } from 'react-leaflet/Circle';
 import { Marker } from 'react-leaflet/Marker';
 import { Tooltip } from 'react-leaflet/Tooltip';
+import { useMapIcon } from '../hooks/use-map-icon';
 
 /**Renders the leaflet marker used to display events on the map. Must be placed within the scope of an EventContext. */
 export function EventMarker({ onClick = null }) {
-  const [icon, setIcon] = useState(null);
-  const { event, positionIsStale } = useEventContext();
-  const eventCoordinates = [event.position.coordinates.at(1), event.position.coordinates.at(0)];
-
-  useEffect(() => {
-    import('leaflet').then(L => {
-      const blueIcon = new L.Icon({
-        iconUrl: positionIsStale ? '/icons/marker_gray.svg' : '/icons/marker_blue.svg',
-        iconSize: [32, 52],
-        iconAnchor: [16, 52],
-      });
-      setIcon(blueIcon);
-    });
-  }, [positionIsStale]);
+  const { event } = useEventContext();
+  const { position, positionIsStale } = useEventPositionContext();
+  const icon = useMapIcon(positionIsStale ? '/icons/marker_gray.svg' : '/icons/marker_blue.svg');
+  const eventCoordinates = [position.coordinates.at(1), position.coordinates.at(0)];
 
   const circleColor = positionIsStale ? 'gray' : 'blue';
   return typeof window !== 'undefined' && icon ? (
@@ -46,8 +36,8 @@ export function EventMarker({ onClick = null }) {
 
       <Circle
         center={eventCoordinates as any}
-        pathOptions={{ fillColor: circleColor, color: circleColor }}
-        radius={event.position.accuracy}
+        pathOptions={{ fillColor: circleColor, color: circleColor, opacity: 0.2, fillOpacity: 0.1 }}
+        radius={position.accuracy}
       />
     </>
   ) : null;

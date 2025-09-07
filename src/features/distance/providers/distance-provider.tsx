@@ -5,6 +5,7 @@ import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { getThresholdAdjusted } from '../util/get-threshold-adjusted';
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
 import { useEventContext } from '@/features/events/providers/event-provider';
+import { useEventPositionContext } from '@/features/events/providers/event-position-provider';
 
 export type TDistanceHistory = {
   position: GeolocationPosition;
@@ -24,8 +25,8 @@ export function DistanceProvider({ children }: React.PropsWithChildren) {
   const { position } = useGeolocationContext();
   const { distance, isPending } = useDistance();
   const { event } = useEventContext();
-
-  const eventPositionAccuracy = event?.position?.accuracy || 0;
+  const { position: eventPosition } = useEventPositionContext();
+  const eventPositionAccuracy = eventPosition?.accuracy || 0;
 
   const joinThreshold = getThresholdAdjusted(
     event?.auto_join_threshold,

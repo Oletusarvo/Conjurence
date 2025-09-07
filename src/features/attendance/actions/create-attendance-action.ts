@@ -34,6 +34,7 @@ export async function createAttendanceAction(
 
   const interestCount = await eventService.repo.countInterestedById(event_id, db);
 
+  console.log(newAttendanceRecord);
   dispatcher.dispatch({
     to: `event:${event_id}`,
     message: 'event:interest',

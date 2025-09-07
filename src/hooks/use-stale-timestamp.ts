@@ -19,7 +19,7 @@ export function useStaleTimestamp(timestamp: number, maxAge: number, enabled?: b
     return () => {
       clearInterval(t);
     };
-  }, [maxAge, isTimestampStale]);
+  }, [maxAge, isTimestampStale, timestamp, enabled]);
 
   return isStale;
 }

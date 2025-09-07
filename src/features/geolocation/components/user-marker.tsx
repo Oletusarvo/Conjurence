@@ -12,7 +12,7 @@ import { Tooltip } from 'react-leaflet';
 export function UserMarker() {
   const icon = useMapIcon('/icons/marker_red.svg');
   const { position } = useGeolocationContext();
-  const positionCoordinates = [position?.coords.latitude, position?.coords.longitude];
+  const positionCoordinates = position && [position.coords.latitude, position.coords.longitude];
 
   return typeof window !== 'undefined' && position && icon ? (
     <>
@@ -28,8 +28,8 @@ export function UserMarker() {
       </Marker>
       <Circle
         center={positionCoordinates as any}
-        pathOptions={{ fillColor: 'red', color: 'red' }}
-        radius={position?.coords.accuracy || 0}
+        pathOptions={{ fillColor: 'red', color: 'red', opacity: 0.2, fillOpacity: 0.1 }}
+        radius={position.coords.accuracy || 0}
       />
     </>
   ) : null;

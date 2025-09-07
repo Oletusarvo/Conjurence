@@ -7,7 +7,7 @@ export default async function AttendanceSlot({ params }) {
   const { event_id } = await params;
   /**The join requests to initially display. */
   const initialAttendanceRecords = await getAttendance(db)
-    .whereIn('ejs.label', ['host', 'joined', 'interested', 'left'])
+    .whereIn('ejs.label', ['host', 'joined', 'interested', 'left', 'canceled'])
     .andWhere({
       event_instance_id: event_id,
     })

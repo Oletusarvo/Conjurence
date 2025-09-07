@@ -101,7 +101,10 @@ export class AttendanceRepository extends Repository {
         .select('id')
         .limit(1),
     });
-    return await this.findRecentActiveByUserId(payload.user_id, ctx);
+    return await this.findBy(
+      { user_id: payload.user_id, event_instance_id: payload.event_instance_id },
+      ctx
+    ).first();
   }
 }
 

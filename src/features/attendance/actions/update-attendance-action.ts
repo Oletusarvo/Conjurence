@@ -13,6 +13,7 @@ export async function updateAttendanceAction(
   status: string
 ): Promise<ActionResponse<TAttendance, string>> {
   const session = await loadSession();
+
   const updatedAttendanceRecord = await attendanceService.repo.updateBy(
     {
       query: { event_instance_id: eventId, user_id: session.user.id },

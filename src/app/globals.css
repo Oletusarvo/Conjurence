@@ -2,9 +2,9 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #3a254b;
+  --background: #291f31;
   --foreground: #ffffff;
-  --background-light: #48295f;
+  --background-light: #422e51;
   --modal-background: hsl(from var(--background) h s l / 0.9);
   --accent: #e1e774;
   --secondary: #725f80;

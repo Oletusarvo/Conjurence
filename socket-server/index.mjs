@@ -36,8 +36,6 @@ export const socketServer = io => {
       //Fired and forgotten on purpose.
       db('positions.event_position')
         .where({ event_id: eventId })
-        //Skip saving if the arriving position is older than what is already stored.
-        .andWhere('timestamp', '<', position.timestamp)
         .update({
           coordinates: db.raw(
             `ST_SetSRID(

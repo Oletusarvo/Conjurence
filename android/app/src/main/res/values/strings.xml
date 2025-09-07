@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Conjurence</string>
+    <string name="title_activity_main">Conjurence</string>
+    <string name="package_name">com.onrender.conjurence</string>
+    <string name="custom_url_scheme">com.onrender.conjurence</string>
+</resources>
