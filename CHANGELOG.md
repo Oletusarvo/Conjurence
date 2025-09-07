@@ -1,3 +1,13 @@
+## [0.8.0-beta.5] - 07-09-2025
+
+### Changed
+
+- The modal show-prop now affects the hidden-attribute of itself, rather than the modal being conditionally rendered.
+
+### Added
+
+- EventMapSpecific now flys to the location of the event.
+
 ## [0.8.0-beta.4] - 07-09-2025
 
 ### Changed

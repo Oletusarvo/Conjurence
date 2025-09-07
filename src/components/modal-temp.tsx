@@ -48,8 +48,10 @@ export function Modal({
     </button>
   );
 
-  return show ? (
-    <div className='flex w-full h-screen absolute top-0 left-0 items-center justify-center backdrop-blur-md z-90 p-1'>
+  return (
+    <div
+      className='flex w-full h-screen absolute top-0 left-0 items-center justify-center backdrop-blur-md z-90 p-1'
+      hidden={!show}>
       <div
         {...props}
         //ref={ref}
@@ -69,5 +71,5 @@ export function Modal({
         {children}
       </div>
     </div>
-  ) : null;
+  );
 }

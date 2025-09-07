@@ -3,6 +3,7 @@
 import { useEventContext } from '@/features/events/providers/event-provider';
 import { GeolocationMap } from './geolocation-map';
 import { EventMarker } from './event-marker';
+import { FlyToPosition } from './flyto-position';
 
 /**Renders a GeolocationMap containing a single, specific event. */
 export function EventMapSpecific() {
@@ -15,6 +16,7 @@ export function EventMapSpecific() {
       zoom={13}
       minZoom={13}>
       <EventMarker />
+      <FlyToPosition position={[eventPositionCoords.at(1), eventPositionCoords.at(0)]} />
     </GeolocationMap>
   );
 }

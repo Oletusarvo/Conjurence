@@ -24,7 +24,7 @@ export function EventPositionProvider({ children }: EventPositionProviderProps) 
   const positionIsStale = useStaleTimestamp(
     position.timestamp,
     30000,
-    !!position || event?.is_mobile
+    !!position && event?.is_mobile
   );
 
   return (

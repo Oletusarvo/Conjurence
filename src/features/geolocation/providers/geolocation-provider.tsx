@@ -30,7 +30,7 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
     if ('geolocation' in navigator) {
       const options: PositionOptions = {
         enableHighAccuracy: true,
-        //maximumAge: 10000,
+        maximumAge: 3000,
         //timeout: Infinity,
       };
 
