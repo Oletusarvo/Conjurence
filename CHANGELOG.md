@@ -1,3 +1,13 @@
+## [0.8.0-beta.6] - 08-09-2025
+
+### Changed
+
+- The event creation form to not use an explicit state to store the input values, and instead reading them directly from the inputs on submission; made possible by hiding the steps instead of not rendering them when not on them.
+
+### Fixed
+
+- The FlyToPosition-component not updating the map view when position changes...possibly.
+
 ## [0.8.0-beta.5] - 07-09-2025
 
 ### Changed

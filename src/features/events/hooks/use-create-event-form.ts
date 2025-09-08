@@ -6,7 +6,7 @@ import { useOnSubmit } from '@/hooks/use-on-submit';
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
 import { EventError } from '@/features/events/errors/events';
 import { useRef, useState } from 'react';
-import { ZodType } from 'zod';
+import z, { ZodType } from 'zod';
 import { useStep } from '@/providers/step-provider';
 import { TAttendance } from '@/features/attendance/schemas/attendance-schema';
 import { useEventContext } from '../providers/event-provider';
@@ -18,75 +18,41 @@ import { getParseResultErrorMessage } from '@/util/get-parse-result-error-messag
 export function useCreateEventForm() {
   const { event: template } = useEventContext();
   const { user, updateSession } = useUserContext();
-
-  const [payload, setPayload] = useState(() => {
-    const fd = new FormData();
-    if (template) {
-      for (const [key, val] of Object.entries(template)) {
-        fd.set(key, typeof val === 'string' ? val : JSON.stringify(val));
-      }
-    }
-    return fd;
-  });
-
   const steps = useStep(0);
-
-  const [inputStatus, setStatus] = useState({
-    title: template?.title ? 'success' : null,
-    location_title: null,
-    description: template?.description ? 'success' : null,
+  const [inputStatus, setInputStatus] = useState(() => {
+    if (template) {
+      return {
+        title: { errors: null },
+        description: { errors: null },
+        spots_available: { errors: null },
+        size: { errors: null },
+        category: { errors: null },
+      };
+    }
+    return null;
   });
 
-  const handleParse = (e: TODO, schema: ZodType) => {
-    const key = e.target.name;
-    const parseResult = schema.safeParse(e.target.value);
-    if (!parseResult.success) {
-      setStatus(prev => ({
-        ...prev,
-        [key]: parseResult.error.issues.at(0)?.message,
-      }));
+  const handleParse = (e: TODO) => {
+    const result = createEventSchema.shape[e.target.name].safeParse(e.target.value);
+    if (!result.success) {
+      setInputStatus({
+        ...inputStatus,
+        [e.target.name]: z.treeifyError(result.error),
+      });
     } else {
-      setStatus(prev => ({ ...prev, [key]: 'success' }));
+      setInputStatus({ ...inputStatus, [e.target.name]: { errors: null } });
     }
-  };
-
-  const handleChange = (e: TODO, schema?: ZodType) => {
-    if (schema) {
-      handleParse(e, schema);
-    }
-
-    setPayload(prev => {
-      const newPayload = cloneFormData(prev);
-
-      newPayload.set(
-        e.target.name,
-        e.target.type === 'checkbox' ? e.target.checked : e.target.value
-      );
-
-      return newPayload;
-    });
   };
 
   const attendance = useUserAttendanceContext();
 
   const router = useRouter();
-  const { position } = useGeolocationContext();
-  if (position) {
-    payload.set(
-      'position',
-      JSON.stringify({
-        coordinates: [position.coords.longitude, position.coords.latitude],
-        accuracy: position.coords.accuracy,
-        timestamp: position.timestamp,
-      })
-    );
-  }
+
   const {
     onSubmit: submitEvent,
     isPending,
     status,
   } = useOnSubmit({
-    payload,
     action: async payload => {
       if (!payload.get('position')) {
         return { success: false, error: EventError.locationDisabled };
@@ -115,5 +81,5 @@ export function useCreateEventForm() {
     },
   });
 
-  return { payload, submitEvent, status, isPending, handleChange, setPayload, steps, inputStatus };
+  return { submitEvent, handleParse, status, isPending, steps, inputStatus };
 }

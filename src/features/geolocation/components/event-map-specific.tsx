@@ -16,7 +16,9 @@ export function EventMapSpecific() {
       zoom={13}
       minZoom={13}>
       <EventMarker />
-      <FlyToPosition position={[eventPositionCoords.at(1), eventPositionCoords.at(0)]} />
+      <FlyToPosition
+        position={{ lat: eventPositionCoords.at(1), lng: eventPositionCoords.at(0) }}
+      />
     </GeolocationMap>
   );
 }

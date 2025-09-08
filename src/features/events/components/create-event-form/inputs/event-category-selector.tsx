@@ -6,16 +6,12 @@ import { capitalize } from '@/util/capitalize';
 import { eventCategories } from '@/features/events/schemas/event-category-schema';
 
 export function EventCategorySelector() {
-  const { payload, handleChange } = useCreateEventFormContext();
-
+  const { template } = useCreateEventFormContext();
   return (
     <div className='form-input-group'>
       <select
+        defaultValue={template?.category}
         name='category'
-        value={payload.get('category') as unknown as string}
-        onChange={e => {
-          handleChange(e);
-        }}
         required>
         <option
           value={0}

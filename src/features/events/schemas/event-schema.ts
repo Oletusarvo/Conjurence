@@ -5,7 +5,7 @@ import { eventCategorySchema } from './event-category-schema';
 
 export const createEventSchema = z.object({
   title: z.string().min(3, EventError.titleTooShort).max(24, EventError.titleTooLong).trim(),
-  description: z.string().trim(),
+  description: z.string().max(256).trim(),
 
   spots_available: z
     .string()
@@ -28,7 +28,8 @@ export const createEventSchema = z.object({
   size: eventSizeSchema,
   is_mobile: z
     .string()
-    .transform(val => val === 'true')
+    .transform(val => val === 'on')
+    .pipe(z.boolean())
     .optional(),
 });
 

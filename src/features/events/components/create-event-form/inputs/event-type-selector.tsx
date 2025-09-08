@@ -1,24 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-import { ThresholdsType, useCreateEventFormContext } from '../create-event-form';
 import { capitalize } from '@/util/capitalize';
-import { Sublabel } from '@/components/ui/sub-label';
 import { List } from '@/components/feature/list-temp';
 import { eventSizes } from '@/features/events/schemas/event-size-schema';
+import { useCreateEventFormContext } from '../create-event-form';
 
 export function EventTypeSelector() {
   const thresholds = eventSizes;
-  const { payload, handleChange } = useCreateEventFormContext();
-
+  const { template } = useCreateEventFormContext();
   return (
     <div className='form-input-group'>
       <select
+        defaultValue={template?.size}
         name='size'
-        value={payload.get('size') as unknown as string}
-        onChange={e => {
-          handleChange(e);
-        }}
         required>
         <option
           value={0}

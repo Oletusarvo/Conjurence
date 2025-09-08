@@ -28,7 +28,11 @@ export function CreateEventForm({ onCancel = null }) {
   const isForwardButtonDisabled = () => {
     const { inputStatus, steps } = form;
     if (steps.current == 0) {
-      return inputStatus.title !== 'success' || inputStatus.description !== 'success';
+      return (
+        inputStatus == null ||
+        //inputStatus.description?.errors !== null ||
+        inputStatus.title?.errors !== null
+      );
     }
   };
 
@@ -74,17 +78,15 @@ export function CreateEventForm({ onCancel = null }) {
   return (
     <form
       className='flex flex-col gap-2 sm:w-[450px] xs:w-full h-full'
-      onSubmit={form.submitEvent}>
+      onSubmit={form.submitEvent}
+      onChange={form.handleParse}>
       <StepTrack
         currentStep={form.steps.current}
         max={2}
       />
       <CreateEventFormContext.Provider value={{ template, ...form }}>
-        {form.steps.current === 0 ? (
-          <OverviewStep />
-        ) : form.steps.current === 1 ? (
-          <TypesStep />
-        ) : null}
+        <OverviewStep show={form.steps.current === 0} />
+        <TypesStep show={form.steps.current === 1} />
         <StatusNotice status={form.status} />
 
         <div className='flex gap-2 w-full mt-auto px-default'>

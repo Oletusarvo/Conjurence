@@ -15,6 +15,7 @@ export function PositionAutoInput() {
     <input
       name='position'
       value={value}
+      readOnly
       hidden
     />
   );

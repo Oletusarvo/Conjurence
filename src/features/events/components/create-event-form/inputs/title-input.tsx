@@ -8,25 +8,23 @@ import { useCreateEventFormContext } from '../create-event-form';
 import { createEventSchema } from '@/features/events/schemas/event-schema';
 
 export function TitleInput() {
-  const { payload, template, handleChange, inputStatus } = useCreateEventFormContext();
-
+  const { template, inputStatus } = useCreateEventFormContext();
+  const error = inputStatus?.title?.errors;
   return (
     <div className='form-input-group'>
       <Input
+        defaultValue={template?.title}
         autoComplete='off'
-        onChange={e => {
-          handleChange(e, createEventSchema.shape.title);
-        }}
         icon={<Heading />}
         name='title'
         placeholder='Title...'
         required
-        defaultValue={template?.title || payload.get('title')?.toString()}
+        // defaultValue={template?.title || payload.get('title')?.toString()}
       />
-      {inputStatus.title === EventError.titleTooShort ? (
-        <Sublabel variant='error'>The title is too short!</Sublabel>
-      ) : inputStatus.title === EventError.titleTooLong ? (
-        <Sublabel variant='error'>The title is too long!</Sublabel>
+      {error?.includes(EventError.titleTooShort) ? (
+        <Sublabel variant='error'>Title too short!</Sublabel>
+      ) : error?.includes(EventError.titleTooLong) ? (
+        <Sublabel variant='error'>Title too long!</Sublabel>
       ) : null}
     </div>
   );
