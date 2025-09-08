@@ -10,7 +10,6 @@ export function useNearbyEvents() {
   const search = useSearchParams().get('q');
   const eventCache = useRef([]);
 
-  console.log(distanceToPreviousPosition);
   const { data: events, isPending } = useQuery({
     queryKey: [`events`, position, search],
     queryFn: async () =>

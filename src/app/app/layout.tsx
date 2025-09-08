@@ -10,6 +10,7 @@ import { UserProvider } from '@/features/users/providers/user-provider';
 import { TUser } from '@/features/users/schemas/user-schema';
 import { ServiceWorkerManager } from '@/managers/service-worker-manager';
 import { WindowResizeManager } from '@/managers/window-resize-manager';
+import { AppProvider } from '@/providers/app-provider';
 import { QueryProvider } from '@/providers/query-provider';
 import { loadSession } from '@/util/load-session';
 import { Bell } from 'lucide-react';
@@ -24,7 +25,7 @@ export default async function AppLayout({ children }) {
   );
 
   return (
-    <>
+    <AppProvider>
       <QueryProvider>
         <UserProvider user={session.user}>
           <NotificationsProvider initialNotifications={[]}>
@@ -42,6 +43,6 @@ export default async function AppLayout({ children }) {
           </NotificationsProvider>
         </UserProvider>
       </QueryProvider>
-    </>
+    </AppProvider>
   );
 }

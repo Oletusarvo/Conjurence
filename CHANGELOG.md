@@ -1,3 +1,14 @@
+## [0.8.0-beta.7] - 08-09-2025
+
+### Added
+
+- Handler for native-platform geolocation.
+- Background geolocation. (Server-side logic for joining and leaving not implemented yet.).
+
+### Changed
+
+- GeolocationProvider to handle its logic in separate components; chosen based on if the platform is native or not.
+
 ## [0.8.0-beta.6] - 08-09-2025
 
 ### Changed

@@ -3,8 +3,13 @@
 import { getDistanceInMeters } from '@/features/distance/util/get-distance-in-meters';
 import { useSessionStorage } from '@/hooks/use-session-storage';
 import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
-import { useEffect, useRef, useState } from 'react';
-import toast from 'react-hot-toast';
+import { useState } from 'react';
+
+import { Capacitor } from '@capacitor/core';
+import { NativeGeolocationManager } from '../managers/native-geolocation-provider';
+import { WebGeolocationManager } from '../managers/web-geolocation-manager';
+import { useAppContext } from '@/providers/app-provider';
+import { BackgroundGeolocationManager } from '../managers/background-geolocation-manager';
 
 const [GeolocationContext, useGeolocationContext] = createContextWithUseHook<{
   position: GeolocationPosition | null;
@@ -13,6 +18,7 @@ const [GeolocationContext, useGeolocationContext] = createContextWithUseHook<{
 
 /**Retrieves the current position of the device using the geolocation-api, and serves it through its context. */
 export function GeolocationProvider({ children }: React.PropsWithChildren) {
+  const { isInBackground } = useAppContext();
   const [position, setPosition] = useSessionStorage<GeolocationPosition | null>('incant-pos', null);
   const [previousPosition, setPreviousPosition] = useState(null);
 
@@ -21,44 +27,23 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
       ? getDistanceInMeters(position.coords, previousPosition.coords)
       : Infinity;
 
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
+  const handlePositionChange = (pos: GeolocationPosition) => {
+    if (position) {
+      setPreviousPosition(position);
     }
-
-    let geoWatcher;
-    if ('geolocation' in navigator) {
-      const options: PositionOptions = {
-        enableHighAccuracy: true,
-        maximumAge: 3000,
-        //timeout: Infinity,
-      };
-
-      geoWatcher = navigator.geolocation.watchPosition(
-        pos => {
-          if (position) {
-            setPreviousPosition(position);
-          }
-
-          setPosition(pos);
-        },
-        error => {
-          console.log(error);
-          toast.error('To use the app, geolocation has to be enabled!');
-        },
-        options
-      );
-    } else {
-      throw new Error('Geolocation unavailable!');
-    }
-
-    return () => {
-      navigator.geolocation.clearWatch(geoWatcher);
-    };
-  }, []);
+    setPosition(pos);
+  };
 
   return (
     <GeolocationContext.Provider value={{ position, distanceToPreviousPosition }}>
+      {Capacitor.isNativePlatform() ? (
+        <NativeGeolocationManager onPosition={pos => handlePositionChange(pos)} />
+      ) : (
+        <WebGeolocationManager onPosition={pos => handlePositionChange(pos)} />
+      )}
+      {isInBackground && (
+        <BackgroundGeolocationManager onPosition={pos => handlePositionChange(pos)} />
+      )}
       {children}
     </GeolocationContext.Provider>
   );
