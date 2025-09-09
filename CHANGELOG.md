@@ -1,3 +1,10 @@
+## [0.8.0-beta.8] - 09-09-2025
+
+### Changed
+
+- Moved socket-server hadlers into their own files.
+- Added a return button to each step in the event-creation flow.
+
 ## [0.8.0-beta.7] - 08-09-2025
 
 ### Added

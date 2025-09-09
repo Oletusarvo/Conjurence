@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "socketServer/src/index.ts"
+    "socket-server/src/index.ts"
   ],
   "exclude": ["node_modules"]
 }

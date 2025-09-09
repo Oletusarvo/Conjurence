@@ -64,6 +64,8 @@ export function CreateEventForm({ onCancel = null }) {
         if (form.steps.current === 0) {
           if (onCancel) {
             onCancel();
+          } else if (template) {
+            router.push('/app/event/create/from_template');
           } else {
             router.push('/app/feed');
           }
