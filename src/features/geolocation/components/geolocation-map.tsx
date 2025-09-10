@@ -13,13 +13,21 @@ type GeolocationMapProps = React.PropsWithChildren &
   };
 
 /**Renders a leaflet-map centered on the users current location. */
-export function GeolocationMap({ children, onSelectLocation, ...props }: GeolocationMapProps) {
+export function GeolocationMap({
+  children,
+  onSelectLocation,
+  center,
+  ...props
+}: GeolocationMapProps) {
   const { position } = useGeolocationContext();
-  const positionCoordinates = [position?.coords.latitude, position?.coords.longitude];
+  //const positionCoordinates = [position?.coords.latitude, position?.coords.longitude];
+  const mapCenter =
+    center || position ? { lat: position?.coords.latitude, lng: position?.coords.longitude } : null;
 
   return typeof window === 'undefined' || !position ? null : (
     <MapContainer
       {...props}
+      center={mapCenter}
       style={{ height: '100%', zIndex: 10 }}
       //center={positionCoordinates as any}
       zoom={15}

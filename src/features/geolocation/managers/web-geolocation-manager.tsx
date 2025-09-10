@@ -10,7 +10,7 @@ export function WebGeolocationManager({ onPosition }) {
     }
 
     const watchOptions = {
-      enableHighAccuracy: true,
+      enableHighAccuracy: false,
       maximumAge: 3000,
       //timeout: Infinity,
     };
@@ -32,7 +32,7 @@ export function WebGeolocationManager({ onPosition }) {
     return () => {
       navigator.geolocation?.clearWatch(geoWatcher);
     };
-  }, [onPosition]);
+  }, []);
 
   return null;
 }

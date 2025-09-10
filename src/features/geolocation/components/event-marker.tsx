@@ -1,6 +1,6 @@
 'use client';
 
-import { useEventPositionContext } from '@/features/events/providers/event-position-provider';
+import { useEventPositionContext } from '@/features/events/providers/event-provider';
 import { useEventContext } from '@/features/events/providers/event-provider';
 
 import { useEffect, useState } from 'react';
@@ -13,11 +13,12 @@ import { useMapIcon } from '../hooks/use-map-icon';
 export function EventMarker({ onClick = null }) {
   const { event } = useEventContext();
   const { position, positionIsStale } = useEventPositionContext();
+
   const icon = useMapIcon(positionIsStale ? '/icons/marker_gray.svg' : '/icons/marker_blue.svg');
-  const eventCoordinates = [position.coordinates.at(1), position.coordinates.at(0)];
+  const eventCoordinates = position && [position.coordinates.at(1), position.coordinates.at(0)];
 
   const circleColor = positionIsStale ? 'gray' : 'blue';
-  return typeof window !== 'undefined' && icon ? (
+  return typeof window !== 'undefined' && position && icon ? (
     <>
       <Marker
         eventHandlers={{
@@ -30,7 +31,7 @@ export function EventMarker({ onClick = null }) {
           offset={[0, 1]}
           opacity={1}
           permanent>
-          {event.title}
+          {event?.title || 'No title'}
         </Tooltip>
       </Marker>
 

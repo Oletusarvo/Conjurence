@@ -14,7 +14,7 @@ export function CheckboxInput({
   hidden,
   ...props
 }: CheckboxInputProps) {
-  const [isChecked, setIsChecked] = useState(checked);
+  const [isChecked, setIsChecked] = useState(checked || false);
   const componentRef = useRef<HTMLInputElement>(null);
   return (
     <div

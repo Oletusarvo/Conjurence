@@ -33,6 +33,8 @@ export function useCreateEventForm() {
   });
 
   const handleParse = (e: TODO) => {
+    if (e.target.name === 'category' || e.target.name === 'size' || e.target.name === 'is_mobile')
+      return;
     const result = createEventSchema.shape[e.target.name].safeParse(e.target.value);
     if (!result.success) {
       setInputStatus({

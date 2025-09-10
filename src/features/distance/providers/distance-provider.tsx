@@ -5,7 +5,7 @@ import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { getThresholdAdjusted } from '../util/get-threshold-adjusted';
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
 import { useEventContext } from '@/features/events/providers/event-provider';
-import { useEventPositionContext } from '@/features/events/providers/event-position-provider';
+import { useEventPositionContext } from '@/features/events/providers/event-provider';
 
 export type TDistanceHistory = {
   position: GeolocationPosition;

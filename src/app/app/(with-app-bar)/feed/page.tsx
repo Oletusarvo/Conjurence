@@ -1,14 +1,7 @@
-import { AddEventButton } from '@/components/add-event-button';
-import { ConfirmDialog } from '@/components/feature/confirm-dialog';
-import { TestModalButton } from '@/components/test-modal-button';
-import { AddButton, RoundButton } from '@/components/ui/round-button';
-import { AddEventModalTrigger } from '@/features/events/components/create-event-modal/create-event-modal-trigger';
-import { EventFeed } from '@/features/events/components/event-feed';
+import { RoundButton } from '@/components/ui/round-button';
 import { EventMap } from '@/features/events/components/event-map';
 import { ModalStackProvider } from '@/providers/modal-stack-provider';
-import { SearchProvider } from '@/providers/search-provider';
-import { ToggleProvider } from '@/providers/toggle-provider';
-import { Map, Pin, Plus, User } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
 export const revalidate = 0;

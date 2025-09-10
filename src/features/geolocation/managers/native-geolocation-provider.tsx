@@ -25,7 +25,7 @@ export function NativeGeolocationManager({ onPosition }) {
     return () => {
       Geolocation.clearWatch({ id: geoWatcher });
     };
-  }, [onPosition]);
+  }, []);
 
   return null;
 }

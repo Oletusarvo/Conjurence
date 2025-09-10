@@ -1,3 +1,13 @@
+## [0.8.0-beta.9] - 09-09-2025
+
+### Fixed
+
+- Event markers flickering on the feed-map when the user's position changes.
+
+### Changed
+
+- Moved event position-logic and provider inside the EventProvider.
+
 ## [0.8.0-beta.8] - 09-09-2025
 
 ### Changed

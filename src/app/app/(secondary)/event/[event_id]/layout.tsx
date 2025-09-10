@@ -24,7 +24,6 @@ import { JoinedCountBadge } from '@/features/attendance/components/joined-count-
 import { ToggleProvider } from '@/providers/toggle-provider';
 import { EventPositionUpdater } from '@/features/events/managers/event-position-updater';
 import { EventPositionListener } from '@/features/events/managers/event-position-listener';
-import { EventPositionProvider } from '@/features/events/providers/event-position-provider';
 
 export const revalidate = 0;
 
@@ -35,53 +34,51 @@ export default async function EventPage({ params, attendance }) {
 
   return (
     <EventProvider initialEvent={event}>
-      <EventPositionProvider>
-        <EventPositionListener />
-        {event.is_mobile && <EventPositionUpdater />}
-        <DistanceProvider>
-          <UserAttendanceManager />
-          <ToggleProvider>
-            <UserAttendanceStatusManager />
-          </ToggleProvider>
+      <EventPositionListener />
+      {event.is_mobile && <EventPositionUpdater />}
+      <DistanceProvider>
+        <UserAttendanceManager />
+        <ToggleProvider>
+          <UserAttendanceStatusManager />
+        </ToggleProvider>
 
-          <EventActionProvider>
-            <ModalStackProvider>
-              <div className='flex flex-col h-full'>
-                <EventOverviewContainer>
-                  <EventHeader />
-                  <EventDescription />
-                  <div className='flex w-full justify-between'>
-                    <ToggleProvider>
-                      <AttendanceFeedTrigger>
-                        <InterestedCountBadge />
-                        <JoinedCountBadge />
-                      </AttendanceFeedTrigger>
+        <EventActionProvider>
+          <ModalStackProvider>
+            <div className='flex flex-col h-full'>
+              <EventOverviewContainer>
+                <EventHeader />
+                <EventDescription />
+                <div className='flex w-full justify-between'>
+                  <ToggleProvider>
+                    <AttendanceFeedTrigger>
+                      <InterestedCountBadge />
+                      <JoinedCountBadge />
+                    </AttendanceFeedTrigger>
 
-                      <Suspense fallback={<AttendanceLoading />}>
-                        <AttendanceFeedTarget>{attendance}</AttendanceFeedTarget>
-                      </Suspense>
-                    </ToggleProvider>
+                    <Suspense fallback={<AttendanceLoading />}>
+                      <AttendanceFeedTarget>{attendance}</AttendanceFeedTarget>
+                    </Suspense>
+                  </ToggleProvider>
 
-                    <div className='flex gap-2'>
-                      <DistanceBadge />
-                      <DistanceThresholdDisplay />
-                    </div>
+                  <div className='flex gap-2'>
+                    <DistanceBadge />
+                    <DistanceThresholdDisplay />
                   </div>
-                </EventOverviewContainer>
-                <div
-                  className='overflow-hidden flex flex-1 flex-col'
-                  style={{
-                    width: '100%',
-                  }}>
-                  <EventMapSpecific />
                 </div>
-                <EventControlBar />
-                {/** */}
+              </EventOverviewContainer>
+              <div
+                className='overflow-hidden flex flex-1 flex-col'
+                style={{
+                  width: '100%',
+                }}>
+                <EventMapSpecific />
               </div>
-            </ModalStackProvider>
-          </EventActionProvider>
-        </DistanceProvider>
-      </EventPositionProvider>
+              <EventControlBar />
+              {/** */}
+            </div>
+          </ModalStackProvider>
+        </EventActionProvider>
+      </DistanceProvider>
     </EventProvider>
   );
 }
