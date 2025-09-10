@@ -30,7 +30,7 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
 
   //Invalidate positions of mobile events after 30 seconds.
   const positionIsStale = useStaleTimestamp(
-    position.timestamp,
+    position?.timestamp,
     30000,
     !!position && event?.is_mobile
   );

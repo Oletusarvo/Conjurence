@@ -1,3 +1,9 @@
+## [0.8.0-beta.10] - 10-09-2025
+
+### Added
+
+- Animations to buttons when pressed.
+
 ## [0.8.0-beta.9] - 09-09-2025
 
 ### Fixed
