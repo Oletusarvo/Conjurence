@@ -45,10 +45,11 @@ export default async function HomePage() {
       <section className='flex flex-col gap-8 py-24 items-center px-default bg-background-light'>
         <h2>What Is {packageName}?</h2>
         <p className='text-gray-300'>
-          {packageName} is a platform for creating and discovering unofficial, small, local social
-          events. Whether you're hosting a board game, a casual meetup, or just hanging out, you can
-          list your event for others nearby to find and join. The app makes it easy to connect with
-          people in your area, join gatherings spontaneously, and meet new friends in real life.
+          {packageName} is a geolocation-based platform for creating and discovering unofficial,
+          small, local social events. Whether you're hosting a board game, a casual meetup, or just
+          hanging out, you can list your event for others nearby to find and join. The app makes it
+          easy to connect with people in your area, join gatherings spontaneously, and meet new
+          friends in real life.
         </p>
       </section>
       <section className='flex flex-col gap-8 py-24 items-center px-default'>
