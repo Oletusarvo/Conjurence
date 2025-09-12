@@ -6,7 +6,11 @@ type NoticeProps = React.PropsWithChildren & {
 };
 
 export function Notice({ children, variant = 'default' }: NoticeProps) {
-  const className = useClassName('notice flex gap-2', `--${variant}`, '--contained');
+  const className = useClassName(
+    'notice flex gap-2',
+    variant !== 'default' ? `--${variant}` : '--theme',
+    '--contained'
+  );
   return (
     <div className={className}>
       <div className='flex items-start'>
@@ -20,7 +24,7 @@ export function Notice({ children, variant = 'default' }: NoticeProps) {
           <CircleAlert />
         )}
       </div>
-      {children}
+      <div className='text-left text-sm'>{children}</div>
     </div>
   );
 }

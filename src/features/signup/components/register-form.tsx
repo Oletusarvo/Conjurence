@@ -60,9 +60,6 @@ function StepOne() {
           placeholder='Email...'
           required
         />
-        <Sublabel>
-          Please provide a valid email address we can send a verification link to.
-        </Sublabel>
       </div>
       <div className='flex gap-2 w-full'>
         <button

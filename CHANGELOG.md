@@ -1,3 +1,10 @@
+## [0.8.0-beta.12] - 12-09-2025
+
+### Added
+
+- Beta-notice on the hero-section.
+- A notice explaining only gmail is allowed, on the registration-page.
+
 ## [0.8.0-beta.11] - 12-09-2025
 
 ### Changed

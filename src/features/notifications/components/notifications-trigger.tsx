@@ -55,7 +55,7 @@ function NotificationsModal() {
 
   useEffect(() => {
     //Mark the notes as seen after the first render.
-    markNotificationsAsSeen();
+    //markNotificationsAsSeen();
   }, []);
 
   return (

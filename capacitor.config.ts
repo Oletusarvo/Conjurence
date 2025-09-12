@@ -1,5 +1,5 @@
 import type { CapacitorConfig } from '@capacitor/cli';
-
+//const env = process.env.NODE_ENV || 'development';
 const config: CapacitorConfig = {
   appId: 'com.onrender.conjurence',
   appName: 'Conjurence',

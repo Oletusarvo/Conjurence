@@ -54,16 +54,15 @@ a.--on-path {
 }
 
 .--contained.--success {
-  background-color: hsl(from var(--color-green-400) h s l / 0.2);
-  color: var(--color-green-400);
+  background-color: hsl(from var(--color-green-600) h s l / 0.5);
 }
 
 .--contained.--warning {
-  background-color: hsl(from var(--color-yellow-400) h s l / 0.2);
+  background-color: hsl(from var(--color-yellow-600) h s l / 0.5);
 }
 
 .--contained.--error {
-  background-color: hsl(from var(--color-red-400) h s l / 0.2);
+  background-color: hsl(from var(--color-red-600) h s l / 0.5);
 }
 
 .--contained.--theme {

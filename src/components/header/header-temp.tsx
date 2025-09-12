@@ -28,7 +28,6 @@ export function Logo() {
           className='font-semibold tracking-wider text-[10px]'>
           {name}
         </h2>
-        <small className='text-accent'>{version}</small>
       </div>
     </Link>
   );

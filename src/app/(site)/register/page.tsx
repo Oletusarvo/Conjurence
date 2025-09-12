@@ -1,4 +1,6 @@
 import { FormContainer } from '@/components/form-temp';
+import { BetaNotice } from '@/components/ui/beta-notice';
+import { Notice } from '@/components/ui/notice-temp';
 import { Spinner } from '@/components/ui/spinner-temp';
 import { RegisterForm } from '@/features/signup/components/register-form';
 import { Suspense } from 'react';
@@ -11,6 +13,10 @@ export default function RegisterPage() {
         <Suspense fallback={<Spinner />}>
           <RegisterForm />
         </Suspense>
+        <Notice variant='default'>
+          For now, registration is limited to Gmail addresses only as part of our early testing and
+          spam prevention efforts. We plan to support more email providers soon.
+        </Notice>
       </FormContainer>
     </div>
   );

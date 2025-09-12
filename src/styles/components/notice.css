@@ -3,17 +3,21 @@
   border-radius: var(--radius-lg);
 }
 
+.notice.--contained.--theme {
+  border: 1px solid hsl(from var(--color-background-light) h s 40);
+  color: white;
+}
 .notice.--contained.--success {
-  border: 1px solid var(--color-green-400);
+  border: 1px solid hsl(from var(--color-green-600) h s 40);
   color: var(--color-green-100);
 }
 
 .notice.--contained.--error {
-  border: 1px solid var(--color-red-400);
+  border: 1px solid hsl(from var(--color-red-600) h s 40);
   color: var(--color-red-100);
 }
 
 .notice.--contained.--warning {
-  border: 1px solid var(--color-yellow-400);
-  color: var(--color-yellow-100);
+  border: 1px solid hsl(from var(--color-yellow-600) h s 40);
+  color: var(--color-yellow-50);
 }

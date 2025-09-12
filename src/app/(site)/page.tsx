@@ -1,4 +1,6 @@
 import { Logo } from '@/components/header/header-temp';
+import { BetaNotice } from '@/components/ui/beta-notice';
+import { Notice } from '@/components/ui/notice-temp';
 import { name as packageName, version } from '@package';
 import { Ghost, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -30,7 +32,7 @@ export default async function HomePage() {
             meet new people, and connect in real life — all with a tap.
           </p>
         </article>
-        <div className='flex gap-2 w-full justify-center'>
+        <div className='flex gap-2 w-full justify-center items-center'>
           <Link href='/register'>
             <button className='--contained --accent'>Register Now</button>
           </Link>
@@ -38,6 +40,7 @@ export default async function HomePage() {
             <button className='--outlined --secondary'>Login</button>
           </Link>
         </div>
+        <BetaNotice />
       </section>
       <section className='flex flex-col gap-8 py-24 items-center px-default bg-background-light'>
         <h2>What Is {packageName}?</h2>
@@ -73,7 +76,6 @@ export default async function HomePage() {
 
         <div className='flex flex-col gap-2 items-center'>
           <Logo />
-
           <small>{version}</small>
         </div>
       </footer>
