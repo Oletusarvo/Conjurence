@@ -1,5 +1,4 @@
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
-import { useSearchProvider } from '@/providers/search-provider';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
@@ -13,8 +12,6 @@ export function useNearbyEvents() {
   const { data: events, isPending } = useQuery({
     queryKey: [`events`, search],
     queryFn: async () => {
-      console.log('Fetching positions');
-
       return axios
         .get(
           `/api/events/get_nearby?lat=${position?.coords.latitude}&lng=${

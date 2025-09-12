@@ -3,10 +3,11 @@ const db = require('../../dbconfig');
 module.exports = async function eventPositionUpdateHandler(io, socket, payload) {
   const { eventId, position, user_id } = payload;
 
-  //Fired and forgotten on purpose.
   db('positions.event_position')
     .where({ event_id: eventId })
-    .where('timestamp', '<', position.timestamp)
+    .where(function () {
+      this.where({ timestamp: null }).orWhere('timestamp', '<', position.timestamp);
+    })
     .update(
       {
         coordinates: db.raw(
@@ -22,8 +23,10 @@ module.exports = async function eventPositionUpdateHandler(io, socket, payload) 
         timestamp: position.timestamp,
         accuracy: position.coords.accuracy,
       },
-      ['*']
-    );
-
-  io.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });
+      'timestamp'
+    )
+    .then(record => {
+      if (!record) return;
+      io.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });
+    });
 };

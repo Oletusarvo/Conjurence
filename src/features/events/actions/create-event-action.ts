@@ -14,6 +14,7 @@ import { createEventSchema } from '../schemas/event-schema';
 import { userService } from '@/features/users/services/user-service';
 import { eventService } from '../services/event-service';
 import { attendanceService } from '@/features/attendance/services/attendance-service';
+import { dispatcher } from '@/features/dispatcher/dispatcher';
 
 /**Creates a new event.
  * @param payload The data for the event.
@@ -75,6 +76,7 @@ export async function createEventAction(
     );
 
     await trx.commit();
+
     return {
       success: true,
       data: attendance,

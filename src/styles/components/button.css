@@ -11,7 +11,7 @@ button {
   transition: transform 0.1s ease-out;
 }
 
-button:active {
+button:enabled:active {
   transform: scale(0.9, 0.9);
 }
 

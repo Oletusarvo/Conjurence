@@ -1,3 +1,13 @@
+## [0.8.0-beta.11] - 12-09-2025
+
+### Changed
+
+- The socket server event position update handler now checks for null before updating, and emits the received position after
+  the database operation has finished, to try to make sure the mobile events position does not jump to where it was started at
+  on screen refresh.
+
+- Inactive buttons now do not play the press-down animation.
+
 ## [0.8.0-beta.10] - 10-09-2025
 
 ### Added
