@@ -13,11 +13,11 @@ export function EventPositionListener() {
     eventId: event?.id,
     onPositionUpdate: payload => {
       const { position } = payload;
-      setPosition({
+      setPosition(() => ({
         coordinates: [position.coords.longitude, position.coords.latitude],
         accuracy: position.coords.accuracy,
         timestamp: position.timestamp,
-      });
+      }));
     },
   });
   return null;
