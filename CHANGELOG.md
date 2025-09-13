@@ -1,12 +1,18 @@
-## [0.8.0-beta.13] - 12-09-2025
+## [0.8.0-beta.13] - 13-09-2025
 
 ### Changed
 
 - The socket server event position update handler now excludes the socket from which the update came from, and the host directly sets the event position through state.
 
+- Moved event subqueries under EventMetaRepository.
+
 ### Fixed
 
 - useStaleTimestamp not working on the host of an event.
+
+### Added
+
+- EventTemplateRepository and service.
 
 ## [0.8.0-beta.12] - 12-09-2025
 
