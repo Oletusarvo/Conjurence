@@ -1,7 +1,7 @@
 'use client';
 
 import { useGeolocationContext } from '@/features/geolocation/providers/geolocation-provider';
-import { useEventContext } from '../providers/event-provider';
+import { useEventContext, useEventPositionContext } from '../providers/event-provider';
 import { useEffect } from 'react';
 import { useUserContext } from '@/features/users/providers/user-provider';
 import { socket } from '@/socket';
@@ -11,11 +11,17 @@ export function EventPositionUpdater() {
   const { user } = useUserContext();
   const { event } = useEventContext();
   const { position } = useGeolocationContext();
+  const { setPosition } = useEventPositionContext();
 
   useEffect(() => {
     //Update the position of mobile events.
-    if (!event || event.host !== user.username) return;
+    if (!event || !position || event.author_id !== user.id) return;
     socket.emit('event:position_update', { eventId: event.id, position, user_id: user.id });
+    setPosition({
+      coordinates: [position.coords.longitude, position.coords.latitude],
+      accuracy: position.coords.accuracy,
+      timestamp: position.timestamp,
+    });
   }, [position]);
 
   return null;

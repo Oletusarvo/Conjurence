@@ -2,6 +2,7 @@ import { RoundButton } from '@/components/ui/round-button';
 import db from '@/dbconfig';
 import { TemplateLinkList } from '@/features/events/components/template-list';
 import { eventService } from '@/features/events/services/event-service';
+import { eventTemplateService } from '@/features/events/services/event-template-service';
 import { SearchProvider } from '@/providers/search-provider';
 import { tablenames } from '@/tablenames';
 import { loadSession } from '@/util/load-session';
@@ -11,7 +12,12 @@ import Link from 'next/link';
 export default async function EventTemplatesPage({ searchParams }) {
   const { q } = await searchParams;
   const session = await loadSession();
-  const templates = await eventService.repo.findTemplatesByAuthorId(session.user.id, null, db);
+  const templates = await eventTemplateService.repo.findTemplatesByAuthorId(
+    session.user.id,
+    null,
+    db
+  );
+  console.log(templates);
   return (
     <>
       <main className='flex flex-col gap-2 w-full py-2 px-default flex-1 overflow-y-scroll'>

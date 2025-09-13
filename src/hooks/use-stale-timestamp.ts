@@ -11,15 +11,15 @@ export function useStaleTimestamp(timestamp: number, maxAge: number, enabled?: b
   };
 
   useEffect(() => {
-    //Check for stale positions every 30 seconds.
-    const t = setInterval(() => {
-      setIsStale(isTimestampStale());
-    }, 30000);
+    setIsStale(isTimestampStale());
+    const t = setTimeout(() => {
+      setIsStale(!!enabled);
+    }, maxAge);
 
     return () => {
-      clearInterval(t);
+      clearTimeout(t);
     };
-  }, [maxAge, isTimestampStale, timestamp, enabled]);
+  }, [maxAge, timestamp, enabled, setIsStale, isTimestampStale]);
 
   return isStale;
 }

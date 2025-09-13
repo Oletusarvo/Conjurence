@@ -7,7 +7,7 @@ type NoticeProps = React.PropsWithChildren & {
 
 export function Notice({ children, variant = 'default' }: NoticeProps) {
   const className = useClassName(
-    'notice flex gap-2',
+    'notice flex gap-2 w-full',
     variant !== 'default' ? `--${variant}` : '--theme',
     '--contained'
   );

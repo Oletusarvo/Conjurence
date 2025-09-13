@@ -15,6 +15,7 @@ import { userService } from '@/features/users/services/user-service';
 import { eventService } from '../services/event-service';
 import { attendanceService } from '@/features/attendance/services/attendance-service';
 import { dispatcher } from '@/features/dispatcher/dispatcher';
+import { eventTemplateService } from '../services/event-template-service';
 
 /**Creates a new event.
  * @param payload The data for the event.
@@ -44,10 +45,7 @@ export async function createEventAction(
   }
 
   /*Prevent adding events of bigger size than allowed by the subscription.
-  if (
-    parsedInstance.event_threshold_id &&
-    parsedInstance.event_threshold_id > subscriptionRecord.maximum_event_size_id
-  ) {
+  if (subscriptionRecord) {
     return { success: false, error: 'event:size_not_allowed' };
   }*/
 
@@ -65,6 +63,10 @@ export async function createEventAction(
       },
       trx
     );
+
+    if (parsedData.is_template) {
+      await eventTemplateService.repo.create(parsedData, trx);
+    }
 
     const attendance = await attendanceService.repo.create(
       {

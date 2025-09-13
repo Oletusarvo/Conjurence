@@ -13,7 +13,6 @@ export function EventPositionListener() {
     eventId: event?.id,
     onPositionUpdate: payload => {
       const { position } = payload;
-      console.log('Updating event position...');
       setPosition({
         coordinates: [position.coords.longitude, position.coords.latitude],
         accuracy: position.coords.accuracy,

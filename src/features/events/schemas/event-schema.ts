@@ -4,7 +4,7 @@ import { EventError } from '../errors/events';
 import { eventCategorySchema } from './event-category-schema';
 
 export const createEventSchema = z.object({
-  title: z.string().min(3, EventError.titleTooShort).max(24, EventError.titleTooLong).trim(),
+  title: z.string().min(3, EventError.titleTooShort).max(32, EventError.titleTooLong).trim(),
   description: z.string().max(256).trim(),
 
   spots_available: z
@@ -29,7 +29,13 @@ export const createEventSchema = z.object({
   is_mobile: z
     .string()
     .transform(val => val === 'on')
-    .pipe(z.boolean())
+    .pipe(z.boolean().default(false))
+    .optional(),
+
+  is_template: z
+    .string()
+    .transform(val => val === 'on')
+    .pipe(z.boolean().default(false))
     .optional(),
 });
 
@@ -48,6 +54,7 @@ export const updateEventSchema = createEventSchema
 
 export type TEvent = z.infer<typeof createEventSchema> & {
   id: string;
+  author_id: string;
   host: string;
   interested_count: number;
   attendance_count: number;

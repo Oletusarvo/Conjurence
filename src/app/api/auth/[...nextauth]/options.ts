@@ -36,7 +36,6 @@ export const options: NextAuthOptions = {
             .first();
 
           if (!user || !(await verifyPassword(password, user.password))) {
-            console.log(user);
             throw new Error(AuthError.invalidCredentials);
           }
 

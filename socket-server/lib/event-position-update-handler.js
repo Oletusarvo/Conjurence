@@ -24,9 +24,8 @@ module.exports = async function eventPositionUpdateHandler(io, socket, payload) 
         accuracy: position.coords.accuracy,
       },
       'timestamp'
-    )
-    .then(record => {
-      if (!record) return;
-      io.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });
-    });
+    );
+
+  //Omit broadcasting to the socket from which the event came.
+  socket.to(`event:${payload.eventId}`).emit('event:position_update', { eventId, position });
 };

@@ -89,7 +89,9 @@ export function CreateEventForm({ onCancel = null }) {
       <CreateEventFormContext.Provider value={{ template, ...form }}>
         <OverviewStep show={form.steps.current === 0} />
         <TypesStep show={form.steps.current === 1} />
-        <StatusNotice status={form.status} />
+        <div className='flex w-full px-default'>
+          <StatusNotice status={form.status} />
+        </div>
 
         <div className='flex gap-2 w-full mt-auto px-default'>
           <BackwardButton />

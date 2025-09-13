@@ -5,91 +5,39 @@ import { Repository } from '@/util/repository';
 import z from 'zod';
 import { createEventSchema, updateEventSchema } from '../schemas/event-schema';
 import { createGeographyRow } from '@/features/geolocation/util/create-geography-row';
+import { EventMetaRepository } from './event-meta-repository';
 
-export class EventRepository extends Repository {
+export class EventRepository extends EventMetaRepository {
   public getBaseQuery(ctx: DBContext) {
-    //Get the host participant.
-    const hostParticipantSubquery = ctx
-      .select('user_id as host_user_id', 'event_instance_id')
-      .from(tablenames.event_attendance)
-      .whereIn(
-        'attendance_status_id',
-        ctx(tablenames.event_attendance_status).whereIn('label', ['host']).select('id as status_id')
-      )
-      .groupBy('event_instance_id', 'user_id')
-      .as('hp');
-
     //Get the host username.
-    const hostUsernameSubquery = ctx(tablenames.user)
-      .select('id as host_user_id', 'username as host')
-      .as('u');
-
+    const hostUserSubQuery = this.getHostUserSubQuery(ctx);
     //Get the event size settings.
-    const thresholdsQuery = ctx(tablenames.event_threshold)
-      .select('auto_join_threshold', 'auto_leave_threshold', 'id as threshold_id', 'label as size')
-      .groupBy('id')
-      .as('event_threshold');
-
+    const thresholdsQuery = this.getSizeSubQuery(ctx);
     //Get interested users count.
-    const participantCountSubquery = ctx
-      .select('event_instance_id AS ap_instance_id')
-      .count('* AS interested_count')
-      .from(tablenames.event_attendance)
-      .whereIn(
-        'attendance_status_id',
-        ctx
-          .select('id AS ap_status_id')
-          .from(tablenames.event_attendance_status)
-          .whereIn('label', ['interested', 'joined', 'left'])
-      )
-      .groupBy('event_instance_id')
-      .as('ap');
-
+    const participantCountSubquery = this.getParticipantCountSubQuery(ctx);
     //Get attendant count
-    const attendantCountSubquery = ctx
-      .select('event_instance_id as ac_instance_id')
-      .count('* AS attendance_count')
-      .from(tablenames.event_attendance)
-      .whereIn(
-        'attendance_status_id',
-        ctx
-          .select('id')
-          .from(tablenames.event_attendance_status)
-          .whereIn('label', ['joined', 'host'])
-      )
-      .groupBy('event_instance_id')
-      .as('ac');
-
+    const presentCountSubquery = this.getPresentCountSubQuery(ctx);
     //Get the event category label.
-    const eventCategorySubquery = ctx
-      .select('id as category_id', 'label')
-      .from(tablenames.event_category)
-      .as('ec');
-
-    const positionSubquery = ctx
-      .select('event_id', 'accuracy', 'coordinates', 'timestamp')
-      .from(tablenames.event_position)
-      .groupBy('event_id')
-      .as('position');
+    const eventCategorySubquery = this.getCategorySubquery(ctx);
+    const positionSubquery = this.getPositionSubQuery(ctx);
 
     const q = ctx({ event: tablenames.event_instance })
       .join(positionSubquery, 'position.event_id', 'event.id')
-      .join(hostParticipantSubquery, 'hp.event_instance_id', 'event.id')
-      .join(hostUsernameSubquery, 'u.host_user_id', 'hp.host_user_id')
-      .leftJoin(participantCountSubquery, 'ap.ap_instance_id', 'event.id')
-      .leftJoin(attendantCountSubquery, 'ac.ac_instance_id', 'event.id')
+      .join(hostUserSubQuery, 'host.event_instance_id', 'event.id')
+      .leftJoin(participantCountSubquery, 'participant_count.event_instance_id', 'event.id')
+      .leftJoin(presentCountSubquery, 'present_count.event_instance_id', 'event.id')
       .leftJoin(thresholdsQuery, 'event_threshold.threshold_id', 'event.event_threshold_id')
-      .join(eventCategorySubquery, 'ec.category_id', 'event.event_category_id')
+      .join(eventCategorySubquery, 'category.category_id_actual', 'event.event_category_id')
       .select(
         'event.author_id',
         'event.title',
         'event.description',
         'event.id as id',
-        'ec.label as category',
+        'category.category',
         'event.created_at',
         'event.ended_at',
         'event.spots_available',
-        'u.host',
+        'host.username as host',
         'event_threshold.auto_join_threshold',
         'event_threshold.auto_leave_threshold',
         'event_threshold.size',
@@ -97,8 +45,10 @@ export class EventRepository extends Repository {
         ctx.raw(
           "JSON_BUILD_OBJECT('coordinates', ST_AsGeoJSON(position.coordinates)::json -> 'coordinates', 'accuracy', position.accuracy, 'timestamp', position.timestamp) AS position"
         ),
-        ctx.raw('COALESCE(CAST(ap.interested_count AS INTEGER), 0) AS interested_count'),
-        ctx.raw('COALESCE(CAST(ac.attendance_count AS INTEGER), 0) AS attendance_count')
+        ctx.raw(
+          'COALESCE(CAST(participant_count.interested_count AS INTEGER), 0) AS interested_count'
+        ),
+        ctx.raw('COALESCE(CAST(present_count.attendance_count AS INTEGER), 0) AS attendance_count')
       );
 
     return q;
@@ -109,22 +59,10 @@ export class EventRepository extends Repository {
     event_id: string,
     ctx: DBContext
   ): Promise<{ username: string; id: string }> {
-    return await ctx({ event: tablenames.event_instance })
-      .join(
-        ctx.select('id', 'username').from(tablenames.user).groupBy('id').as('user'),
-        'user.id',
-        'event.author_id'
-      )
-      .where({ 'event.id': event_id })
-      .select('user.id', 'user.username as username')
+    return await ctx(tablenames.event_instance)
+      .where({ id: event_id })
+      .select('author_id as id')
       .first();
-  }
-
-  /**Returns previously created events of a user with distinct titles and descriptions. */
-  async findTemplatesByAuthorId(author_id: string, search: string | null, ctx: DBContext) {
-    return await Repository.withSearch(this.getBaseQuery(ctx), search, ['title', 'description'])
-      .where({ author_id })
-      .distinctOn('event.title', 'event.description');
   }
 
   /**Finds an event by id. */

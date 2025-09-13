@@ -5,6 +5,7 @@ import { FormContainer } from '@/components/form-temp';
 import { loadSession } from '@/util/load-session';
 import { EventProvider } from '@/features/events/providers/event-provider';
 import { eventService } from '@/features/events/services/event-service';
+import { eventTemplateService } from '@/features/events/services/event-template-service';
 
 export default async function CreateEventPage({ searchParams }) {
   const session = await loadSession();
@@ -12,7 +13,7 @@ export default async function CreateEventPage({ searchParams }) {
 
   let templateRecord = null;
   if (template_id) {
-    templateRecord = await eventService.repo.findById(template_id, db);
+    templateRecord = await eventTemplateService.repo.findTemplateById(template_id, db);
     //Check that the template is by the logged in user.
     if (templateRecord.author_id !== session.user.id) {
       return <span>Only the author of a template can use it!</span>;
