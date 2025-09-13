@@ -30,14 +30,14 @@ type EventFeedProps = {
  */
 export function EventFeed() {
   const { order } = useSearchProvider();
-  const { events, cache, isPending } = useNearbyEvents();
+  const { events, isPending } = useNearbyEvents();
 
   const EventList = withAlternate(List, true);
   return (
     <EventList
-      showAlternate={cache.length === 0}
+      showAlternate={events?.length === 0}
       alternate={<NoEvents />}
-      data={events || cache}
+      data={events || []}
       sortFn={(a, b) => {
         const adate = new Date(a.created_at).getTime();
         const bdate = new Date(b.created_at).getTime();

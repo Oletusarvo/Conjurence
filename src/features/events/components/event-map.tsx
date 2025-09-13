@@ -20,13 +20,12 @@ export function EventMap() {
 }
 
 function Markers() {
-  const { events, cache, isPending } = useNearbyEvents();
+  const { events, isPending } = useNearbyEvents();
   const router = useRouter();
-  const src = events || cache;
 
   return (
     <List<TEvent>
-      data={src}
+      data={events || []}
       component={({ item }) => {
         return (
           <EventProvider initialEvent={item}>

@@ -4,8 +4,6 @@ import { ModalStackProvider } from '@/providers/modal-stack-provider';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
-export const revalidate = 0;
-
 export default async function EventFeedPage({ searchParams }: any) {
   return (
     <div className='w-full flex-1'>

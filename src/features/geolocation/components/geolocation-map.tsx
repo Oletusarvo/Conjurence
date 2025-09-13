@@ -5,7 +5,8 @@ import { MapContainer, MapContainerProps } from 'react-leaflet/MapContainer';
 import { TileLayer } from 'react-leaflet/TileLayer';
 import { UserMarker } from './user-marker';
 import { useMapEvent } from 'react-leaflet';
-import { LatLng, LatLngBoundsExpression } from 'leaflet';
+import { LatLng } from 'leaflet';
+import { useRef } from 'react';
 
 type GeolocationMapProps = React.PropsWithChildren &
   MapContainerProps & {
@@ -20,14 +21,14 @@ export function GeolocationMap({
   ...props
 }: GeolocationMapProps) {
   const { position } = useGeolocationContext();
-  //const positionCoordinates = [position?.coords.latitude, position?.coords.longitude];
-  const mapCenter =
-    center || position ? { lat: position?.coords.latitude, lng: position?.coords.longitude } : null;
+  const mapCenter = useRef(
+    center || position ? { lat: position?.coords.latitude, lng: position?.coords.longitude } : null
+  );
 
   return typeof window === 'undefined' || !position ? null : (
     <MapContainer
       {...props}
-      center={mapCenter}
+      center={mapCenter.current}
       style={{ height: '100%', zIndex: 10 }}
       //center={positionCoordinates as any}
       zoom={15}

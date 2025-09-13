@@ -2,12 +2,10 @@ const db = require('../../dbconfig');
 
 module.exports = async function eventPositionUpdateHandler(io, socket, payload) {
   const { eventId, position, user_id } = payload;
-
   db('positions.event_position')
     .where({ event_id: eventId })
-    .where(function () {
-      this.where({ timestamp: null }).orWhere('timestamp', '<', position.timestamp);
-    })
+    //.where({ timestamp: null })
+    //.orWhere('timestamp', '<', position.timestamp)
     .update(
       {
         coordinates: db.raw(

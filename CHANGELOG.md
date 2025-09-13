@@ -1,3 +1,13 @@
+## [0.8.0-beta.14] - 13-09-2025
+
+### Changed
+
+- Moved the center position of GeolocationMap into a ref to prevent the component from re-rendering unecessarily every time the users location changes.
+
+- Removed null and stale-timestamp check from the updateEventPositionHandler, to see if it fixes the problem where a stale position is displayed breafly after re-renders on EventMap and EventMapSpecific.
+
+- Changed the initial event-position argument to come from the initialEvent-prop instead of the event-state, also as an attempt to see if it stops an events stale position from flashing briefly after re-renders.
+
 ## [0.8.0-beta.13] - 13-09-2025
 
 ### Changed

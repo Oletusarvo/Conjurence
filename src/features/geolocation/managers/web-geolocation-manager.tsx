@@ -10,7 +10,7 @@ export function WebGeolocationManager({ onPosition }) {
     }
 
     const watchOptions = {
-      enableHighAccuracy: false,
+      enableHighAccuracy: true,
       maximumAge: 3000,
       //timeout: Infinity,
     };
