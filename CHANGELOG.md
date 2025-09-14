@@ -7,6 +7,7 @@
 ### Changed
 
 - Moved EventPositionProvider into its own file.
+- Made the event marker icons be saved inside a ref instead of state, so they are loaded once and reused later.
 
 ## [0.8.0-beta.14] - 13-09-2025
 
