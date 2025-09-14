@@ -16,13 +16,16 @@ const [EventPositionContext, useEventPositionContext] = createContextWithUseHook
 type EventPositionProviderProps = React.PropsWithChildren;
 
 export function EventPositionProvider({ children }: EventPositionProviderProps) {
-  const {
-    event: { is_mobile, position: initialPosition },
-  } = useEventContext();
-  const [position, setPosition] = useState(initialPosition);
+  const { event } = useEventContext();
+
+  const [position, setPosition] = useState(event?.position);
 
   //Invalidate positions of mobile events if they haven't been updated for a while.
-  const positionIsStale = useStaleTimestamp(position?.timestamp, 45000, !!position && is_mobile);
+  const positionIsStale = useStaleTimestamp(
+    position?.timestamp,
+    45000,
+    !!position && event?.is_mobile
+  );
 
   return (
     <EventPositionContext.Provider value={{ position, positionIsStale, setPosition }}>

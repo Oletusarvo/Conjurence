@@ -1,24 +1,10 @@
 import { useEffect, useRef } from 'react';
-import L from 'leaflet';
+import { createIcon } from '../util/createIcon';
 
-export function useEventIcon(isPositionStale: boolean) {
+export function useEventIcon(positionIsStale: boolean) {
   const icons = useRef({
-    stale: new L.Icon({
-      iconUrl: '/icons/marker_gray.svg',
-      shadowUrl: '/icons/marker-shadow.png',
-      iconSize: [32, 52],
-      iconAnchor: [16, 52],
-      shadowSize: [41, 41],
-      shadowAnchor: [12, 41],
-    }),
-    active: new L.Icon({
-      iconUrl: '/icons/marker_blue.svg',
-      shadowUrl: '/icons/marker-shadow.png',
-      iconSize: [32, 52],
-      iconAnchor: [16, 52],
-      shadowSize: [41, 41],
-      shadowAnchor: [12, 41],
-    }),
+    stale: createIcon('/icons/marker_gray.svg'),
+    active: createIcon('/icons/marker_blue.svg'),
   });
 
   /*
@@ -49,5 +35,5 @@ export function useEventIcon(isPositionStale: boolean) {
     });
   }, []);*/
 
-  return isPositionStale ? icons.current.stale : icons.current.active;
+  return positionIsStale ? icons.current.stale : icons.current.active;
 }

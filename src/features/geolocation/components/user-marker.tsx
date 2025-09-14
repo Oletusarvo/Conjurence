@@ -1,16 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useGeolocationContext } from '../providers/geolocation-provider';
 import { Marker } from 'react-leaflet/Marker';
-import { Popup } from 'react-leaflet/Popup';
 import { Circle } from 'react-leaflet/Circle';
-import { useMapIcon } from '../hooks/use-map-icon';
 import { Tooltip } from 'react-leaflet';
+import { createIcon } from '../util/createIcon';
 
 /**Renders the leaflet marker of the currently logged in user. */
 export function UserMarker() {
-  const icon = useMapIcon('/icons/marker_red.svg');
+  const icon = createIcon('/icons/marker_red.svg');
   const { position } = useGeolocationContext();
   const positionCoordinates = position && [position.coords.latitude, position.coords.longitude];
 

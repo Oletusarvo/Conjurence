@@ -20,7 +20,7 @@ export function EventMarker({ onClick = null }) {
   const eventCoordinates = position && [position.coordinates.at(1), position.coordinates.at(0)];
 
   const circleColor = positionIsStale ? 'gray' : 'blue';
-  return typeof window !== 'undefined' && position && icon ? (
+  return typeof window !== 'undefined' && position ? (
     <>
       <Marker
         eventHandlers={{
