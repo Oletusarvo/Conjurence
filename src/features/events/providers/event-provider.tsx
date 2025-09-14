@@ -5,6 +5,7 @@ import { TEvent } from '../schemas/event-schema';
 import { SetStateAction, useState } from 'react';
 import { useEventSocket } from '../hooks/use-event-socket';
 import { useReloadData } from '@/hooks/use-reload-data';
+import { EventPositionProvider } from './event-position-provider';
 import { useStaleTimestamp } from '@/hooks/use-stale-timestamp';
 
 type EventProviderProps = React.PropsWithChildren & {
@@ -18,22 +19,8 @@ const [EventContext, useEventContext] = createContextWithUseHook<{
   interestCount: number;
 }>('useEventContext can only be used within the scope of an EventContext!');
 
-const [EventPositionContext, useEventPositionContext] = createContextWithUseHook<{
-  position: TEvent['position'];
-  positionIsStale: boolean;
-  setPosition: React.Dispatch<SetStateAction<TEvent['position']>>;
-}>('useEventPositionContext can only be called within the scope of an EventPositionContext!');
-
 export function EventProvider({ children, initialEvent }: EventProviderProps) {
   const [event, setEvent] = useState(initialEvent);
-  const [position, setPosition] = useState(initialEvent?.position);
-
-  //Invalidate positions of mobile events after 30 seconds.
-  const positionIsStale = useStaleTimestamp(
-    position?.timestamp,
-    45000,
-    !!position && event?.is_mobile
-  );
 
   const hasEnded = event?.ended_at !== null;
   const interestCount = event?.interested_count;
@@ -54,11 +41,9 @@ export function EventProvider({ children, initialEvent }: EventProviderProps) {
 
   return (
     <EventContext.Provider value={{ event, setEvent, hasEnded, interestCount }}>
-      <EventPositionContext.Provider value={{ position, positionIsStale, setPosition }}>
-        {children}
-      </EventPositionContext.Provider>
+      <EventPositionProvider>{children}</EventPositionProvider>
     </EventContext.Provider>
   );
 }
 
-export { useEventContext, useEventPositionContext };
+export { useEventContext };

@@ -1,3 +1,13 @@
+## [0.8.0-beta.15] - 14-09-2025
+
+### Fixed
+
+- An oversight where the handlers for messages on the socket-server were not awaited.
+
+### Changed
+
+- Moved EventPositionProvider into its own file.
+
 ## [0.8.0-beta.14] - 13-09-2025
 
 ### Changed

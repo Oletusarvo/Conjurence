@@ -2,12 +2,13 @@
 
 import { GeolocationMap } from '@/features/geolocation/components/geolocation-map';
 import { useNearbyEvents } from '../hooks/use-nearby-events';
-import { EventMarker } from '@/features/geolocation/components/event-marker';
+import { EventMarker } from '@/features/events/components/event-marker';
 import { EventProvider } from '../providers/event-provider';
 import { List } from '@/components/feature/list-temp';
 import { TEvent } from '../schemas/event-schema';
 import { EventPositionListener } from '../managers/event-position-listener';
 import { useRouter } from 'next/navigation';
+import { EventPositionProvider } from '../providers/event-position-provider';
 
 /**Renders nearby events as markers on a leaflet-map. Must be placed within the scope of a ModalStackProvider*/
 export function EventMap() {

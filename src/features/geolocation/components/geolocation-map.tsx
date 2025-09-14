@@ -21,8 +21,12 @@ export function GeolocationMap({
   ...props
 }: GeolocationMapProps) {
   const { position } = useGeolocationContext();
+
+  //Set once.
   const mapCenter = useRef(
-    center || position ? { lat: position?.coords.latitude, lng: position?.coords.longitude } : null
+    center || position
+      ? { lat: position?.coords.latitude, lng: position?.coords.longitude }
+      : undefined
   );
 
   return typeof window === 'undefined' || !position ? null : (

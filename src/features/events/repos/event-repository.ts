@@ -43,7 +43,7 @@ export class EventRepository extends EventMetaRepository {
         'event_threshold.size',
         'event.is_mobile',
         ctx.raw(
-          "JSON_BUILD_OBJECT('coordinates', ST_AsGeoJSON(position.coordinates)::json -> 'coordinates', 'accuracy', position.accuracy, 'timestamp', position.timestamp) AS position"
+          "JSON_BUILD_OBJECT('coordinates', ST_AsGeoJSON(coordinates)::json -> 'coordinates', 'accuracy', accuracy, 'timestamp', timestamp) AS position"
         ),
         ctx.raw(
           'COALESCE(CAST(participant_count.interested_count AS INTEGER), 0) AS interested_count'

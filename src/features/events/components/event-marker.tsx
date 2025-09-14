@@ -1,20 +1,22 @@
 'use client';
 
-import { useEventPositionContext } from '@/features/events/providers/event-provider';
 import { useEventContext } from '@/features/events/providers/event-provider';
 
 import { useEffect, useState } from 'react';
 import { Circle } from 'react-leaflet/Circle';
 import { Marker } from 'react-leaflet/Marker';
 import { Tooltip } from 'react-leaflet/Tooltip';
-import { useMapIcon } from '../hooks/use-map-icon';
+import { useMapIcon } from '../../geolocation/hooks/use-map-icon';
+import { useEventPositionContext } from '../providers/event-position-provider';
+import { useEventIcon } from '@/features/geolocation/hooks/use-event-icon';
 
 /**Renders the leaflet marker used to display events on the map. Must be placed within the scope of an EventContext. */
 export function EventMarker({ onClick = null }) {
   const { event } = useEventContext();
   const { position, positionIsStale } = useEventPositionContext();
 
-  const icon = useMapIcon(positionIsStale ? '/icons/marker_gray.svg' : '/icons/marker_blue.svg');
+  //const icon = useMapIcon(positionIsStale ? '/icons/marker_gray.svg' : '/icons/marker_blue.svg');
+  const icon = useEventIcon(positionIsStale);
   const eventCoordinates = position && [position.coordinates.at(1), position.coordinates.at(0)];
 
   const circleColor = positionIsStale ? 'gray' : 'blue';

@@ -15,7 +15,7 @@ import {
   AttendanceFeedTrigger,
 } from '@/features/attendance/components/attendance-feed-trigger';
 import { eventService } from '@/features/events/services/event-service';
-import { EventMapSpecific } from '@/features/geolocation/components/event-map-specific';
+import { EventMapSpecific } from '@/features/events/components/event-map-specific';
 import { EventHeader } from '@/features/events/components/ui/event-header';
 import { EventDescription } from '@/features/events/components/ui/event-description';
 import { EventOverviewContainer } from '@/features/events/components/ui/event-overview-container';
@@ -24,6 +24,8 @@ import { JoinedCountBadge } from '@/features/attendance/components/joined-count-
 import { ToggleProvider } from '@/providers/toggle-provider';
 import { EventPositionUpdater } from '@/features/events/managers/event-position-updater';
 import { EventPositionListener } from '@/features/events/managers/event-position-listener';
+import { EventPositionProvider } from '@/features/events/providers/event-position-provider';
+import { tablenames } from '@/tablenames';
 
 export const revalidate = 0;
 
@@ -31,7 +33,7 @@ export default async function EventPage({ params, attendance }) {
   const { event_id } = await params;
   const event = await eventService.repo.findById(event_id, db);
   if (!event) return <span>Event does not exist!</span>;
-
+  console.log(event);
   return (
     <EventProvider initialEvent={event}>
       <EventPositionListener />
@@ -74,7 +76,6 @@ export default async function EventPage({ params, attendance }) {
                 <EventMapSpecific />
               </div>
               <EventControlBar />
-              {/** */}
             </div>
           </ModalStackProvider>
         </EventActionProvider>

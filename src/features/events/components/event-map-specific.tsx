@@ -1,14 +1,13 @@
 'use client';
-
-import { useEventContext } from '@/features/events/providers/event-provider';
-import { GeolocationMap } from './geolocation-map';
+import { GeolocationMap } from '@/features/geolocation/components/geolocation-map';
 import { EventMarker } from './event-marker';
-import { FlyToPosition } from './flyto-position';
-import { useEventPositionContext } from '@/features/events/providers/event-provider';
+import { FlyToPosition } from '@/features/geolocation/components/flyto-position';
+import { useEventPositionContext } from '../providers/event-position-provider';
 
 /**Renders a GeolocationMap containing a single, specific event. */
 export function EventMapSpecific() {
   const { position: eventPosition } = useEventPositionContext();
+
   const eventPositionCoords = eventPosition?.coordinates;
   const center = eventPositionCoords && {
     lat: eventPositionCoords.at(1),
