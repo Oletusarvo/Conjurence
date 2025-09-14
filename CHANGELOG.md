@@ -1,3 +1,13 @@
+## [0.8.0-beta.17] - 14-09-2025
+
+### Changed
+
+- The key for useSessionStorage to an array of strings from a single string.
+
+### Added
+
+- A cleanupOnUnmount-flag for useSessionStorage, to remove the saved value on unmount.
+
 ## [0.8.0-beta.16] - 14-08-2025
 
 ### Changed

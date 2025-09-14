@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
+/**@deprecated */
 export function useDataStream<T extends any[]>(endpoint: string) {
   const buffer = useRef<T>([] as T);
   const interval = useRef(null);

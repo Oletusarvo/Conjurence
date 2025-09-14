@@ -9,7 +9,6 @@ export function useNearbyEvents() {
   const search = useSearchParams().get('q');
   const cache = useRef([]);
   const { data: events, isPending } = useQuery({
-    //placeholderData: prev => prev,
     queryKey: [`events`, search],
     queryFn: async () => {
       return axios

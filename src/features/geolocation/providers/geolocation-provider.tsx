@@ -19,7 +19,10 @@ const [GeolocationContext, useGeolocationContext] = createContextWithUseHook<{
 /**Retrieves the current position of the device using the geolocation-api, and serves it through its context. */
 export function GeolocationProvider({ children }: React.PropsWithChildren) {
   const { isInBackground } = useAppContext();
-  const [position, setPosition] = useSessionStorage<GeolocationPosition | null>('incant-pos', null);
+  const [position, setPosition] = useSessionStorage<GeolocationPosition | null>(
+    ['conjurence-user-position'],
+    null
+  );
   const [previousPosition, setPreviousPosition] = useState(null);
 
   const distanceToPreviousPosition =
