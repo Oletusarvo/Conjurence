@@ -26,7 +26,7 @@ function Markers() {
 
   return (
     <List<TEvent>
-      data={events || []}
+      data={events}
       component={({ item }) => {
         return (
           <EventProvider initialEvent={item}>

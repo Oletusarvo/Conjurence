@@ -17,6 +17,8 @@ export function UserMarker() {
   return typeof window !== 'undefined' && position && icon ? (
     <>
       <Marker
+        //Keep the marker below other markers
+        zIndexOffset={-1}
         position={positionCoordinates as any}
         icon={icon}>
         <Tooltip

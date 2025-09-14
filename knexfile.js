@@ -16,7 +16,22 @@ module.exports = {
       port: 5432,
     }*/ pool: {
       min: 0,
-      max: 1,
+      max: 10,
+    },
+  },
+
+  staging: {
+    client: 'pg',
+    connection: process.env.DB_DEV_URL,
+    /*{
+      user: 'dev_user',
+      database: 'socialize_dev_db',
+      password: process.env.DB_DEV_PASSWORD,
+      host: 'localhost',
+      port: 5432,
+    }*/ pool: {
+      min: 0,
+      max: 10,
     },
   },
 

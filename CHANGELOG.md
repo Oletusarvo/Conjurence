@@ -1,3 +1,13 @@
+## [0.8.0-beta.16] - 14-08-2025
+
+### Changed
+
+- Moved the icon-instantiations of useEventmarker into the initialization of the ref, instead of lazy-loading leaflet in a useEffect before setting them, to prevent a flash of missing icons on the map.
+
+### Added
+
+- Temporarily added back the manual cache-ref for useNearbyEvents.
+
 ## [0.8.0-beta.15] - 14-09-2025
 
 ### Fixed
