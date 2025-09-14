@@ -33,7 +33,7 @@ export default async function EventPage({ params, attendance }) {
   const { event_id } = await params;
   const event = await eventService.repo.findById(event_id, db);
   if (!event) return <span>Event does not exist!</span>;
-  console.log(event);
+
   return (
     <EventProvider initialEvent={event}>
       <EventPositionListener />
