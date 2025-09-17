@@ -6,6 +6,7 @@ import { loadSession } from '@/util/load-session';
 import { EventProvider } from '@/features/events/providers/event-provider';
 import { eventService } from '@/features/events/services/event-service';
 import { eventTemplateService } from '@/features/events/services/event-template-service';
+import { EventTemplateProvider } from '@/features/events/providers/event-template-provider';
 
 export default async function CreateEventPage({ searchParams }) {
   const session = await loadSession();
@@ -27,9 +28,9 @@ export default async function CreateEventPage({ searchParams }) {
           <h2>Create event</h2>
         </div>
 
-        <EventProvider initialEvent={templateRecord}>
+        <EventTemplateProvider initialTemplate={templateRecord}>
           <CreateEventForm />
-        </EventProvider>
+        </EventTemplateProvider>
       </FormContainer>
     </div>
   );

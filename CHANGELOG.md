@@ -1,3 +1,13 @@
+## [0.8.0-beta.18] - 17-09-2025
+
+### Fixed
+
+- createEventAction throwing an error when is_template is true.
+
+### Added
+
+- EventTemplateProvider
+
 ## [0.8.0-beta.17] - 14-09-2025
 
 ### Changed

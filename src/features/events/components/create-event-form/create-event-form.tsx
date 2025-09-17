@@ -10,6 +10,7 @@ import { TypesStep } from './types-step';
 import { StatusNotice } from './status-notice';
 import { useEventContext } from '../../providers/event-provider';
 import { TEvent } from '../../schemas/event-schema';
+import { useEventTemplateContext } from '../../providers/event-template-provider';
 
 export type CategoriesType = { id: number; label: string; description?: string }[];
 export type ThresholdsType = { id: number; label: string; description: string }[];
@@ -21,7 +22,7 @@ const [CreateEventFormContext, useCreateEventFormContext] = createContextWithUse
 export { useCreateEventFormContext };
 
 export function CreateEventForm({ onCancel = null }) {
-  const { event: template } = useEventContext();
+  const { template } = useEventTemplateContext();
   const form = useCreateEventForm();
   const router = useRouter();
 

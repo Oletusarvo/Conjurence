@@ -65,7 +65,13 @@ export async function createEventAction(
     );
 
     if (parsedData.is_template) {
-      await eventTemplateService.repo.create(parsedData, trx);
+      await eventTemplateService.repo.create(
+        {
+          ...parsedData,
+          author_id: session.user.id,
+        },
+        trx
+      );
     }
 
     const attendance = await attendanceService.repo.create(

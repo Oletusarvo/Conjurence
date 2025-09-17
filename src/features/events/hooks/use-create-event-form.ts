@@ -12,9 +12,10 @@ import { useEventContext } from '../providers/event-provider';
 import { createEventSchema } from '../schemas/event-schema';
 import { formDataToObject } from '@/util/form-data-to-object';
 import { getParseResultErrorMessage } from '@/util/get-parse-result-error-message';
+import { useEventTemplateContext } from '../providers/event-template-provider';
 
 export function useCreateEventForm() {
-  const { event: template } = useEventContext();
+  const { template } = useEventTemplateContext();
   const { user, updateSession } = useUserContext();
   const steps = useStep(0);
   const [inputStatus, setInputStatus] = useState(() => {
