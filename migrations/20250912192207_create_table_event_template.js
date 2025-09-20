@@ -37,5 +37,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.withSchema('users').dropTable('event_template');
+  return knex.schema.withSchema('events').dropTable('event_template');
 };

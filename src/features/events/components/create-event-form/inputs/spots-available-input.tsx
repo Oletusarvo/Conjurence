@@ -12,7 +12,7 @@ export function SpotsAvailableInput() {
   return (
     <div className='form-input-group'>
       <Input
-        defaultValue={template?.spots_available}
+        defaultValue={template?.spots_available || 2}
         min={1}
         icon={<Armchair />}
         name='spots_available'

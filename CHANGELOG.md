@@ -1,3 +1,9 @@
+## [0.8.0-beta.19] - 20-09-2025
+
+### Added
+
+- Account deletion functionality
+
 ## [0.8.0-beta.18] - 17-09-2025
 
 ### Fixed

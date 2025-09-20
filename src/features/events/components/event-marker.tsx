@@ -23,6 +23,7 @@ export function EventMarker({ onClick = null }) {
   return typeof window !== 'undefined' && position ? (
     <>
       <Marker
+        zIndexOffset={1}
         eventHandlers={{
           click: onClick,
         }}

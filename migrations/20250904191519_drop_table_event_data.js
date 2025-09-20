@@ -23,5 +23,11 @@ exports.down = function (knex) {
     tbl.string('title', 24);
     tbl.string('description');
     tbl.boolean('is_template').defaultTo(false);
+    tbl
+      .integer('event_category_id')
+      .references('id')
+      .inTable('events.event_category')
+      .onUpdate('CASCADE');
+    tbl.integer('spots_available');
   });
 };

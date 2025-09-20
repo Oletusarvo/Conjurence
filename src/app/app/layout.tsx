@@ -34,7 +34,6 @@ export default async function AppLayout({ children }) {
             <GeolocationProvider>
               <UserAttendanceProvider initialAttendanceRecord={initialAttendanceRecord}>
                 <HeaderProvider>
-                  <NotificationsTrigger />
                   <MainMenuButton />
                 </HeaderProvider>
                 {children}

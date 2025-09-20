@@ -30,7 +30,10 @@ export function EventCard({ children, ...props }: EventCardProps) {
         className={cardClassName}>
         <CardHeader>{children}</CardHeader>
         <p className='tracking-tight leading-[18px]'>{event?.description || 'No description'}</p>
-        <CardFooter />
+        <div className='flex gap-2'>
+          <CategoryBadge />
+        </div>
+        <CardFooter>{children}</CardFooter>
       </div>
     </ModalStackProvider>
   );
@@ -49,12 +52,7 @@ function CardHeader({ children }: React.PropsWithChildren) {
     <div className='flex w-full items-start justify-between'>
       <div className='flex flex-col justify-start items-start gap-1'>
         <h3>{title || 'Otsikko'}</h3>
-
         {hostBadge}
-        <div className='flex gap-2'>
-          <CategoryBadge />
-          <SpotsAvailableBadge />
-        </div>
       </div>
 
       {statusBadge}
@@ -62,13 +60,17 @@ function CardHeader({ children }: React.PropsWithChildren) {
   );
 }
 
-function CardFooter() {
+function CardFooter({ children }) {
   const { hasEnded } = useEventContext();
+  const childArray = React.Children.toArray(children);
+  const interestedCountBadge = childArray.find((c: any) => c.type === InterestedCountBadge);
+  const joinedCountBadge = childArray.find((c: any) => c.type === JoinedCountBadge);
+
   return (
     <div className='flex justify-between gap-2 w-full text-sm font-semibold'>
       <div className='flex items-center gap-4'>
-        <InterestedCountBadge />
-        <JoinedCountBadge />
+        {interestedCountBadge}
+        {joinedCountBadge}
       </div>
 
       {!hasEnded && <DistanceBadge />}

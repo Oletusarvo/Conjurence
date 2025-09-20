@@ -16,7 +16,7 @@ export function UserMarker() {
     <>
       <Marker
         //Keep the marker below other markers
-        zIndexOffset={-1}
+        zIndexOffset={0}
         position={positionCoordinates as any}
         icon={icon}>
         <Tooltip

@@ -60,4 +60,8 @@ export class UserRepository extends Repository {
     );
     return newUserRecord;
   }
+
+  async deleteById(id: string, ctx: DBContext) {
+    await ctx(tablenames.user).where({ id }).delete();
+  }
 }

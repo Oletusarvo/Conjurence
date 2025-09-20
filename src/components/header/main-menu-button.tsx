@@ -28,27 +28,40 @@ export function MainMenuButton() {
         <>
           <span className='text-sm'>@{(session.user as any).username}</span>
           <div className='h-[1px] w-full bg-gray-600 mb-4' />
+          <ToggleProvider.Trigger>
+            <IconLink
+              icon={<Settings />}
+              href='/app/settings'>
+              Settings
+            </IconLink>
+          </ToggleProvider.Trigger>
 
-          <IconLink
-            icon={<LogOut />}
-            href='/logout'>
-            Logout
-          </IconLink>
+          <ToggleProvider.Trigger>
+            <IconLink
+              icon={<LogOut />}
+              href='/logout'>
+              Logout
+            </IconLink>
+          </ToggleProvider.Trigger>
         </>
       );
     } else if (status === 'unauthenticated') {
       return (
         <>
-          <IconLink
-            icon={<User />}
-            href='/register'>
-            Register
-          </IconLink>
-          <IconLink
-            icon={<LogIn />}
-            href='/login'>
-            Login
-          </IconLink>
+          <ToggleProvider.Trigger>
+            <IconLink
+              icon={<User />}
+              href='/register'>
+              Register
+            </IconLink>
+          </ToggleProvider.Trigger>
+          <ToggleProvider.Trigger>
+            <IconLink
+              icon={<LogIn />}
+              href='/login'>
+              Login
+            </IconLink>
+          </ToggleProvider.Trigger>
         </>
       );
     } else {

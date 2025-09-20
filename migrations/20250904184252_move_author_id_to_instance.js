@@ -4,7 +4,12 @@
  */
 exports.up = function (knex) {
   return knex.schema.withSchema('events').alterTable('event_instance', tbl => {
-    tbl.uuid('author_id').references('id').inTable('users.user').onUpdate('CASCADE');
+    tbl
+      .uuid('author_id')
+      .references('id')
+      .inTable('users.user')
+      .onUpdate('CASCADE')
+      .onDelete('CASCADE');
   });
 };
 

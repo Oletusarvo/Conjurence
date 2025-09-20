@@ -12,11 +12,7 @@ import Link from 'next/link';
 export default async function EventTemplatesPage({ searchParams }) {
   const { q } = await searchParams;
   const session = await loadSession();
-  const templates = await eventTemplateService.repo.findTemplatesByAuthorId(
-    session.user.id,
-    null,
-    db
-  );
+  const templates = await eventTemplateService.repo.findTemplatesByAuthorId(session.user.id, q, db);
   console.log(templates);
   return (
     <>

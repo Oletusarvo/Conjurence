@@ -10,7 +10,7 @@ export abstract class Repository {
       if (!search) return;
       const str = `%${search}%`;
       const [firstColumn, ...rest] = columns;
-      this.whereILike(str, firstColumn);
+      this.whereILike(firstColumn, firstColumn);
       for (const column of rest) {
         this.orWhereILike(column, str);
       }

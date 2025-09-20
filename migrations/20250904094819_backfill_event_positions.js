@@ -15,8 +15,8 @@ exports.up = function (knex) {
           await trx('positions.event_position').insert({
             event_id: r.id,
             coordinates: r.position,
-            accuracy: r.position_metadata.accuracy,
-            timestamp: r.position_metadata.timestamp,
+            accuracy: r.position_metadata?.accuracy || 0,
+            timestamp: r.position_metadata?.timestamp || 0,
           });
         }
       });

@@ -26,6 +26,9 @@ import { EventPositionUpdater } from '@/features/events/managers/event-position-
 import { EventPositionListener } from '@/features/events/managers/event-position-listener';
 import { EventPositionProvider } from '@/features/events/providers/event-position-provider';
 import { tablenames } from '@/tablenames';
+import { CategoryBadge } from '@/features/events/components/ui/category-badge';
+import { SpotsAvailableBadge } from '@/features/events/components/ui/spots-available-badge';
+import { MobileEventBadge } from '@/features/events/components/ui/mobile-event-badge';
 
 export const revalidate = 0;
 
@@ -50,6 +53,11 @@ export default async function EventPage({ params, attendance }) {
               <EventOverviewContainer>
                 <EventHeader />
                 <EventDescription />
+                <div className='flex gap-2'>
+                  <CategoryBadge />
+                  <SpotsAvailableBadge />
+                  {event.is_mobile && <MobileEventBadge />}
+                </div>
                 <div className='flex w-full justify-between'>
                   <ToggleProvider>
                     <AttendanceFeedTrigger>
