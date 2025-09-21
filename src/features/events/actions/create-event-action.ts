@@ -44,10 +44,16 @@ export async function createEventAction(
     return { success: false, error: 'event:mobile_not_allowed' };
   }
 
-  /*Prevent adding events of bigger size than allowed by the subscription.
+  //Prevent adding events of bigger size than allowed by the subscription.
   if (subscriptionRecord) {
-    return { success: false, error: 'event:size_not_allowed' };
-  }*/
+    const eventSizeRecord = await db(tablenames.event_threshold)
+      .where({ label: parsedData.size })
+      .select('id')
+      .first();
+    if (subscriptionRecord.maximum_event_size_id > eventSizeRecord.id) {
+      return { success: false, error: 'event:size_not_allowed' };
+    }
+  }
 
   //Prevent creation of events if already hosting or joined to another.
   if (await isAttending(session)) {

@@ -1,12 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
 import { registerPlugin } from '@capacitor/core';
 import type { BackgroundGeolocationPlugin } from '@capacitor-community/background-geolocation';
-import { timeStamp } from 'console';
 import { useUserContext } from '@/features/users/providers/user-provider';
-import { socket } from '@/socket';
 import { Preferences } from '@capacitor/preferences';
 const BackgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>('BackgroundGeolocation');
 

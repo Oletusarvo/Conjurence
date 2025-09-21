@@ -1,3 +1,9 @@
+## [0.8.0-beta.20] - 21-09-2025
+
+### Added
+
+- Event feed-map refresh button.
+
 ## [0.8.0-beta.19] - 20-09-2025
 
 ### Added

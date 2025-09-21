@@ -6,7 +6,7 @@ import { createContextWithUseHook } from '@/util/create-context-with-use-hook';
 import { useState } from 'react';
 
 import { Capacitor } from '@capacitor/core';
-import { NativeGeolocationManager } from '../managers/native-geolocation-provider';
+import { NativeGeolocationManager } from '../managers/native-geolocation-manager';
 import { WebGeolocationManager } from '../managers/web-geolocation-manager';
 import { useAppContext } from '@/providers/app-provider';
 import { BackgroundGeolocationManager } from '../managers/background-geolocation-manager';
@@ -45,6 +45,7 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
         <WebGeolocationManager onPosition={pos => handlePositionChange(pos)} />
       )}
       {isInBackground && (
+        /**This will never work. React unmounts the AppProvider when the app is in the background; meaning isInBackground cannot even be checked. */
         <BackgroundGeolocationManager onPosition={pos => handlePositionChange(pos)} />
       )}
       {children}
