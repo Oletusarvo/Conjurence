@@ -7,6 +7,7 @@ import { TEvent } from '../../schemas/event-schema';
 import { SelectActionStep } from './select-action-step';
 import { SelectTemplateStep } from './select-template-step';
 
+/**@deprecated */
 export function CreateEventModal() {
   const [currentStep, setCurrentStep] = useState<'select-action' | 'select-template' | 'create'>(
     'select-action'
@@ -32,7 +33,11 @@ export function CreateEventModal() {
           />
         ) : (
           <EventProvider initialEvent={selectedTemplate}>
-            <CreateEventForm onCancel={() => setCurrentStep('select-action')} />
+            <CreateEventForm
+              onCancel={() => setCurrentStep('select-action')}
+              categories={[]}
+              sizes={[]}
+            />
           </EventProvider>
         )}
       </div>
