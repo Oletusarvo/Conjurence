@@ -16,7 +16,7 @@ export function EventMarker({ onClick = null }) {
   const { position, positionIsStale } = useEventPositionContext();
 
   //const icon = useMapIcon(positionIsStale ? '/icons/marker_gray.svg' : '/icons/marker_blue.svg');
-  const icon = useEventIcon(positionIsStale);
+  const icon = useEventIcon(positionIsStale || !!event?.ended_at);
   const eventCoordinates = position && [position.coordinates.at(1), position.coordinates.at(0)];
 
   const circleColor = positionIsStale ? 'gray' : 'blue';

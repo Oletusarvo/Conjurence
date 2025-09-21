@@ -50,7 +50,7 @@ export async function createEventAction(
       .where({ label: parsedData.size })
       .select('id')
       .first();
-    if (subscriptionRecord.maximum_event_size_id > eventSizeRecord.id) {
+    if (eventSizeRecord.id < subscriptionRecord.maximum_allowed_event_size) {
       return { success: false, error: 'event:size_not_allowed' };
     }
   }

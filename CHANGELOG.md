@@ -1,3 +1,13 @@
+## [0.8.0-beta.21]
+
+### Fixed
+
+- Event feed map update-button not working
+
+### Changed
+
+- Moved event map logic under the EventFeedPage-component, and made the page client-side.
+
 ## [0.8.0-beta.20] - 21-09-2025
 
 ### Added

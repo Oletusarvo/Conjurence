@@ -10,7 +10,9 @@ import { EventPositionListener } from '../managers/event-position-listener';
 import { useRouter } from 'next/navigation';
 import { EventPositionProvider } from '../providers/event-position-provider';
 
-/**Renders nearby events as markers on a leaflet-map. Must be placed within the scope of a ModalStackProvider*/
+/**Renders nearby events as markers on a leaflet-map
+ * @deprecated
+ */
 export function EventMap() {
   return (
     <GeolocationMap>

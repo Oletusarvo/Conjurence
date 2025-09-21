@@ -8,7 +8,11 @@ export function useNearbyEvents() {
   const { position } = useGeolocationContext();
   const search = useSearchParams().get('q');
   const cache = useRef([]);
-  const { data: events, isPending } = useQuery({
+  const {
+    data: events,
+    isPending,
+    refetch,
+  } = useQuery({
     queryKey: [`events`, search],
     queryFn: async () => {
       return axios
@@ -23,5 +27,5 @@ export function useNearbyEvents() {
     },
   });
 
-  return { events: events || cache.current, isPending };
+  return { events: events || cache.current, isPending, refetch };
 }
