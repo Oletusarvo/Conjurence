@@ -21,6 +21,9 @@ export default async function CreateEventPage({ searchParams }) {
     }
   }
 
+  const categories = await db(tablenames.event_category).pluck('label');
+  const sizes = await db(tablenames.event_threshold).pluck('label');
+
   return (
     <div className='flex flex-col w-full flex-1 items-center'>
       <FormContainer>
@@ -29,7 +32,10 @@ export default async function CreateEventPage({ searchParams }) {
         </div>
 
         <EventTemplateProvider initialTemplate={templateRecord}>
-          <CreateEventForm />
+          <CreateEventForm
+            categories={categories}
+            sizes={sizes}
+          />
         </EventTemplateProvider>
       </FormContainer>
     </div>

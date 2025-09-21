@@ -6,8 +6,8 @@ import { eventSizes } from '@/features/events/schemas/event-size-schema';
 import { useCreateEventFormContext } from '../create-event-form';
 
 export function EventTypeSelector() {
-  const thresholds = eventSizes;
-  const { template } = useCreateEventFormContext();
+  // const thresholds = eventSizes;
+  const { template, sizes } = useCreateEventFormContext();
   return (
     <div className='form-input-group'>
       <select
@@ -19,8 +19,8 @@ export function EventTypeSelector() {
           disabled>
           Select event size...
         </option>
-        <List
-          data={thresholds}
+        <List<string>
+          data={sizes}
           component={({ item }) => {
             return <option value={item}>{capitalize(item)}</option>;
           }}

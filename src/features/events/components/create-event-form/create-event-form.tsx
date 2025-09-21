@@ -16,12 +16,12 @@ export type CategoriesType = { id: number; label: string; description?: string }
 export type ThresholdsType = { id: number; label: string; description: string }[];
 
 const [CreateEventFormContext, useCreateEventFormContext] = createContextWithUseHook<
-  ReturnType<typeof useCreateEventForm> & { template: TEvent }
+  ReturnType<typeof useCreateEventForm> & { template: TEvent; categories: any; sizes: any }
 >('useCreateEventForm can only be called from within the scope of a CreateEventFormContext!');
 
 export { useCreateEventFormContext };
 
-export function CreateEventForm({ onCancel = null }) {
+export function CreateEventForm({ onCancel = null, categories, sizes }) {
   const { template } = useEventTemplateContext();
   const form = useCreateEventForm();
   const router = useRouter();
@@ -87,7 +87,7 @@ export function CreateEventForm({ onCancel = null }) {
         currentStep={form.steps.current}
         max={2}
       />
-      <CreateEventFormContext.Provider value={{ template, ...form }}>
+      <CreateEventFormContext.Provider value={{ template, categories, sizes, ...form }}>
         <OverviewStep show={form.steps.current === 0} />
         <TypesStep show={form.steps.current === 1} />
         <div className='flex w-full px-default'>

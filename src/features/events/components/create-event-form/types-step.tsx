@@ -1,4 +1,4 @@
-import { EventTypeSelector } from './inputs/event-type-selector';
+import { EventTypeSelector } from './inputs/event-size-selector';
 import { EventCategorySelector } from './inputs/event-category-selector';
 import { MobileEventCheckbox } from './inputs/mobile-event-checkbox';
 import { PositionAutoInput } from './inputs/position-auto-input';

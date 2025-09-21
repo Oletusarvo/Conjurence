@@ -13,7 +13,7 @@ export const createEventSchema = z.object({
     .transform(val => Number(val))
     .pipe(z.number().min(1)),
 
-  category: eventCategorySchema,
+  category: z.string(),
   position: z
     .string()
     .transform(val => JSON.parse(val))
@@ -25,7 +25,7 @@ export const createEventSchema = z.object({
       })
     ),
 
-  size: eventSizeSchema,
+  size: z.string(),
   is_mobile: z
     .string()
     .transform(val => val === 'on')

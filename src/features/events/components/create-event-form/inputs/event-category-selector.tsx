@@ -6,7 +6,7 @@ import { capitalize } from '@/util/capitalize';
 import { eventCategories } from '@/features/events/schemas/event-category-schema';
 
 export function EventCategorySelector() {
-  const { template } = useCreateEventFormContext();
+  const { template, categories } = useCreateEventFormContext();
   return (
     <div className='form-input-group'>
       <select
@@ -18,8 +18,8 @@ export function EventCategorySelector() {
           disabled>
           Select event type...
         </option>
-        <List
-          data={eventCategories}
+        <List<string>
+          data={categories}
           component={({ item: cat }) => {
             return <option value={cat}>{capitalize(cat)}</option>;
           }}
