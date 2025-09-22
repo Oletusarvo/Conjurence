@@ -11,7 +11,7 @@ const [AppContext, useAppContext] = createContextWithUseHook<{
 }>('useAppContext can only be called within the scope of an AppContext!');
 
 export function AppProvider({ children }: React.PropsWithChildren) {
-  const [isInBackground, setIsInBackground] = useState(true);
+  const [isInBackground, setIsInBackground] = useState(false);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;

@@ -40,14 +40,11 @@ export function GeolocationProvider({ children }: React.PropsWithChildren) {
   return (
     <GeolocationContext.Provider value={{ position, distanceToPreviousPosition }}>
       {Capacitor.isNativePlatform() ? (
-        <NativeGeolocationManager onPosition={pos => handlePositionChange(pos)} />
+        <BackgroundGeolocationManager onPosition={pos => handlePositionChange(pos)} />
       ) : (
         <WebGeolocationManager onPosition={pos => handlePositionChange(pos)} />
       )}
-      {isInBackground && (
-        /**This will never work. React unmounts the AppProvider when the app is in the background; meaning isInBackground cannot even be checked. */
-        <BackgroundGeolocationManager onPosition={pos => handlePositionChange(pos)} />
-      )}
+
       {children}
     </GeolocationContext.Provider>
   );

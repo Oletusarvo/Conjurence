@@ -1,4 +1,15 @@
-## [0.8.0-beta.21]
+## [0.8.0-beta.22] - 22-09-2025
+
+### Fixed
+
+- Missing date from log 0.8.0-beta.21.
+
+### Changed
+
+- Tidied up the app/ routes.
+- GeolocationProvider now uses the BackgroundGeolocationManager exclusively when on a native platform.
+
+## [0.8.0-beta.21] - 21-09-2025
 
 ### Fixed
 

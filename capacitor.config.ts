@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Conjurence',
   webDir: 'public',
   server: {
-    url: 'https://conjurence.onrender.com', // 👈 your live site URL
+    url: 'http://conjurence.onrender.com', // 👈 your live site URL
     cleartext: true, // allow HTTP if not using HTTPS (not recommended in prod)
   },
 };
