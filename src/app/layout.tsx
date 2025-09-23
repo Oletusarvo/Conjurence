@@ -3,6 +3,7 @@ import './globals.css';
 import { AuthProvider } from '@/providers/auth-provider';
 import { Toaster } from 'react-hot-toast';
 import { name as packageName } from '@package';
+import { QueryProvider } from '@/providers/query-provider';
 
 export const metadata: Metadata = {
   title: packageName,
@@ -45,7 +46,9 @@ export default function RootLayout({
       </head>
 
       <body className='flex flex-col antialiazed w-full'>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </AuthProvider>
         <Toaster position='bottom-center' />
       </body>
     </html>

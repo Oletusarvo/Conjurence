@@ -17,8 +17,12 @@ type UserProviderProps = React.PropsWithChildren & {
   user: TUser;
 };
 
-export function UserProvider({ children, user }: UserProviderProps) {
-  const { update, status: sessionStatus } = useSession();
+export function UserProvider({ children }: UserProviderProps) {
+  const {
+    data: { user },
+    update,
+    status: sessionStatus,
+  } = useSession();
   const [newSession, setNewSession] = useState<{ attended_event_id: string | null } | null>(null);
   const [sessionUpdating, setSessionUpdating] = useState(false);
 
@@ -50,7 +54,7 @@ export function UserProvider({ children, user }: UserProviderProps) {
   return (
     <UserContext.Provider
       value={{
-        user,
+        user: user as any,
         sessionStatus,
         sessionUpdating,
         updateSession,

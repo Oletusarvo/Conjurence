@@ -1,43 +1,5 @@
-import { CreateEventForm } from '@/features/events/components/create-event-form/create-event-form';
-import db from '@/dbconfig';
-import { tablenames } from '@/tablenames';
-import { FormContainer } from '@/components/form-temp';
-import { loadSession } from '@/util/load-session';
-import { EventProvider } from '@/features/events/providers/event-provider';
-import { eventService } from '@/features/events/services/event-service';
-import { eventTemplateService } from '@/features/events/services/event-template-service';
-import { EventTemplateProvider } from '@/features/events/providers/event-template-provider';
+import { withPlatformComponent } from '@/hoc/with-platform-component';
+import CreateEventPage from './page.web';
+import ClientCreateEventPage from './page.native';
 
-export default async function CreateEventPage({ searchParams }) {
-  const session = await loadSession();
-  const { template_id } = await searchParams;
-
-  let templateRecord = null;
-  if (template_id) {
-    templateRecord = await eventTemplateService.repo.findTemplateById(template_id, db);
-    //Check that the template is by the logged in user.
-    if (templateRecord.author_id !== session.user.id) {
-      return <span>Only the author of a template can use it!</span>;
-    }
-  }
-
-  const categories = await db(tablenames.event_category).pluck('label');
-  const sizes = await db(tablenames.event_threshold).pluck('label');
-
-  return (
-    <div className='flex flex-col w-full flex-1 items-center'>
-      <FormContainer>
-        <div className='px-default'>
-          <h2>Create event</h2>
-        </div>
-
-        <EventTemplateProvider initialTemplate={templateRecord}>
-          <CreateEventForm
-            categories={categories}
-            sizes={sizes}
-          />
-        </EventTemplateProvider>
-      </FormContainer>
-    </div>
-  );
-}
+export default withPlatformComponent(CreateEventPage, ClientCreateEventPage);

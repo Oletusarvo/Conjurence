@@ -88,9 +88,7 @@ export function AttendantList({ initialAttendants }) {
 }
 
 const ParticipantListing = ({ participant, hostUsername }) => {
-  const { user } = useUserContext();
   const isHost = participant.status === 'host';
-  const canAcceptPending = hostUsername === user?.username;
 
   return (
     <div className='flex gap-2 items-center justify-between w-full bg-background-light border border-gray-600 p-2'>

@@ -13,7 +13,14 @@ const handler = app.getRequestHandler();
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
-  const io = new Server(httpServer);
+  const io = new Server(httpServer, {
+    cors: {
+      origin: 'http://localhost:5173', // or "*" for testing
+      methods: ['GET', 'POST'],
+      credentials: true,
+    },
+  });
+
   global.io = io;
   socketServer(io);
 

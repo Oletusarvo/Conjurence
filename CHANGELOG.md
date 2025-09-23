@@ -1,3 +1,11 @@
+## [0.8.0-beta.23] - 22-09-2025
+
+### Added
+
+- Middleware steps
+- Cors-handling into middleware
+- Cors-settings into socket-server.
+
 ## [0.8.0-beta.22] - 22-09-2025
 
 ### Fixed

@@ -13,11 +13,12 @@ import { useUserContext } from '@/features/users/providers/user-provider';
 
 export function AttendedEventFeed() {
   const search = useSearchParams().get('q');
-  const { user } = useUserContext();
+  const { user, sessionStatus } = useUserContext();
   const { data: events, isPending } = useQuery({
     queryKey: ['attended-events', search],
     queryFn: async () =>
       axios.get(`/api/events/attended?user_id=${user.id}&q=${search || ''}`).then(res => res.data),
+    enabled: sessionStatus === 'authenticated',
   });
 
   const AttendedEventsList = withAlternate(List, true);

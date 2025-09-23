@@ -2,7 +2,6 @@
 
 import { List } from '@/components/feature/list-temp';
 import { RoundButton } from '@/components/ui/round-button';
-import { EventMap } from '@/features/events/components/event-map';
 import { EventMarker } from '@/features/events/components/event-marker';
 import { useNearbyEvents } from '@/features/events/hooks/use-nearby-events';
 import { EventPositionListener } from '@/features/events/managers/event-position-listener';

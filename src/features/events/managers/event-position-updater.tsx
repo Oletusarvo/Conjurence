@@ -9,14 +9,15 @@ import { useEventPositionContext } from '../providers/event-position-provider';
 
 /**Emits event-position updates on an event when the position of the host changes. Depends on the User-, Event-, and Geolocation contexts.*/
 export function EventPositionUpdater() {
-  const { user } = useUserContext();
+  const { user, sessionStatus } = useUserContext();
   const { event } = useEventContext();
   const { position } = useGeolocationContext();
   const { setPosition } = useEventPositionContext();
 
   useEffect(() => {
     //Update the position of mobile events.
-    if (!event || !position || event.author_id !== user.id) return;
+    if (!event || !position || sessionStatus !== 'authenticated' || event.author_id !== user.id)
+      return;
     setPosition(() => {
       const newPosition = {
         coordinates: [position.coords.longitude, position.coords.latitude],

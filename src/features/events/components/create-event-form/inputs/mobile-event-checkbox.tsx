@@ -10,7 +10,7 @@ export function MobileEventCheckbox() {
   return (
     <CheckboxInput
       //defaultChecked={template?.is_mobile}
-      hidden={!user.subscription.allow_mobile_events}
+      hidden={!user?.subscription.allow_mobile_events}
       label={<span>Mobile event?</span>}
       type='checkbox'
       name='is_mobile'

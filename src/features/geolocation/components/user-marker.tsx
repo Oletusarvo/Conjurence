@@ -10,9 +10,11 @@ import { createIcon } from '../util/createIcon';
 export function UserMarker() {
   const icon = createIcon('/icons/marker_red.svg');
   const { position } = useGeolocationContext();
-  const positionCoordinates = position && [position.coords.latitude, position.coords.longitude];
+  const positionCoordinates = position &&
+    position.coords.latitude &&
+    position.coords.longitude && [position.coords.latitude, position.coords.longitude];
 
-  return typeof window !== 'undefined' && position && icon ? (
+  return typeof window !== 'undefined' && position && positionCoordinates && icon ? (
     <>
       <Marker
         //Keep the marker below other markers

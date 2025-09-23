@@ -10,7 +10,7 @@ export function IsTemplateCheckbox() {
     <CheckboxInput
       type='checkbox'
       name='is_template'
-      hidden={!user.subscription.allow_templates}
+      hidden={!user?.subscription.allow_templates}
       label={<span>Save event as template?</span>}
       component={props => <input {...props} />}
     />
